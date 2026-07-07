@@ -1,0 +1,679 @@
+<!DOCTYPE html>
+<html lang="es" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <!-- ============ SEO ============ -->
+  <title>David Taranto — Sistemas con IA para tu negocio | DT System</title>
+  <meta name="description" content="Bots de WhatsApp con IA que atienden y venden 24/7, CRM a medida y automatización. Construido en Salta, Argentina, usado en producción. Windows SysAdmin + builder de productos con IA.">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="David Taranto — Sistemas con IA para tu negocio">
+  <meta property="og:description" content="Bots de WhatsApp que venden por vos, CRM a medida y automatización. Hablá con mi asistente IA.">
+  <!-- PLACEHOLDER: generar assets/og.png (1200×630).
+       PROMPT HIGGSFIELD: "Open Graph banner para portfolio dev, mockups de dashboard CRM flotando
+       en 3D suave, paleta celeste #52BFFE sobre fondo oscuro #0E0F12, tipografía mono-tech,
+       texto 'DT System', estilo SaaS premium, 1200x630" -->
+  <meta property="og:image" content="assets/og.png">
+  <!-- Favicon: marca "dt/" en SVG inline (sin archivo extra) -->
+  <link rel="icon" href="assets/brand/icon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="assets/brand/icon.svg">
+
+  <!-- ============ Fonts: Geist (títulos) + Geist Mono (todo lo demás) ============
+       Único recurso externo permitido. preload + display=swap. -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;700&family=Geist+Mono:wght@400;700&display=swap">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;700&family=Geist+Mono:wght@400;700&display=swap">
+
+  <link rel="stylesheet" href="styles.css">
+
+  <!-- Tema inicial ANTES del primer paint (evita flash):
+       localStorage manda; si no hay, respeta prefers-color-scheme. -->
+  <script>
+    (function () {
+      var t = localStorage.getItem("dt-theme")
+           || (matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light");
+      document.documentElement.dataset.theme = t;
+    })();
+  </script>
+
+  <!-- ============ JSON-LD: Person ============ -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Person",
+    "name": "David Taranto",
+    "jobTitle": "Windows System Administrator & AI Product Builder",
+    "worksFor": { "@type": "Organization", "name": "JBKnowledge" },
+    "address": { "@type": "PostalAddress", "addressLocality": "Salta", "addressCountry": "AR" },
+    "email": "mailto:david_taranto@outlook.es",
+    "url": "https://davidtaranto96.github.io/",
+    "sameAs": [
+      "https://github.com/davidtaranto96",
+      "https://linkedin.com/in/davidtaranto"
+    ],
+    "knowsAbout": ["Microsoft 365", "Azure", "Automatización", "IA", "Claude", "Next.js", "WhatsApp bots"]
+  }
+  </script>
+</head>
+<body>
+  <a class="skip" href="#main" data-i18n="skip">Saltar al contenido</a>
+
+  <!-- Capa de efectos global (z-index:-1): grilla + spotlight -->
+  <div class="fx" aria-hidden="true">
+    <div class="fx-grid"></div>
+    <div class="fx-spot"></div>
+  </div>
+
+  <!-- ============ Announcement bar + header (sticky) ============ -->
+  <div class="top">
+    <div class="bar" id="bar">
+      <span data-i18n="bar_t">🚀 Disponible para nuevos proyectos —</span>
+      <!-- PLACEHOLDER wa.me: reemplazar en TODOS los href="https://wa.me/..." -->
+      <a href="https://wa.me/5493875454070" target="_blank" rel="noopener" data-i18n="bar_l">Hablá con mi asistente IA</a>
+      <button class="bar-x" aria-label="Cerrar anuncio">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M18 6 6 18M6 6l12 12"/></svg>
+      </button>
+      <span class="bar-beam" aria-hidden="true"></span>
+    </div>
+
+    <!-- Header estilo Stökt: UNA barra de vidrio transparente (blur 15px) -->
+    <header class="hdr">
+      <div class="hdr-pill">
+        <a class="logo" href="#top">dt<b>/</b>system</a>
+        <nav class="nav" aria-label="Principal">
+          <a href="#top"><span class="nl"><span data-i18n="nav_inicio">Inicio</span><span aria-hidden="true" data-i18n="nav_inicio">Inicio</span></span></a>
+          <a href="#servicios"><span class="nl"><span data-i18n="nav_prod">Productos</span><span aria-hidden="true" data-i18n="nav_prod">Productos</span></span></a>
+          <a href="#proyectos"><span class="nl"><span data-i18n="nav_proy">Proyectos</span><span aria-hidden="true" data-i18n="nav_proy">Proyectos</span></span></a>
+          <a href="#sobre-mi"><span class="nl"><span data-i18n="nav_sobre">Sobre mí</span><span aria-hidden="true" data-i18n="nav_sobre">Sobre mí</span></span></a>
+          <a href="#contacto"><span class="nl"><span data-i18n="nav_contacto">Contacto</span><span aria-hidden="true" data-i18n="nav_contacto">Contacto</span></span></a>
+        </nav>
+      <div class="hdr-right">
+        <!-- Selector de idioma: ES default, EN secundario (persistido) -->
+        <button class="tgl lang" id="langToggle" aria-label="Cambiar idioma / Switch language">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c2.5 2.6 3.8 5.7 3.8 9s-1.3 6.4-3.8 9c-2.5-2.6-3.8-5.7-3.8-9S9.5 5.6 12 3Z"/></svg>
+          <span id="langLabel">ES</span>
+        </button>
+        <button class="tgl" id="themeToggle" aria-label="Cambiar tema claro/oscuro">
+          <svg class="sun" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2m0 16v2M4.9 4.9l1.4 1.4m11.4 11.4 1.4 1.4M2 12h2m16 0h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>
+          <svg class="moon" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8Z"/></svg>
+        </button>
+        <a class="hdr-cta" href="https://wa.me/5493875454070" target="_blank" rel="noopener"><span data-i18n="chat">Chat IA</span>
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M5 12h14m-6-6 6 6-6 6"/></svg>
+        </a>
+        <!-- Menú mobile: <details> con popover e items escalonados -->
+        <details class="menu" id="menu">
+          <summary aria-label="Abrir menú">
+            <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
+          </summary>
+          <div class="menu-pop">
+            <a href="#top" style="--i:0" data-i18n="nav_inicio">Inicio</a>
+            <a href="#servicios" style="--i:1" data-i18n="nav_prod">Productos</a>
+            <a href="#proyectos" style="--i:2" data-i18n="nav_proy">Proyectos</a>
+            <a href="#sobre-mi" style="--i:3" data-i18n="nav_sobre">Sobre mí</a>
+            <a href="#contacto" style="--i:4" data-i18n="nav_contacto">Contacto</a>
+          </div>
+        </details>
+      </div>
+      </div>
+    </header>
+  </div>
+
+  <main id="main">
+    <!-- ============ 3. HERO ============ -->
+    <section class="hero" id="top">
+      <!-- 4 screenshots flotantes: --x/--y posición, --rot rotación,
+           --dur/--delay del bob, data-depth (2..4) para el parallax. -->
+      <div class="float" style="--x: 2%;  --y: 6%;"  data-depth="3">
+        <div class="float-card" style="--rot: -8deg; --dur: 5.5s; width: 340px;">
+          <!-- PROMPT HIGGSFIELD: "Screenshot de dashboard CRM con pipeline kanban, UI SaaS limpia,
+               acentos celeste #52BFFE sobre fondo blanco, tipografía mono, alta fidelidad, 680x440" -->
+          <img src="assets/ph-hero-1.svg" width="680" height="440" alt="Panel CRM de DT-System con pipeline kanban" loading="lazy">
+        </div>
+      </div>
+      <div class="float" style="--x: 74%; --y: 2%;"  data-depth="4">
+        <div class="float-card" style="--rot: 6deg; --dur: 6.5s; --delay: -2s; width: 280px;">
+          <!-- PROMPT HIGGSFIELD: "Captura de conversación de WhatsApp con bot IA respondiendo a un lead,
+               burbujas verdes, mockup limpio flotante, acento celeste #52BFFE, 560x400" -->
+          <img src="assets/ph-hero-2.svg" width="560" height="400" alt="Bot de WhatsApp con IA respondiendo a un lead" loading="lazy">
+        </div>
+      </div>
+      <div class="float" style="--x: 1%;  --y: 62%;" data-depth="2">
+        <div class="float-card" style="--rot: 4deg; --dur: 7s; --delay: -1s; width: 310px;">
+          <!-- PROMPT HIGGSFIELD: "Screenshot de módulo de finanzas con gráfico P&L, tarjetas de métricas,
+               UI SaaS moderna, paleta celeste #52BFFE, fondo claro, 620x420" -->
+          <img src="assets/ph-hero-3.svg" width="620" height="420" alt="Módulo de finanzas de DT-System con P&L" loading="lazy">
+        </div>
+      </div>
+      <div class="float" style="--x: 76%; --y: 58%;" data-depth="3">
+        <div class="float-card" style="--rot: -10deg; --dur: 6s; --delay: -3s; width: 270px;">
+          <!-- PROMPT HIGGSFIELD: "Mockup de presupuesto PDF profesional generado por software,
+               encabezado con logo, tabla de items, acento celeste #52BFFE, 540x380" -->
+          <img src="assets/ph-hero-4.svg" width="540" height="380" alt="Presupuesto PDF generado por DT-System" loading="lazy">
+        </div>
+      </div>
+
+      <div class="hero-inner">
+        <h1><span data-i18n="hero_t">Haciendo realidad tu</span> <br><span class="tw" id="tw" data-words="idea|web|tienda online|CRM|app" data-words-en="idea|website|online store|CRM|app"></span><span class="caret" aria-hidden="true"></span></h1>
+        <p class="sub" data-i18n="hero_sub">Webs, tiendas online y CRM a medida — con automatización e IA cuando suma. Construido en Salta, usado en producción.</p>
+        <div class="hero-ctas">
+          <!-- Botón estilo Clean Slate: gradiente animado + anillo blanco + halo -->
+          <a class="btn btn-ai" href="https://wa.me/5493875454070" target="_blank" rel="noopener"><span data-i18n="cta_hero">Hablá con mi asistente →</span></a>
+          <a class="btn btn-sec" href="#proyectos" data-i18n="cta_work">Ver mi trabajo</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ 4. MOBILE SHOWCASE ============ -->
+    <section class="mobile-sec">
+      <div class="mobile-head wrap">
+        <span class="eyebrow" data-i18n="mob_eb">Mobile-first de verdad</span>
+        <h2 class="h2" data-i18n="mob_h">Hecho para cómo se usa en serio: desde el celular.</h2>
+      </div>
+
+      <!-- Marquee infinito: el track se duplica con aria-hidden="true"
+           y anima translateX(-100%) → loop perfecto sin salto. -->
+      <div class="marquee" style="--speed: 10s;">
+        <div class="mtrack">
+          <div class="phone"><img src="assets/ph-mobile-1.svg" width="360" height="780" alt="Dashboard de DT-System en mobile" loading="lazy"></div>
+          <div class="phone"><img src="assets/ph-mobile-2.svg" width="360" height="780" alt="Kanban de DT-System en mobile" loading="lazy"></div>
+          <div class="phone"><img src="assets/ph-mobile-3.svg" width="360" height="780" alt="Chat del bot en mobile" loading="lazy"></div>
+          <div class="phone"><img src="assets/ph-mobile-4.svg" width="360" height="780" alt="Facturación de DT-System en mobile" loading="lazy"></div>
+          <div class="phone"><img src="assets/ph-mobile-1.svg" width="360" height="780" alt="" loading="lazy"></div>
+          <div class="phone"><img src="assets/ph-mobile-2.svg" width="360" height="780" alt="" loading="lazy"></div>
+        </div>
+        <div class="mtrack" aria-hidden="true">
+          <div class="phone"><img src="assets/ph-mobile-1.svg" width="360" height="780" alt="" loading="lazy"></div>
+          <div class="phone"><img src="assets/ph-mobile-2.svg" width="360" height="780" alt="" loading="lazy"></div>
+          <div class="phone"><img src="assets/ph-mobile-3.svg" width="360" height="780" alt="" loading="lazy"></div>
+          <div class="phone"><img src="assets/ph-mobile-4.svg" width="360" height="780" alt="" loading="lazy"></div>
+          <div class="phone"><img src="assets/ph-mobile-1.svg" width="360" height="780" alt="" loading="lazy"></div>
+          <div class="phone"><img src="assets/ph-mobile-2.svg" width="360" height="780" alt="" loading="lazy"></div>
+        </div>
+      </div>
+      <!-- Segunda fila: dirección opuesta y velocidad distinta -->
+      <div class="marquee rev" style="--speed: 13s;">
+        <div class="mtrack">
+          <div class="phone"><img src="assets/ph-mobile-3.svg" width="360" height="780" alt="Detalle de proyecto en mobile" loading="lazy"></div>
+          <div class="phone"><img src="assets/ph-mobile-4.svg" width="360" height="780" alt="Finanzas en mobile" loading="lazy"></div>
+          <div class="phone"><img src="assets/ph-mobile-1.svg" width="360" height="780" alt="Portal del cliente en mobile" loading="lazy"></div>
+          <div class="phone"><img src="assets/ph-mobile-2.svg" width="360" height="780" alt="Tareas en mobile" loading="lazy"></div>
+          <div class="phone"><img src="assets/ph-mobile-3.svg" width="360" height="780" alt="" loading="lazy"></div>
+          <div class="phone"><img src="assets/ph-mobile-4.svg" width="360" height="780" alt="" loading="lazy"></div>
+        </div>
+        <div class="mtrack" aria-hidden="true">
+          <div class="phone"><img src="assets/ph-mobile-3.svg" width="360" height="780" alt="" loading="lazy"></div>
+          <div class="phone"><img src="assets/ph-mobile-4.svg" width="360" height="780" alt="" loading="lazy"></div>
+          <div class="phone"><img src="assets/ph-mobile-1.svg" width="360" height="780" alt="" loading="lazy"></div>
+          <div class="phone"><img src="assets/ph-mobile-2.svg" width="360" height="780" alt="" loading="lazy"></div>
+          <div class="phone"><img src="assets/ph-mobile-3.svg" width="360" height="780" alt="" loading="lazy"></div>
+          <div class="phone"><img src="assets/ph-mobile-4.svg" width="360" height="780" alt="" loading="lazy"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ 5. SERVICIOS ============ -->
+    <section id="servicios">
+      <div class="wrap">
+        <div class="sec-head">
+          <span class="eyebrow" data-i18n="srv_eb">Productos</span>
+          <h2 class="h2" data-i18n="srv_h">Elegí por dónde empezar.</h2>
+          <p class="sub" data-i18n="srv_sub">Cuatro formas de trabajar conmigo, de la web con bot al sistema completo.</p>
+          <button class="acc-reset" id="accReset" hidden data-i18n="acc_reset">✕ Cerrar detalle</button>
+        </div>
+
+        <!-- Acordeón horizontal estilo Stökt (full-bleed): el panel abierto
+             crece y su contenido entra en cascada; los cerrados son franjas
+             con el título vertical. -->
+        <div class="acc" id="acc">
+          <article class="acc-p">
+            <button class="acc-tab" type="button" aria-expanded="false" data-cursor="Ver detalle →" data-cursor-en="See details →"><span class="acc-vert" data-i18n="s1_h">Webs y Tiendas</span></button>
+            <!-- Cover: lo que se ve en la grilla inicial (imagen animada + título) -->
+            <div class="acc-cover" aria-hidden="true">
+              <span class="acc-pill" data-i18n="acc_pill">Ver detalle →</span>
+              <img src="assets/ph-srv-1.svg" width="640" height="400" alt="" loading="lazy">
+              <h3 data-i18n="s1_h">Webs y Tiendas</h3>
+            </div>
+            <div class="acc-body">
+              <div class="acc-txt">
+                <span class="srv-num">01</span>
+                <h3 data-i18n="s1_h">Webs y Tiendas</h3>
+                <p class="srv-tag" data-i18n="s1_tag">Landings, webs corporativas y e-commerce que venden.</p>
+                <ul class="acc-list">
+                  <li data-i18n="s1_l1">Landing y web corporativa a medida</li>
+                  <li data-i18n="s1_l2">Tienda online con pagos y envíos</li>
+                  <li data-i18n="s1_l3">SEO, analítica y bot de WhatsApp integrado</li>
+                </ul>
+                <p class="srv-price" data-i18n="price">Precio: <b>A medida</b></p>
+                <a class="srv-cta" href="https://wa.me/5493875454070" target="_blank" rel="noopener" data-i18n="see_more">Ver más →</a>
+              </div>
+              <div class="acc-img">
+                <!-- PROMPT HIGGSFIELD: "Objeto 3D flotante: laptop minimalista con tienda online en pantalla, estilo producto Stökt, fondo liso oscuro, acento celeste #52BFFE, 640x400" -->
+                <img src="assets/ph-srv-1.svg" width="640" height="400" alt="Webs y tiendas online" loading="lazy">
+              </div>
+            </div>
+          </article>
+
+          <article class="acc-p">
+            <span class="ribbon" data-i18n="ribbon">Más pedido</span>
+            <button class="acc-tab" type="button" aria-expanded="false" data-cursor="Ver detalle →" data-cursor-en="See details →"><span class="acc-vert" data-i18n="s2_h">Sistemas y CRM</span></button>
+            <!-- Cover: lo que se ve en la grilla inicial (imagen animada + título) -->
+            <div class="acc-cover" aria-hidden="true">
+              <span class="acc-pill" data-i18n="acc_pill">Ver detalle →</span>
+              <img src="assets/ph-srv-2.svg" width="640" height="400" alt="" loading="lazy">
+              <h3 data-i18n="s2_h">Sistemas y CRM</h3>
+            </div>
+            <div class="acc-body">
+              <div class="acc-txt">
+                <span class="srv-num">02</span>
+                <h3 data-i18n="s2_h">Sistemas y CRM</h3>
+                <p class="srv-tag" data-i18n="s2_tag">Software para tu negocio: CRM, panel y portal, como DT-System.</p>
+                <ul class="acc-list">
+                  <li data-i18n="s2_l1">CRM con pipeline, proyectos y tareas</li>
+                  <li data-i18n="s2_l2">Presupuestos PDF, facturación y P&amp;L</li>
+                  <li data-i18n="s2_l3">Portal del cliente y reportes</li>
+                </ul>
+                <p class="srv-price" data-i18n="price">Precio: <b>A medida</b></p>
+                <a class="srv-cta" href="https://wa.me/5493875454070" target="_blank" rel="noopener" data-i18n="see_more">Ver más →</a>
+              </div>
+              <div class="acc-img">
+                <!-- PROMPT HIGGSFIELD: "Objeto 3D flotante: dashboard de vidrio con kanban en relieve, estilo producto premium, fondo oscuro, acento celeste #52BFFE, 640x400" -->
+                <img src="assets/ph-srv-2.svg" width="640" height="400" alt="Sistemas informáticos y CRM a medida" loading="lazy">
+              </div>
+            </div>
+          </article>
+
+          <article class="acc-p">
+            <button class="acc-tab" type="button" aria-expanded="false" data-cursor="Ver detalle →" data-cursor-en="See details →"><span class="acc-vert" data-i18n="s3_h">Apps móviles</span></button>
+            <!-- Cover: lo que se ve en la grilla inicial (imagen animada + título) -->
+            <div class="acc-cover" aria-hidden="true">
+              <span class="acc-pill" data-i18n="acc_pill">Ver detalle →</span>
+              <img src="assets/ph-srv-3.svg" width="640" height="400" alt="" loading="lazy">
+              <h3 data-i18n="s3_h">Apps móviles</h3>
+            </div>
+            <div class="acc-body">
+              <div class="acc-txt">
+                <span class="srv-num">03</span>
+                <h3 data-i18n="s3_h">Apps móviles</h3>
+                <p class="srv-tag" data-i18n="s3_tag">Apps Android y iPhone a medida, del diseño a la store.</p>
+                <ul class="acc-list">
+                  <li data-i18n="s3_l1">Diseño mobile-first y prototipo</li>
+                  <li data-i18n="s3_l2">Desarrollo multiplataforma</li>
+                  <li data-i18n="s3_l3">Publicación en Google Play y App Store</li>
+                </ul>
+                <p class="srv-price" data-i18n="price">Precio: <b>A medida</b></p>
+                <a class="srv-cta" href="https://wa.me/5493875454070" target="_blank" rel="noopener" data-i18n="see_more">Ver más →</a>
+              </div>
+              <div class="acc-img">
+                <!-- PROMPT HIGGSFIELD: "Objeto 3D flotante: dos teléfonos (Android y iPhone) entrelazados, estilo producto, fondo oscuro, acento celeste #52BFFE, 640x400" -->
+                <img src="assets/ph-srv-3.svg" width="640" height="400" alt="Apps móviles Android y iPhone" loading="lazy">
+              </div>
+            </div>
+          </article>
+
+          <article class="acc-p">
+            <button class="acc-tab" type="button" aria-expanded="false" data-cursor="Ver detalle →" data-cursor-en="See details →"><span class="acc-vert" data-i18n="s4_h">Automatización IA</span></button>
+            <!-- Cover: lo que se ve en la grilla inicial (imagen animada + título) -->
+            <div class="acc-cover" aria-hidden="true">
+              <span class="acc-pill" data-i18n="acc_pill">Ver detalle →</span>
+              <img src="assets/ph-srv-4.svg" width="640" height="400" alt="" loading="lazy">
+              <h3 data-i18n="s4_h">Automatización IA</h3>
+            </div>
+            <div class="acc-body">
+              <div class="acc-txt">
+                <span class="srv-num">04</span>
+                <h3 data-i18n="s4_h">Automatización IA</h3>
+                <p class="srv-tag" data-i18n="s4_tag">Procesos que se hacen solos: IA + integraciones.</p>
+                <ul class="acc-list">
+                  <li data-i18n="s4_l1">Bots de WhatsApp con IA (Claude)</li>
+                  <li data-i18n="s4_l2">Flujos M365/Azure y Graph API</li>
+                  <li data-i18n="s4_l3">Integraciones entre tus herramientas</li>
+                </ul>
+                <p class="srv-price" data-i18n="price">Precio: <b>A medida</b></p>
+                <a class="srv-cta" href="https://wa.me/5493875454070" target="_blank" rel="noopener" data-i18n="see_more">Ver más →</a>
+              </div>
+              <div class="acc-img">
+                <!-- PROMPT HIGGSFIELD: "Objeto 3D flotante: engranaje robótico con destello IA, estilo producto tech, fondo oscuro, acento celeste #52BFFE, 640x400" -->
+                <img src="assets/ph-srv-4.svg" width="640" height="400" alt="Automatización de procesos con IA" loading="lazy">
+              </div>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ 6. LAPTOP SHOWCASE (laptop 100% CSS) ============ -->
+    <section class="laptop-sec" id="dt-system">
+      <div class="wrap">
+        <span class="eyebrow" data-i18n="lap_eb">Miralo funcionando</span>
+        <h2 class="h2" data-i18n="lap_h">Así trabaja DT-System.</h2>
+        <p class="sub" style="margin: 0 auto;" data-i18n="lap_sub">Del lead en WhatsApp a la factura cobrada, todo en un solo panel.</p>
+
+        <div class="laptop">
+          <div class="lap-lid">
+            <span class="lap-cam" aria-hidden="true"></span>
+            <div class="lap-screen">
+              <!-- PLACEHOLDER VIDEO: subir assets/dt-system-demo.mp4 (screencast del panel, 16:10).
+                   Autoplay muted loop playsinline + poster; se pausa fuera del viewport (IO 0.35). -->
+              <video id="lapVideo" autoplay muted loop playsinline
+                     poster="assets/ph-laptop-poster.svg"
+                     aria-label="Video del panel DT-System funcionando">
+                <source src="assets/dt-system-demo.mp4" type="video/mp4">
+              </video>
+            </div>
+          </div>
+          <div class="lap-hinge" aria-hidden="true"></div>
+          <div class="lap-base" aria-hidden="true">
+            <span class="lap-notch"></span>
+            <span class="lap-keys"></span>
+            <span class="lap-pad"></span>
+            <span class="lap-led"></span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ 7. SOBRE MÍ — BENTO GRID (franja invertida estilo Stökt) ============ -->
+    <section class="bento-sec" id="sobre-mi">
+      <div class="wrap">
+        <div class="sec-head">
+          <span class="eyebrow" data-i18n="about_eb">Sobre mí</span>
+          <h2 class="h2" data-i18n="about_h">La persona detrás del sistema.</h2>
+        </div>
+
+        <div class="bento">
+          <!-- Columna de stats con count-up (IntersectionObserver, ~1s) -->
+          <div class="b-stats">
+            <div class="bcard b-stat"><div class="bcard-in"><b data-count="5" data-suffix="+">5+</b><span data-i18n="st1">Años en IT</span></div></div>
+            <div class="bcard b-stat"><div class="bcard-in"><b data-count="24" data-suffix="/7">24/7</b><span data-i18n="st2">Bot atendiendo leads</span></div></div>
+            <div class="bcard b-stat"><div class="bcard-in"><b data-count="100" data-suffix="%">100%</b><span data-i18n="st3">Proyectos en producción</span></div></div>
+          </div>
+
+          <!-- Globo punteado en canvas con Salta marcada (estilo Stökt) -->
+          <div class="bcard b-globe">
+            <div class="bcard-in">
+              <h3 data-i18n="globe_h">Basado en Salta, Argentina</h3>
+              <span class="avail"><i class="dotlive" aria-hidden="true"></i> <span data-i18n="avail">DISPONIBLE · REMOTO WORLDWIDE</span></span>
+              <div class="globe-wrap">
+                <canvas id="globeCanvas" role="img" aria-label="Globo terráqueo punteado con Salta, Argentina, marcada"></canvas>
+              </div>
+            </div>
+          </div>
+
+          <!-- Card founder (la grande) — con border beam sincronizado -->
+          <div class="bcard b-founder beam-card">
+            <div class="bcard-in founder">
+              <!-- PROMPT HIGGSFIELD (desde una foto tuya): "Retrato editorial duotono:
+                   sombras #0a0a0a y luces celeste #52BFFE, alto contraste, grano fino,
+                   fondo liso oscuro, encuadre cuadrado 1:1, estilo tech minimalista, 800x800" -->
+              <figure class="founder-fig">
+                <img src="assets/ph-founder.svg" width="800" height="800" alt="David Taranto, retrato en duotono celeste" loading="lazy">
+                <figcaption class="founder-id">
+                  <h3>David Taranto</h3>
+                  <span class="role">SYSADMIN &amp; AI BUILDER — DT SYSTEM</span>
+                </figcaption>
+              </figure>
+              <div class="founder-txt">
+                <h4 data-i18n="f_h">El Founder</h4>
+                <p data-i18n="f_p1">SysAdmin en JBKnowledge (empresa global) desde Salta, Argentina. Estudiante de Ingeniería Informática, 5+ años administrando M365, Azure y automatización.</p>
+                <p data-i18n="f_p2">Construyo DT-System: un bot de WhatsApp con IA que atiende y califica leads 24/7, más un CRM completo con pipeline, presupuestos y finanzas. Corre en producción.</p>
+                <p data-i18n="f_p3">Trabajo de la idea al deploy: solo cuando alcanza, armando equipo cuando el proyecto lo pide.</p>
+                <a class="founder-cta" href="https://wa.me/5493875454070" target="_blank" rel="noopener"><span data-i18n="f_cta">Trabajar conmigo</span>
+                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" style="transform: rotate(-45deg);" aria-hidden="true"><path d="M5 12h14m-6-6 6 6-6 6"/></svg>
+                </a>
+              </div>
+            </div>
+          </div>
+
+          <!-- Caja de herramientas: marquee de chips (texto mono; reemplazable por SVGs de logos) -->
+          <div class="bcard b-tools">
+            <div class="bcard-in">
+              <h3 data-i18n="tools_h">Stack de todos los días</h3>
+              <div class="marquee chips-mq">
+                <div class="mtrack">
+                  <span class="chip" title="React"><svg viewBox="-12 -12 24 24" width="30" height="30" role="img" aria-label="React"><g stroke="#61DAFB" stroke-width="1.1" fill="none"><ellipse rx="10.5" ry="4.2"></ellipse><ellipse rx="10.5" ry="4.2" transform="rotate(60)"></ellipse><ellipse rx="10.5" ry="4.2" transform="rotate(120)"></ellipse></g><circle r="1.9" fill="#61DAFB"></circle></svg></span><span class="chip" title="TypeScript"><svg viewBox="0 0 24 24" width="27" height="27" role="img" aria-label="TypeScript"><rect width="24" height="24" rx="4" fill="#3178C6"></rect><text x="12" y="16.5" text-anchor="middle" font-family="Arial, sans-serif" font-size="10" font-weight="700" fill="#FFFFFF">TS</text></svg></span><span class="chip chip-word" title="Next.js">NEXT.js</span><span class="chip" title="Tailwind CSS"><svg viewBox="0 0 24 24" width="30" height="30" role="img" aria-label="Tailwind CSS"><path d="M12 6c-2.7 0-4.3 1.3-5 4 1-1.3 2.2-1.8 3.5-1.5.75.2 1.3.7 1.9 1.4.9 1 2 2.1 4.3 2.1 2.7 0 4.3-1.3 5-4-1 1.3-2.2 1.8-3.5 1.5-.75-.2-1.3-.7-1.9-1.4C15.4 7.1 14.3 6 12 6ZM7 12c-2.7 0-4.3 1.3-5 4 1-1.3 2.2-1.8 3.5-1.5.75.2 1.3.7 1.9 1.4.9 1 2 2.1 4.3 2.1 2.7 0 4.3-1.3 5-4-1 1.3-2.2 1.8-3.5 1.5-.75-.2-1.3-.7-1.9-1.4C10.4 13.1 9.3 12 7 12Z" fill="#38BDF8"></path></svg></span><span class="chip" title="Node.js"><svg viewBox="0 0 24 24" width="27" height="27" role="img" aria-label="Node.js"><path d="M12 1.6 21.2 6.9v10.2L12 22.4 2.8 17.1V6.9Z" fill="#539E43"></path><text x="12" y="15.6" text-anchor="middle" font-family="Arial, sans-serif" font-size="8" font-weight="700" fill="#FFFFFF">JS</text></svg></span><span class="chip" title="Python"><svg viewBox="0 0 24 24" width="27" height="27" role="img" aria-label="Python"><path d="M11.9 1.5c-2.6 0-4.4 1.1-4.4 3v2.9h4.5v.9H5c-2 0-3.5 1.6-3.5 4.2S3 16.7 5 16.7h2.2v-2.6c0-1.9 1.7-3.4 3.7-3.4h4.6c1.7 0 3-1.4 3-3.1V4.5c0-1.9-1.9-3-6.6-3ZM9.7 3.4a1.1 1.1 0 1 1 0 2.2 1.1 1.1 0 0 1 0-2.2Z" fill="#3776AB"></path><path d="M12.1 22.5c2.6 0 4.4-1.1 4.4-3v-2.9H12v-.9h7c2 0 3.5-1.6 3.5-4.2S21 7.3 19 7.3h-2.2v2.6c0 1.9-1.7 3.4-3.7 3.4H8.5c-1.7 0-3 1.4-3 3.1v3.1c0 1.9 1.9 3 6.6 3Zm2.2-1.9a1.1 1.1 0 1 1 0-2.2 1.1 1.1 0 0 1 0 2.2Z" fill="#FFD43B"></path></svg></span><span class="chip" title="PowerShell"><svg viewBox="0 0 24 24" width="27" height="27" role="img" aria-label="PowerShell"><rect width="24" height="24" rx="4" fill="#2671BE"></rect><path d="m6 7 5 5-5 5" stroke="#FFFFFF" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"></path><path d="M12.5 17h5.5" stroke="#FFFFFF" stroke-width="2" stroke-linecap="round"></path></svg></span><span class="chip" title="Microsoft Azure"><svg viewBox="0 0 24 24" width="27" height="27" role="img" aria-label="Microsoft Azure"><path d="M13.6 2.5 5.2 19.8c-.2.4.1.9.6.9h4.1c.3 0 .5-.2.6-.4l1.6-4 4.7 4.2c.1.1.3.2.5.2h5c.5 0 .8-.6.5-1L13.6 2.5Z" fill="#0078D4"></path><path d="M13.6 2.5c-.2-.5-.9-.5-1.1 0L8.9 11l3.2 8.5 1.5-3.9-3-3.6 3.9-9.5Z" fill="#5EA0EF"></path></svg></span><span class="chip" title="Microsoft 365"><svg viewBox="0 0 24 24" width="26" height="26" role="img" aria-label="Microsoft 365"><rect x="2" y="2" width="9.4" height="9.4" fill="#F25022"></rect><rect x="12.6" y="2" width="9.4" height="9.4" fill="#7FBA00"></rect><rect x="2" y="12.6" width="9.4" height="9.4" fill="#00A4EF"></rect><rect x="12.6" y="12.6" width="9.4" height="9.4" fill="#FFB900"></rect></svg></span><span class="chip" title="Claude (Anthropic)"><svg viewBox="0 0 24 24" width="28" height="28" role="img" aria-label="Claude"><path d="M12 2.2l1.3 6 4.4-4.3-2.9 5.4 6-.9-5.4 2.9 5.4 2.9-6-.9 2.9 5.4-4.4-4.3-1.3 6-1.3-6-4.4 4.3 2.9-5.4-6 .9 5.4-2.9-5.4-2.9 6 .9-2.9-5.4 4.4 4.3z" fill="#D97757"></path></svg></span><span class="chip chip-word" title="GitHub">GitHub</span><span class="chip chip-word" title="Railway">Railway</span><span class="chip chip-word" title="Turso" style="color: #4FF8D2;">turso</span>
+                </div>
+                <div class="mtrack" aria-hidden="true">
+                  <span class="chip" title="React"><svg viewBox="-12 -12 24 24" width="30" height="30" role="img" aria-label="React"><g stroke="#61DAFB" stroke-width="1.1" fill="none"><ellipse rx="10.5" ry="4.2"></ellipse><ellipse rx="10.5" ry="4.2" transform="rotate(60)"></ellipse><ellipse rx="10.5" ry="4.2" transform="rotate(120)"></ellipse></g><circle r="1.9" fill="#61DAFB"></circle></svg></span><span class="chip" title="TypeScript"><svg viewBox="0 0 24 24" width="27" height="27" role="img" aria-label="TypeScript"><rect width="24" height="24" rx="4" fill="#3178C6"></rect><text x="12" y="16.5" text-anchor="middle" font-family="Arial, sans-serif" font-size="10" font-weight="700" fill="#FFFFFF">TS</text></svg></span><span class="chip chip-word" title="Next.js">NEXT.js</span><span class="chip" title="Tailwind CSS"><svg viewBox="0 0 24 24" width="30" height="30" role="img" aria-label="Tailwind CSS"><path d="M12 6c-2.7 0-4.3 1.3-5 4 1-1.3 2.2-1.8 3.5-1.5.75.2 1.3.7 1.9 1.4.9 1 2 2.1 4.3 2.1 2.7 0 4.3-1.3 5-4-1 1.3-2.2 1.8-3.5 1.5-.75-.2-1.3-.7-1.9-1.4C15.4 7.1 14.3 6 12 6ZM7 12c-2.7 0-4.3 1.3-5 4 1-1.3 2.2-1.8 3.5-1.5.75.2 1.3.7 1.9 1.4.9 1 2 2.1 4.3 2.1 2.7 0 4.3-1.3 5-4-1 1.3-2.2 1.8-3.5 1.5-.75-.2-1.3-.7-1.9-1.4C10.4 13.1 9.3 12 7 12Z" fill="#38BDF8"></path></svg></span><span class="chip" title="Node.js"><svg viewBox="0 0 24 24" width="27" height="27" role="img" aria-label="Node.js"><path d="M12 1.6 21.2 6.9v10.2L12 22.4 2.8 17.1V6.9Z" fill="#539E43"></path><text x="12" y="15.6" text-anchor="middle" font-family="Arial, sans-serif" font-size="8" font-weight="700" fill="#FFFFFF">JS</text></svg></span><span class="chip" title="Python"><svg viewBox="0 0 24 24" width="27" height="27" role="img" aria-label="Python"><path d="M11.9 1.5c-2.6 0-4.4 1.1-4.4 3v2.9h4.5v.9H5c-2 0-3.5 1.6-3.5 4.2S3 16.7 5 16.7h2.2v-2.6c0-1.9 1.7-3.4 3.7-3.4h4.6c1.7 0 3-1.4 3-3.1V4.5c0-1.9-1.9-3-6.6-3ZM9.7 3.4a1.1 1.1 0 1 1 0 2.2 1.1 1.1 0 0 1 0-2.2Z" fill="#3776AB"></path><path d="M12.1 22.5c2.6 0 4.4-1.1 4.4-3v-2.9H12v-.9h7c2 0 3.5-1.6 3.5-4.2S21 7.3 19 7.3h-2.2v2.6c0 1.9-1.7 3.4-3.7 3.4H8.5c-1.7 0-3 1.4-3 3.1v3.1c0 1.9 1.9 3 6.6 3Zm2.2-1.9a1.1 1.1 0 1 1 0-2.2 1.1 1.1 0 0 1 0 2.2Z" fill="#FFD43B"></path></svg></span><span class="chip" title="PowerShell"><svg viewBox="0 0 24 24" width="27" height="27" role="img" aria-label="PowerShell"><rect width="24" height="24" rx="4" fill="#2671BE"></rect><path d="m6 7 5 5-5 5" stroke="#FFFFFF" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"></path><path d="M12.5 17h5.5" stroke="#FFFFFF" stroke-width="2" stroke-linecap="round"></path></svg></span><span class="chip" title="Microsoft Azure"><svg viewBox="0 0 24 24" width="27" height="27" role="img" aria-label="Microsoft Azure"><path d="M13.6 2.5 5.2 19.8c-.2.4.1.9.6.9h4.1c.3 0 .5-.2.6-.4l1.6-4 4.7 4.2c.1.1.3.2.5.2h5c.5 0 .8-.6.5-1L13.6 2.5Z" fill="#0078D4"></path><path d="M13.6 2.5c-.2-.5-.9-.5-1.1 0L8.9 11l3.2 8.5 1.5-3.9-3-3.6 3.9-9.5Z" fill="#5EA0EF"></path></svg></span><span class="chip" title="Microsoft 365"><svg viewBox="0 0 24 24" width="26" height="26" role="img" aria-label="Microsoft 365"><rect x="2" y="2" width="9.4" height="9.4" fill="#F25022"></rect><rect x="12.6" y="2" width="9.4" height="9.4" fill="#7FBA00"></rect><rect x="2" y="12.6" width="9.4" height="9.4" fill="#00A4EF"></rect><rect x="12.6" y="12.6" width="9.4" height="9.4" fill="#FFB900"></rect></svg></span><span class="chip" title="Claude (Anthropic)"><svg viewBox="0 0 24 24" width="28" height="28" role="img" aria-label="Claude"><path d="M12 2.2l1.3 6 4.4-4.3-2.9 5.4 6-.9-5.4 2.9 5.4 2.9-6-.9 2.9 5.4-4.4-4.3-1.3 6-1.3-6-4.4 4.3 2.9-5.4-6 .9 5.4-2.9-5.4-2.9 6 .9-2.9-5.4 4.4 4.3z" fill="#D97757"></path></svg></span><span class="chip chip-word" title="GitHub">GitHub</span><span class="chip chip-word" title="Railway">Railway</span><span class="chip chip-word" title="Turso" style="color: #4FF8D2;">turso</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ 7b. TESTIMONIOS ============ -->
+    <!-- Oculta hasta cargar reviews reales: sacar `hidden` y el display:none, y reemplazar los [REEMPLAZAR]. -->
+    <section id="testimonios" hidden style="display:none">
+      <div class="wrap" style="text-align: center;">
+        <span class="eyebrow" data-i18n="test_eb">Confianza</span>
+        <h2 class="h2" data-i18n="test_h">Resultados, no promesas.</h2>
+        <span class="astnote" data-i18n="test_note">*Palabra de clientes</span>
+
+        <!-- Review destacada -->
+        <figure class="review">
+          <svg class="review-q" width="30" height="22" viewBox="0 0 30 22" fill="currentColor" aria-hidden="true"><path d="M0 22V11.6C0 4.9 4 .8 10.7 0l1.2 3.4c-3.8.9-5.7 3-5.9 6.2H12V22H0Zm18 0V11.6C18 4.9 22 .8 28.7 0L30 3.4c-3.9.9-5.8 3-6 6.2h6.1V22H18Z"/></svg>
+          <!-- [REEMPLAZAR] review real destacada -->
+          <p>“Antes se me escapaban consultas todos los fines de semana. Ahora el bot las responde al toque, me agenda la reunión y yo solo entro a cerrar. Se pagó solo el primer mes.”</p>
+          <figcaption class="review-who">
+            <span class="avatar" aria-hidden="true">M</span>
+            <span><strong>[REEMPLAZAR] Nombre</strong> · dueño de comercio, Salta</span>
+            <span class="verified"><svg width="11" height="11" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 0 15 3.5 19.5 2.6 20.4 7.1 24.6 9 22.5 13 24.6 17 20.4 18.9 19.5 23.4 15 22.5 12 26 9 22.5 4.5 23.4 3.6 18.9-.6 17 1.5 13-.6 9 3.6 7.1 4.5 2.6 9 3.5Z" transform="scale(.9)"/><path d="m9.5 12.8 2 2 4-4.5" stroke="#fff" stroke-width="2" fill="none" stroke-linecap="round"/></svg> Cliente verificado</span>
+          </figcaption>
+        </figure>
+      </div>
+
+      <!-- Marquee lento de testimonios (~55s). [REEMPLAZAR] todos por reales. -->
+      <div class="marquee t-marquee" data-cursor="← Arrastrá →" data-cursor-en="← Drag →">
+        <div class="mtrack">
+          <div class="t-card"><p>“Me armó el sistema de presupuestos y cobros. Lo que antes era una planilla infernal ahora son dos clics.” [REEMPLAZAR]</p><div class="who"><span class="avatar">L</span>Lucía · estudio contable</div></div>
+          <div class="t-card"><p>“El bot atiende mejor que yo un lunes a la mañana. Los clientes ni se dan cuenta de que es IA.” [REEMPLAZAR]</p><div class="who"><span class="avatar" style="background:var(--amber)">J</span>Julián · agencia de viajes</div></div>
+          <div class="t-card"><p>“Migró todo nuestro offboarding a Azure. Cero errores desde entonces.” [REEMPLAZAR]</p><div class="who"><span class="avatar">R</span>Rodrigo · IT manager</div></div>
+          <div class="t-card"><p>“Entendió el negocio antes de escribir una línea de código. Eso no es común.” [REEMPLAZAR]</p><div class="who"><span class="avatar" style="background:var(--pink)">C</span>Carla · e-commerce</div></div>
+          <div class="t-card"><p>“Respuesta a leads en segundos, demos agendadas solas. Duplicamos consultas atendidas.” [REEMPLAZAR]</p><div class="who"><span class="avatar">F</span>Federico · freelancer</div></div>
+          <div class="t-card"><p>“El portal del cliente nos sacó el 80% de los mails de '¿cómo va mi proyecto?'.” [REEMPLAZAR]</p><div class="who"><span class="avatar">S</span>Sofía · consultora</div></div>
+        </div>
+        <div class="mtrack" aria-hidden="true">
+          <div class="t-card"><p>“Me armó el sistema de presupuestos y cobros. Lo que antes era una planilla infernal ahora son dos clics.” [REEMPLAZAR]</p><div class="who"><span class="avatar">L</span>Lucía · estudio contable</div></div>
+          <div class="t-card"><p>“El bot atiende mejor que yo un lunes a la mañana. Los clientes ni se dan cuenta de que es IA.” [REEMPLAZAR]</p><div class="who"><span class="avatar" style="background:var(--amber)">J</span>Julián · agencia de viajes</div></div>
+          <div class="t-card"><p>“Migró todo nuestro offboarding a Azure. Cero errores desde entonces.” [REEMPLAZAR]</p><div class="who"><span class="avatar">R</span>Rodrigo · IT manager</div></div>
+          <div class="t-card"><p>“Entendió el negocio antes de escribir una línea de código. Eso no es común.” [REEMPLAZAR]</p><div class="who"><span class="avatar" style="background:var(--pink)">C</span>Carla · e-commerce</div></div>
+          <div class="t-card"><p>“Respuesta a leads en segundos, demos agendadas solas. Duplicamos consultas atendidas.” [REEMPLAZAR]</p><div class="who"><span class="avatar">F</span>Federico · freelancer</div></div>
+          <div class="t-card"><p>“El portal del cliente nos sacó el 80% de los mails de '¿cómo va mi proyecto?'.” [REEMPLAZAR]</p><div class="who"><span class="avatar">S</span>Sofía · consultora</div></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ 8. DEMOS EN VIVO ============ -->
+    <section id="proyectos">
+      <div class="wrap">
+        <div class="sec-head">
+          <span class="eyebrow" data-i18n="demo_eb">Demos en vivo</span>
+          <h2 class="h2" data-i18n="demo_h">Probalo vos mismo.</h2>
+          <p class="sub" data-i18n="demo_sub">Nada de screenshots retocados: son los sistemas reales, corriendo ahora.</p>
+        </div>
+
+        <div class="demo-grid">
+          <a class="demo" data-cursor="Visitar ↗" data-cursor-en="Visit ↗" href="https://dt-systems.up.railway.app" target="_blank" rel="noopener">
+            <!-- PROMPT HIGGSFIELD: "Screenshot del panel DT-System, dashboard con kanban y métricas,
+                 dark UI, acento celeste #52BFFE, 640x400" -->
+            <img src="assets/ph-demo-1.svg" width="640" height="400" alt="Demo del panel DT-System" loading="lazy">
+            <div class="demo-info">
+              <div>
+                <h3>DT-System</h3>
+                <small data-i18n="d1s">Panel CRM · Next.js + Claude</small>
+              </div>
+              <span class="live"><i aria-hidden="true"></i> Live</span>
+            </div>
+            <div class="demo-ov" aria-hidden="true"><span>Visitar ↗</span></div>
+          </a>
+
+          <a class="demo" data-cursor="Visitar ↗" data-cursor-en="Visit ↗" href="https://davidtaranto96.github.io/Blog-AI" target="_blank" rel="noopener">
+            <!-- PROMPT HIGGSFIELD: "Screenshot de guía interactiva sobre agentes de IA, layout editorial
+                 limpio, código resaltado, acento celeste #52BFFE, 640x400" -->
+            <img src="assets/ph-demo-2.svg" width="640" height="400" alt="Guía interactiva Claude: de 0 a Agentes" loading="lazy">
+            <div class="demo-info">
+              <div>
+                <h3>Claude: de 0 a Agentes</h3>
+                <small data-i18n="d2s">Guía interactiva · gratis</small>
+              </div>
+              <span class="live"><i aria-hidden="true"></i> Live</span>
+            </div>
+            <div class="demo-ov" aria-hidden="true"><span>Visitar ↗</span></div>
+          </a>
+
+          <!-- PLACEHOLDER: próximo proyecto -->
+          <a class="demo" data-cursor="Visitar ↗" data-cursor-en="Visit ↗" href="#" target="_blank" rel="noopener">
+            <img src="assets/ph-demo-3.svg" width="640" height="400" alt="Próximo proyecto (en construcción)" loading="lazy">
+            <div class="demo-info">
+              <div>
+                <h3 data-i18n="d3h">Próximo proyecto</h3>
+                <small data-i18n="d3s">En construcción</small>
+              </div>
+              <span class="live" style="color: var(--muted); border-color: var(--line);"><i style="background: var(--muted); animation: none;" aria-hidden="true"></i> Soon</span>
+            </div>
+            <div class="demo-ov" aria-hidden="true"><span>Visitar ↗</span></div>
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ 9. CTA FINAL (gigante, estilo Stökt) ============ -->
+    <section id="contacto" class="cta-final">
+      <div class="wrap sec-head">
+        <span class="eyebrow" data-i18n="cta_eb">En serio</span>
+        <h2 class="h2 cta-giant" data-i18n="cta_h">HABLEMOS.</h2>
+        <span class="astnote" data-i18n="cta_note">*Sin vueltas</span>
+        <p class="sub" style="margin: 0 auto 36px;" data-i18n="cta_sub">¿Tenés una idea? Contámela. Mi asistente te responde al instante, entiende tu caso y me lo pasa masticado.</p>
+        <!-- ============ FORMULARIO IA ============
+             Sin backend (GitHub Pages): al enviar arma el mensaje y lo manda
+             al asistente de WhatsApp con el texto prellenado (wa.me?text=).
+             El borde vivo es el mismo border-beam sincronizado al reloj. -->
+        <form class="ai-form beam-card" id="aiForm" novalidate>
+          <div class="af-head">
+            <span class="af-dot" aria-hidden="true"></span>
+            <span data-i18n="af_head">Briefing para mi asistente</span>
+            <span class="af-badge" data-i18n="af_badge">IA · respuesta al instante</span>
+          </div>
+
+          <div class="af-grid">
+            <label class="af-field">
+              <span class="af-label"><i>( 01 )</i> <b data-i18n="af_name">Tu nombre</b></span>
+              <input type="text" name="nombre" autocomplete="name" required data-ph="af_name_ph" placeholder="Juan Pérez">
+            </label>
+            <label class="af-field">
+              <span class="af-label"><i>( 02 )</i> <b data-i18n="af_from">Tu negocio / proyecto</b></span>
+              <input type="text" name="negocio" data-ph="af_from_ph" placeholder="Tienda, estudio, emprendimiento…">
+            </label>
+            <label class="af-field">
+              <span class="af-label"><i>( 03 )</i> <b data-i18n="af_mail">Tu correo</b> <em data-i18n="af_opt">· opcional</em></span>
+              <input type="email" name="correo" autocomplete="email" data-ph="af_mail_ph" placeholder="vos@correo.com">
+            </label>
+            <label class="af-field">
+              <span class="af-label"><i>( 04 )</i> <b data-i18n="af_tel">Tu teléfono</b> <em data-i18n="af_opt">· opcional</em></span>
+              <input type="tel" name="telefono" autocomplete="tel" data-ph="af_tel_ph" placeholder="+54 387 000 0000">
+            </label>
+          </div>
+
+          <div class="af-field">
+            <span class="af-label"><i>( 05 )</i> <b data-i18n="af_type">¿Qué necesitás?</b></span>
+            <div class="af-chips" role="group" aria-label="Tipo de proyecto">
+              <button type="button" class="af-chip on" data-val="Web / Tienda" data-i18n="af_t1">Web / Tienda</button>
+              <button type="button" class="af-chip" data-val="Sistema / CRM" data-i18n="af_t2">Sistema / CRM</button>
+              <button type="button" class="af-chip" data-val="App móvil" data-i18n="af_t3">App móvil</button>
+              <button type="button" class="af-chip" data-val="Automatización IA" data-i18n="af_t4">Automatización IA</button>
+              <button type="button" class="af-chip" data-val="Otro" data-i18n="af_t5">Otro</button>
+            </div>
+          </div>
+
+          <label class="af-field">
+            <span class="af-label"><i>( 06 )</i> <b data-i18n="af_idea">Contame la idea</b></span>
+            <textarea name="idea" rows="1" required data-ph="af_idea_ph" placeholder="Quiero un sistema que…"></textarea>
+          </label>
+
+          <div class="af-foot">
+            <!-- Canal de envío: WhatsApp (wa.me?text=) o Email (mailto:) —
+                 ambos gratis, sin backend -->
+            <div class="af-via" role="group" aria-label="Canal de envío">
+              <span class="af-label"><b data-i18n="af_via">Enviar por</b></span>
+              <button type="button" class="af-chip on" data-via="wa">WhatsApp</button>
+              <button type="button" class="af-chip" data-via="mail">Email</button>
+            </div>
+            <span class="af-hint" id="afHint" data-i18n="af_hint">Se abre en WhatsApp con tu briefing listo para enviar.</span>
+            <button type="submit" class="btn btn-ai af-send">
+              <span class="spin" aria-hidden="true"></span>
+              <span data-i18n="af_send">Enviar al asistente</span> <span class="btn-arrow">→</span>
+            </button>
+          </div>
+        </form>
+
+        <div class="cta-links">
+          <a href="mailto:david_taranto@outlook.es">david_taranto@outlook.es</a>
+          <a href="https://linkedin.com/in/davidtaranto" target="_blank" rel="noopener">LinkedIn ↗</a>
+          <a href="https://wa.me/5493875454070" target="_blank" rel="noopener" data-i18n="af_direct">WhatsApp directo ↗</a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- ============ 10. FOOTER ============ -->
+  <footer class="footer">
+    <!-- Wordmark gigante detrás del contenido -->
+    <span class="footer-giant" aria-hidden="true">DT SYSTEM</span>
+    <div class="wrap">
+      <!-- Newsletter: novedades y promos. Sin backend: abre un mail de
+           suscripción prellenado. Para hacerlo automático: reemplazar el
+           handler por el endpoint de tu proveedor (Formspree/Buttondown). -->
+      <div class="nl-bar">
+        <div class="nl-txt">
+          <h4 data-i18n="nl_h">Novedades y promos</h4>
+          <p data-i18n="nl_p">Lanzamientos, promos y aprendizajes de construir con IA. Cero spam.</p>
+        </div>
+        <form class="nl-form" id="nlForm" novalidate>
+          <input type="email" name="email" required autocomplete="email" aria-label="Tu correo" data-ph="nl_ph" placeholder="vos@correo.com">
+          <button type="submit" class="btn btn-pri nl-btn" data-i18n="nl_btn">Sumarme →</button>
+        </form>
+      </div>
+      <div class="footer-cols">
+        <div class="f-brand">
+          <a class="logo" href="#top">dt<b>/</b>system</a>
+          <p>Automate the boring stuff, focus on what matters.</p>
+        </div>
+        <div class="f-col">
+          <h4><span data-i18n="f_proj">Proyectos</span> <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg></h4>
+          <ul>
+            <li><a href="#dt-system">DT-System</a></li>
+            <li><a href="https://davidtaranto96.github.io/Blog-AI" target="_blank" rel="noopener">Claude: de 0 a Agentes</a></li>
+            <li><a href="#proyectos">M365 Offboarding</a></li>
+          </ul>
+        </div>
+        <div class="f-col">
+          <h4><span data-i18n="f_rec">Recursos</span> <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg></h4>
+          <ul>
+            <li><a href="https://github.com/davidtaranto96" target="_blank" rel="noopener">GitHub</a></li>
+            <li><a href="https://davidtaranto96.github.io/Blog-AI" target="_blank" rel="noopener">Blog-AI</a></li>
+            <li><a href="https://linkedin.com/in/davidtaranto" target="_blank" rel="noopener">LinkedIn</a></li>
+          </ul>
+        </div>
+        <div class="f-col">
+          <h4><span data-i18n="f_cont">Contacto</span> <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg></h4>
+          <ul>
+            <li><a href="https://wa.me/5493875454070" target="_blank" rel="noopener" data-i18n="f_wa">WhatsApp (asistente IA)</a></li>
+            <li><a href="mailto:david_taranto@outlook.es">Email</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <span>© 2026 David Taranto</span>
+        <span class="status"><i aria-hidden="true"></i> Bot online 24/7</span>
+        <span class="made" data-i18n="made">Hecho en Salta, Argentina 🇦🇷</span>
+      </div>
+    </div>
+  </footer>
+
+  <script src="assets/land-data.js" defer></script>
+  <script src="main.js" defer></script>
+</body>
+</html>

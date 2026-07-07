@@ -1,0 +1,658 @@
+/* ============================================================
+   DT SYSTEM · WEB PERSONAL v2 — main.js
+   Sin dependencias. Comentado en español.
+   ============================================================ */
+(() => {
+  "use strict";
+  const $ = (s, c = document) => c.querySelector(s);
+  const $$ = (s, c = document) => [...c.querySelectorAll(s)];
+  const reduced = matchMedia("(prefers-reduced-motion: reduce)").matches;
+  let lang = localStorage.getItem("dt-lang") || "es";   // idioma actual (ES default)
+
+  /* ---------- 1. TEMA (light/dark) ----------
+     El default ya se aplicó con el script inline del <head> (evita flash).
+     Al togglear: View Transitions API con reveal circular desde el botón;
+     fallback: cross-fade de 0.55s agregando .theme-fade a <html>. */
+  const root = document.documentElement;
+  function applyTheme(next) { root.dataset.theme = next; localStorage.setItem("dt-theme", next); }
+
+  $("#themeToggle")?.addEventListener("click", (e) => {
+    const next = root.dataset.theme === "dark" ? "light" : "dark";
+    const btn = e.currentTarget.getBoundingClientRect();
+    const x = btn.left + btn.width / 2;
+    const y = btn.top + btn.height / 2;
+
+    if (document.startViewTransition && !reduced) {
+      // Guardamos el origen del reveal en variables (--theme-toggle-x/y)
+      root.style.setProperty("--theme-toggle-x", x + "px");
+      root.style.setProperty("--theme-toggle-y", y + "px");
+      const vt = document.startViewTransition(() => applyTheme(next));
+      // .catch: si se toglea dos veces rápido, la transición anterior se
+      // aborta y su promesa rechaza — lo ignoramos sin ruido en consola.
+      vt.ready.then(() => {
+        // Radio: distancia del botón a la esquina más lejana del viewport
+        const r = Math.hypot(Math.max(x, innerWidth - x), Math.max(y, innerHeight - y));
+        root.animate(
+          { clipPath: [`circle(0px at ${x}px ${y}px)`, `circle(${r}px at ${x}px ${y}px)`] },
+          { duration: 550, easing: "cubic-bezier(0.4,0,0.2,1)", pseudoElement: "::view-transition-new(root)" }
+        );
+      }).catch(() => {});
+    } else {
+      // Fallback: cross-fade de colores
+      root.classList.add("theme-fade");
+      applyTheme(next);
+      setTimeout(() => root.classList.remove("theme-fade"), 600);
+    }
+  });
+
+  /* ---------- 2. BEAM sincronizado al reloj ----------
+     El loop dura 4000ms. Con delay negativo -(Date.now()%4000) el beam
+     arranca "donde le toca" según la hora: nunca se resetea entre cargas. */
+  const beam = $(".bar-beam");
+  if (beam) beam.style.animationDelay = `-${(Date.now() % 4000) / 1000}s`;
+
+  /* ---------- 3. Announcement bar dismissible ---------- */
+  const bar = $("#bar");
+  if (bar) {
+    if (localStorage.getItem("dt-bar-dismissed") === "1") bar.hidden = true;
+    $(".bar-x", bar)?.addEventListener("click", () => {
+      bar.hidden = true;
+      localStorage.setItem("dt-bar-dismissed", "1");
+    });
+  }
+
+  /* ---------- 4. TYPEWRITER del hero ----------
+     Tipea (85ms/letra), pausa 2.4s, borra (45ms/letra), siguiente palabra. */
+  const tw = $("#tw");
+  // Lista de palabras según idioma (data-words / data-words-en)
+  const getWords = () => (((lang === "en" ? tw.dataset.wordsEn : tw.dataset.words) || tw.dataset.words) || "").split("|");
+  if (tw) {
+    if (reduced) {
+      tw.textContent = getWords()[0]; // estático si el usuario pide menos movimiento
+    } else {
+      let wi = 0, ci = 0, deleting = false;
+      (function tick() {
+        const words = getWords();
+        const word = words[wi % words.length];
+        ci = Math.min(ci, word.length) + (deleting ? -1 : 1);
+        tw.textContent = word.slice(0, ci);
+        let wait = deleting ? 45 : 85;
+        if (!deleting && ci >= word.length) { wait = 2400; deleting = true; }
+        else if (deleting && ci <= 0) { ci = 0; deleting = false; wi = (wi + 1) % words.length; wait = 350; }
+        setTimeout(tick, wait);
+      })();
+    }
+  }
+
+  /* ---------- 5. PARALLAX de los screenshots flotantes ----------
+     data-depth 2..4 → desplazamiento máx ~18px. Batched con rAF. */
+  const floats = $$(".float");
+  if (floats.length && !reduced && matchMedia("(hover: hover)").matches) {
+    let mx = 0, my = 0, raf = null;
+    addEventListener("mousemove", (e) => {
+      mx = e.clientX / innerWidth - 0.5;   // -0.5 .. 0.5
+      my = e.clientY / innerHeight - 0.5;
+      if (!raf) raf = requestAnimationFrame(() => {
+        raf = null;
+        for (const f of floats) {
+          const d = +f.dataset.depth || 2;          // 2..4
+          f.style.setProperty("--px", (-mx * d * 9).toFixed(1) + "px"); // 4*9*0.5 = 18px máx
+          f.style.setProperty("--py", (-my * d * 9).toFixed(1) + "px");
+        }
+      });
+    }, { passive: true });
+  }
+
+  /* ---------- 6. SPOTLIGHT de cursor (rAF) ---------- */
+  const spot = $(".fx-spot");
+  if (spot && !reduced && matchMedia("(hover: hover)").matches) {
+    let sx = 0, sy = 0, sraf = null;
+    addEventListener("mousemove", (e) => {
+      sx = e.clientX; sy = e.clientY;
+      if (!sraf) sraf = requestAnimationFrame(() => {
+        sraf = null;
+        spot.style.setProperty("--mx", sx + "px");
+        spot.style.setProperty("--my", sy + "px");
+      });
+    }, { passive: true });
+  }
+
+  /* ---------- 7. Video del laptop: pausar fuera del viewport ---------- */
+  const vid = $("#lapVideo");
+  if (vid && "IntersectionObserver" in window) {
+    new IntersectionObserver((entries) => {
+      for (const en of entries) {
+        if (en.isIntersecting) vid.play().catch(() => {}); else vid.pause();
+      }
+    }, { threshold: 0.35 }).observe(vid);
+  }
+
+  /* ---------- 8. Chips de password copiables ---------- */
+  $$(".pw").forEach((chip) => {
+    chip.addEventListener("click", async (e) => {
+      e.preventDefault(); e.stopPropagation();
+      try {
+        await navigator.clipboard.writeText(chip.dataset.pw || "");
+        const prev = chip.textContent;
+        chip.classList.add("copied");
+        chip.textContent = "Copied ✓";
+        setTimeout(() => { chip.classList.remove("copied"); chip.textContent = prev; }, 1500);
+      } catch { /* clipboard bloqueado: no hacemos nada */ }
+    });
+  });
+
+  /* ---------- 9. FORMULARIO IA → WhatsApp con briefing prellenado ----------
+     Sin backend: arma el mensaje con los campos y abre wa.me?text=.
+     Validación nativa (required) + estado loading en el botón. */
+  const aiForm = $("#aiForm");
+  if (aiForm) {
+    // Chips de tipo de proyecto (selección única, solo entre data-val)
+    $$(".af-chip[data-val]", aiForm).forEach((ch) =>
+      ch.addEventListener("click", () => {
+        $$(".af-chip[data-val]", aiForm).forEach((c) => c.classList.remove("on"));
+        ch.classList.add("on");
+      })
+    );
+    // Canal de envío (WhatsApp/Email) + hint acorde
+    const afHint = $("#afHint");
+    $$(".af-chip[data-via]", aiForm).forEach((ch) =>
+      ch.addEventListener("click", () => {
+        $$(".af-chip[data-via]", aiForm).forEach((c) => c.classList.remove("on"));
+        ch.classList.add("on");
+        const mail = ch.dataset.via === "mail";
+        if (afHint) afHint.textContent = lang === "en"
+          ? (mail ? "Opens your email app with the briefing ready to send." : "Opens WhatsApp with your briefing ready to send.")
+          : (mail ? "Se abre tu correo con el briefing listo para enviar." : "Se abre en WhatsApp con tu briefing listo para enviar.");
+      })
+    );
+    // Auto-grow del textarea (fallback donde no hay field-sizing)
+    const ta = $("textarea", aiForm);
+    ta?.addEventListener("input", () => {
+      ta.style.height = "auto";
+      ta.style.height = Math.min(ta.scrollHeight, 180) + "px";
+    });
+    aiForm.addEventListener("submit", (e) => {
+      e.preventDefault();
+      aiForm.classList.add("tried");
+      if (!aiForm.checkValidity()) { aiForm.reportValidity(); return; }
+      const btn = $(".af-send", aiForm);
+      if (btn.classList.contains("is-loading")) return;
+      const nombre = aiForm.nombre.value.trim();
+      const negocio = aiForm.negocio.value.trim();
+      const correo = aiForm.correo.value.trim();
+      const telefono = aiForm.telefono.value.trim();
+      const tipo = $(".af-chip.on[data-val]", aiForm)?.dataset.val || "";
+      const idea = aiForm.idea.value.trim();
+      const via = $(".af-chip.on[data-via]", aiForm)?.dataset.via || "wa";
+      // Briefing multilínea (para email); en wa.me también respeta los saltos
+      const L = lang === "en"
+        ? { hi: `Hi! I'm ${nombre}`, biz: "Business", mail: "Email", tel: "Phone", need: "I need", idea: "My idea", subj: `Project inquiry \u2014 ${nombre}` }
+        : { hi: `\u00a1Hola! Soy ${nombre}`, biz: "Negocio", mail: "Correo", tel: "Tel\u00e9fono", need: "Necesito", idea: "Mi idea", subj: `Consulta de proyecto \u2014 ${nombre}` };
+      const msg = [
+        L.hi,
+        negocio && `${L.biz}: ${negocio}`,
+        correo && `${L.mail}: ${correo}`,
+        telefono && `${L.tel}: ${telefono}`,
+        `${L.need}: ${tipo}`,
+        `${L.idea}: ${idea}`
+      ].filter(Boolean).join("\n");
+      btn.classList.add("is-loading");
+      setTimeout(() => {
+        btn.classList.remove("is-loading");
+        if (via === "mail") {
+          location.href = `mailto:david_taranto@outlook.es?subject=${encodeURIComponent(L.subj)}&body=${encodeURIComponent(msg)}`;
+        } else {
+          open(`https://wa.me/5493875454070?text=${encodeURIComponent(msg)}`, "_blank", "noopener");
+        }
+      }, 600);
+    });
+  }
+
+  /* ---------- 10. Acordeón del footer (solo mobile) ----------
+     Una columna abierta a la vez; max-height animado por CSS. */
+  $$(".f-col h4").forEach((h) => {
+    h.addEventListener("click", () => {
+      if (!matchMedia("(max-width: 720px)").matches) return;
+      const col = h.parentElement;
+      const wasOpen = col.classList.contains("open");
+      $$(".f-col.open").forEach((c) => c.classList.remove("open"));
+      if (!wasOpen) col.classList.add("open");
+    });
+  });
+
+  /* ---------- 11. Menú mobile: cerrar al navegar ---------- */
+  const menu = $("#menu");
+  $$(".menu-pop a", menu || document).forEach((a) =>
+    a.addEventListener("click", () => menu?.removeAttribute("open"))
+  );
+  addEventListener("click", (e) => {
+    if (menu?.open && !menu.contains(e.target)) menu.removeAttribute("open");
+  });
+
+  /* ---------- 12. Count-up de stats del bento ----------
+     Cuentan de 0 al valor (~1s, easeOutCubic) al entrar al viewport.
+     Con reduced-motion muestran el valor final directo. */
+  const counters = $$("[data-count]");
+  if (counters.length && "IntersectionObserver" in window) {
+    const cio = new IntersectionObserver((ents) => {
+      ents.forEach((en) => {
+        if (!en.isIntersecting) return;
+        cio.unobserve(en.target);
+        const el = en.target, target = +el.dataset.count, suf = el.dataset.suffix || "";
+        if (reduced) { el.textContent = target + suf; return; }
+        const t0 = performance.now();
+        (function step(t) {
+          const p = Math.min((t - t0) / 1000, 1);
+          const eased = 1 - Math.pow(1 - p, 3);
+          el.textContent = Math.round(target * eased) + suf;
+          if (p < 1) requestAnimationFrame(step);
+        })(t0);
+      });
+    }, { threshold: 0.4 });
+    counters.forEach((c) => {
+      if (!reduced) c.textContent = "0" + (c.dataset.suffix || "");
+      cio.observe(c);
+    });
+  }
+
+  /* ---------- 13. Títulos palabra por palabra (Stökt) ----------
+     Partimos cada .h2 en <span class="w">; al entrar al viewport (una
+     sola vez) se agrega .in → fade + subida con stagger de 40ms (CSS). */
+  const splitH2 = (hEl) => {
+    hEl.innerHTML = hEl.textContent.trim().split(/\s+/)
+      .map((w, i) => `<span class="w" style="--w:${i}">${w}</span>`).join(" ");
+  };
+  if (!reduced) {
+    const heads = $$(".h2");
+    heads.forEach(splitH2);
+    const hio = new IntersectionObserver((ents) => {
+      ents.forEach((en) => {
+        if (en.isIntersecting) { en.target.classList.add("in"); hio.unobserve(en.target); }
+      });
+    }, { threshold: 0.25 });
+    heads.forEach((h) => hio.observe(h));
+  }
+
+  /* ---------- 14. Border beams sincronizados al reloj ----------
+     Mismo truco que el announcement bar: delay negativo según Date.now()
+     para que el destello nunca se resetee entre cargas. */
+  $$(".beam-card").forEach((el) =>
+    el.style.setProperty("--bb-delay", `-${(Date.now() % 4500) / 1000}s`)
+  );
+
+  /* ---------- 15. GLOBO PUNTEADO (canvas, estilo Stökt) ----------
+     Sin librerías: mapa del mundo como bitmask ASCII (48×24 celdas de
+     7.5°), cada celda de tierra genera 4 subpuntos → se proyectan con
+     proyección ortográfica (rotación Y continua + tilt X fijo) y se
+     dibujan solo los del hemisferio visible, con alpha según profundidad.
+     Marker celeste pulsante en Salta (-24.8, -65.4). */
+  const globeC = $("#globeCanvas");
+  if (globeC) {
+    const gctx = globeC.getContext("2d");
+    const D2R = Math.PI / 180;
+    const ll = (lat, lon) => ({
+      x: Math.cos(lat * D2R) * Math.sin(lon * D2R),
+      y: Math.sin(lat * D2R),
+      z: Math.cos(lat * D2R) * Math.cos(lon * D2R)
+    });
+    // Costas REALES (Natural Earth 110m) horneadas en assets/land-data.js:
+    // anillos de costa como polilíneas + puntos interiores pre-calculados.
+    const coastLines = [], land = [];
+    if (window.LAND_DATA) {
+      for (const ring of window.LAND_DATA.coast) {
+        const line = [];
+        for (let i = 0; i < ring.length; i += 2) line.push(ll(ring[i + 1], ring[i]));
+        coastLines.push(line);
+      }
+      const d = window.LAND_DATA.dots;
+      for (let i = 0; i < d.length; i += 2) land.push(ll(d[i + 1], d[i]));
+    }
+    // Graticule como POLILÍNEAS (cada 10°, muestreadas cada 3°) — mucho más
+    // parecido a Stökt que los puntitos: paralelos y meridianos continuos.
+    const parallels = [], meridians = [];
+    for (let lat = -80; lat <= 80; lat += 8) {
+      const line = [];
+      for (let lon = -180; lon <= 180; lon += 3) line.push(ll(lat, lon));
+      parallels.push(line);
+    }
+    for (let lon = -180; lon < 180; lon += 8) {
+      const line = [];
+      for (let lat = -90; lat <= 90; lat += 3) line.push(ll(lat, lon));
+      meridians.push(line);
+    }
+    const salta = ll(-24.7859, -65.4117);   // Salta Capital, exacto
+    const TILT = -0.42;                 // centra la vista en ~lat -24 (Salta)
+    const ROT0 = 65.4 * D2R;            // arranca con Salta de frente
+    const SPEED = 0.0028;               // velocidad de crucero
+    let rot = ROT0, speed = SPEED, targetSpeed = SPEED;
+    let visible = true, dpr = Math.min(devicePixelRatio || 1, 2);
+    // Hover: el globo desacelera a ~12% (lerp, sin frenazo seco)
+    globeC.addEventListener("mouseenter", () => { targetSpeed = SPEED * 0.12; });
+    globeC.addEventListener("mouseleave", () => { targetSpeed = SPEED; });
+
+    // Proyecta un punto: rotación Y + tilt X. Devuelve [sx, sy, prof]
+    function proj(p, cx, cy, R, cosR, sinR, cosT, sinT) {
+      const x1 = p.x * cosR + p.z * sinR;
+      const z1 = -p.x * sinR + p.z * cosR;
+      const y2 = p.y * cosT - z1 * sinT;
+      const z2 = p.y * sinT + z1 * cosT;
+      return [cx + x1 * R, cy - y2 * R, z2];
+    }
+
+    function drawGlobe(now) {
+      const w = globeC.clientWidth || 400;
+      if (globeC.width !== Math.round(w * dpr)) { globeC.width = Math.round(w * dpr); globeC.height = Math.round(w * dpr); }
+      gctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      gctx.clearRect(0, 0, w, w);
+      // La sección bento está invertida: en página clara el card es oscuro
+      const darkCard = root.dataset.theme !== "dark";
+      const ink = darkCard ? "242,242,242" : "23,24,27";
+      const cx = w / 2, cy = w / 2, R = w / 2 - 6;
+      const cosR = Math.cos(rot), sinR = Math.sin(rot);
+      const cosT = Math.cos(TILT), sinT = Math.sin(TILT);
+      // Contorno
+      gctx.strokeStyle = `rgba(${ink},0.28)`;
+      gctx.lineWidth = 1;
+      gctx.beginPath(); gctx.arc(cx, cy, R, 0, 7); gctx.stroke();
+      // Graticule: líneas continuas del hemisferio visible (se corta el
+      // trazo cuando el punto pasa al hemisferio oculto)
+      gctx.strokeStyle = `rgba(${ink},0.10)`;
+      gctx.lineWidth = 0.7;
+      for (const line of [...parallels, ...meridians]) {
+        gctx.beginPath();
+        let pen = false;
+        for (const p of line) {
+          const [sx, sy, z] = proj(p, cx, cy, R, cosR, sinR, cosT, sinT);
+          if (z > -0.02) { pen ? gctx.lineTo(sx, sy) : gctx.moveTo(sx, sy); pen = true; }
+          else pen = false;
+        }
+        gctx.stroke();
+      }
+      // Tierra: textura punteada tenue (el mar queda liso, como Stökt)
+      gctx.fillStyle = `rgba(${ink},0.38)`;
+      for (const p of land) {
+        const [sx, sy, z] = proj(p, cx, cy, R, cosR, sinR, cosT, sinT);
+        if (z <= 0) continue;
+        const s = 1 + z * 0.7;
+        gctx.fillRect(sx, sy, s, s);
+      }
+      // COSTAS: polilíneas reales nítidas — el contorno de países/continentes
+      gctx.strokeStyle = `rgba(${ink},0.95)`;
+      gctx.lineWidth = 1.1;
+      gctx.lineJoin = "round";
+      for (const line of coastLines) {
+        gctx.beginPath();
+        let pen = false;
+        for (const p of line) {
+          const [sx, sy, z] = proj(p, cx, cy, R, cosR, sinR, cosT, sinT);
+          if (z > -0.02) { pen ? gctx.lineTo(sx, sy) : gctx.moveTo(sx, sy); pen = true; }
+          else pen = false;
+        }
+        gctx.stroke();
+      }
+      // Marker de Salta: celeste con halo pulsante
+      const [mx2, my2, mz] = proj(salta, cx, cy, R, cosR, sinR, cosT, sinT);
+      if (mz > 0) {
+        const pulse = 0.5 + 0.5 * Math.sin(now / 350);
+        gctx.strokeStyle = `rgba(82,191,254,${(0.5 * (1 - pulse)).toFixed(2)})`;
+        gctx.lineWidth = 1.5;
+        gctx.beginPath(); gctx.arc(mx2, my2, 7 + 9 * pulse, 0, 7); gctx.stroke();
+        gctx.fillStyle = `rgba(82,191,254,${(0.3 * pulse).toFixed(2)})`;
+        gctx.beginPath(); gctx.arc(mx2, my2, 11, 0, 7); gctx.fill();
+        gctx.fillStyle = "#52BFFE";
+        gctx.beginPath(); gctx.arc(mx2, my2, 4.2, 0, 7); gctx.fill();
+        // Etiqueta "SALTA" junto al marker, para ubicarla sin dudas
+        gctx.font = "600 10px 'Geist Mono', monospace";
+        gctx.fillStyle = `rgba(${ink},0.9)`;
+        gctx.fillText("SALTA", mx2 + 12, my2 + 3);
+      }
+    }
+
+    if (reduced) {
+      requestAnimationFrame((t) => drawGlobe(t));
+    } else {
+      // Giro completo y continuo; el hover lo frena suavemente (lerp)
+      (function loop(t) {
+        if (visible) {
+          speed += (targetSpeed - speed) * 0.06;
+          rot += speed;
+          drawGlobe(t || 0);
+        }
+        requestAnimationFrame(loop);
+      })(0);
+      if ("IntersectionObserver" in window)
+        new IntersectionObserver((es) => { visible = es[0].isIntersecting; }, { threshold: 0.05 })
+          .observe(globeC);
+    }
+  }
+
+  /* ---------- 16. i18n: ES (default, inline en el HTML) / EN ----------
+     Cada elemento traducible lleva data-i18n="clave". Al cambiar a EN se
+     guarda el HTML original en data-es y se pisa con el diccionario; al
+     volver a ES se restaura. Persistido en localStorage (dt-lang). */
+  const EN = {
+    skip: "Skip to content",
+    bar_t: "\uD83D\uDE80 Available for new projects \u2014",
+    bar_l: "Talk to my AI assistant",
+    nav_inicio: "Home", nav_prod: "Products", nav_proy: "Projects", nav_sobre: "About me", nav_contacto: "Contact",
+    chat: "AI Chat",
+    hero_t: "Building your",
+    hero_sub: "Custom websites, online stores and CRMs — with automation and AI where it counts. Built in Salta, running in production.",
+    cta_hero: "Talk to my assistant \u2192",
+    cta_work: "See my work",
+    mob_eb: "Truly mobile-first",
+    mob_h: "Built for how it's really used: from the phone.",
+    srv_eb: "Products", srv_h: "Choose where to start.",
+    srv_sub: "Four ways to work with me, from a site with a bot to the full system.",
+    ribbon: "Most requested",
+    s1_h: "Webs & Stores",
+    s1_tag: "Landings, corporate sites and e-commerce that sell.",
+    s1_l1: "Custom landing and corporate site",
+    s1_l2: "Online store with payments and shipping",
+    s1_l3: "SEO, analytics and a built-in WhatsApp bot",
+    price: "Price: <b>Custom</b>",
+    see_more: "Learn more \u2192",
+    acc_pill: "See details \u2192",
+    acc_reset: "\u2715 Close details",
+    s2_h: "Systems & CRM",
+    s2_tag: "Software for your business: CRM, panel and portal, like DT-System.",
+    s2_l1: "CRM with pipeline, projects and tasks",
+    s2_l2: "PDF quotes, invoicing and P&amp;L",
+    s2_l3: "Client portal and reports",
+    s3_h: "Mobile apps",
+    s3_tag: "Custom Android & iPhone apps, from design to the store.",
+    s3_l1: "Mobile-first design and prototype",
+    s3_l2: "Cross-platform development",
+    s3_l3: "Google Play & App Store release",
+    s4_h: "AI Automation",
+    s4_tag: "Processes that run themselves: AI + integrations.",
+    s4_l1: "WhatsApp bots with AI (Claude)",
+    s4_l2: "M365/Azure flows and Graph API",
+    s4_l3: "Integrations across your tools",
+    lap_eb: "See it working", lap_h: "This is how DT-System works.",
+    lap_sub: "From the WhatsApp lead to the paid invoice, all in one panel.",
+    about_eb: "About me", about_h: "The person behind the system.",
+    f_p1: "SysAdmin at JBKnowledge (a global company) based in Salta, Argentina. Computer Engineering student, 5+ years managing M365, Azure and automation.",
+    f_p2: "I build DT-System: a WhatsApp AI bot that handles and qualifies leads 24/7, plus a full CRM with pipeline, quotes and finances. Running in production.",
+    f_p3: "I work from idea to deploy: solo when that's enough, building a team when the project calls for it.",
+    f_cta: "Work with me",
+    f_h: "The Founder",
+    st1: "Years in IT", st2: "Bot handling leads", st3: "Projects in production",
+    globe_h: "Based in Salta, Argentina",
+    avail: "AVAILABLE \u00b7 REMOTE WORLDWIDE",
+    tools_h: "Everyday stack",
+    test_eb: "Trust", test_h: "Results, not promises.",
+    test_note: "*Straight from clients",
+    cta_note: "*No fluff",
+    demo_eb: "Live demos", demo_h: "Try it yourself.",
+    demo_sub: "No polished screenshots: these are the real systems, running right now.",
+    d1s: "CRM panel \u00b7 Next.js + Claude", d2s: "Interactive guide \u00b7 free",
+    d3h: "Next project", d3s: "In progress",
+    cta_eb: "Seriously", cta_h: "LET'S TALK.",
+    cta_sub: "Got an idea? Tell me about it. My assistant replies instantly, understands your case and hands it to me pre-digested.",
+    cta_btn: "Talk to my assistant",
+    af_head: "Briefing for my assistant",
+    af_badge: "AI \u00b7 instant reply",
+    af_name: "Your name", af_from: "Your business / project",
+    af_mail: "Your email", af_tel: "Your phone", af_opt: "\u00b7 optional",
+    af_via: "Send via",
+    af_type: "What do you need?",
+    af_t1: "Web / Store", af_t2: "System / CRM", af_t3: "Mobile app", af_t4: "AI Automation", af_t5: "Other",
+    af_idea: "Tell me the idea",
+    af_hint: "Opens WhatsApp with your briefing ready to send.",
+    af_send: "Send to the assistant",
+    af_direct: "Direct WhatsApp \u2197",
+    nl_h: "News & deals",
+    nl_p: "Launches, deals and lessons from building with AI. Zero spam.",
+    nl_btn: "Count me in \u2192",
+    f_proj: "Projects", f_rec: "Resources", f_cont: "Contact",
+    f_wa: "WhatsApp (AI assistant)",
+    made: "Made in Salta, Argentina \uD83C\uDDE6\uD83C\uDDF7"
+  };
+  const langLbl = $("#langLabel");
+  function setLang(l, animate) {
+    lang = l;
+    localStorage.setItem("dt-lang", l);
+    document.documentElement.lang = l === "en" ? "en" : "es";
+    if (langLbl) langLbl.textContent = l.toUpperCase();
+    $$("[data-i18n]").forEach((el) => {
+      const k = el.dataset.i18n;
+      if (el.dataset.es === undefined) el.dataset.es = el.innerHTML; // snapshot ES
+      const v = l === "en" ? EN[k] : el.dataset.es;
+      if (v !== undefined) el.innerHTML = v;
+    });
+    // Placeholders de inputs/textarea (data-ph = clave i18n)
+    const PH_EN = { af_name_ph: "Jane Doe", af_from_ph: "Store, studio, startup\u2026", af_idea_ph: "I want a system that\u2026", af_mail_ph: "you@email.com", af_tel_ph: "+1 555 000 0000", nl_ph: "you@email.com" };
+    $$("[data-ph]").forEach((el) => {
+      if (el.dataset.esPh === undefined) el.dataset.esPh = el.placeholder;
+      el.placeholder = l === "en" ? (PH_EN[el.dataset.ph] ?? el.placeholder) : el.dataset.esPh;
+    });
+    // Los H2 se re-parten palabra por palabra en el idioma nuevo
+    if (!reduced) $$(".h2[data-i18n]").forEach((hEl) => { splitH2(hEl); hEl.classList.add("in"); });
+    // Efecto de cambio: cada texto traducido entra con blur+fade (suave,
+    // menos abrupto que el reveal del tema pero visible)
+    if (animate && !reduced) {
+      root.classList.add("lang-swap");
+      setTimeout(() => root.classList.remove("lang-swap"), 650);
+    }
+  }
+  $("#langToggle")?.addEventListener("click", () => setLang(lang === "en" ? "es" : "en", true));
+
+  /* ---------- 19. Testimonios arrastrables ----------
+     El drag NO pelea con la animación del marquee: el keyframe anima
+     transform, y el offset del drag va por la propiedad 'translate'
+     (independiente). Al soltar, el offset decae suavemente a 0. */
+  const tmq = $(".t-marquee");
+  if (tmq) {
+    let dragging = false, sx = 0, base = 0, off = 0;
+    tmq.addEventListener("pointerdown", (e) => {
+      dragging = true; sx = e.clientX; base = off;
+      tmq.setPointerCapture(e.pointerId);
+      tmq.classList.add("dragging");
+      $$(".mtrack", tmq).forEach((t) => { t.style.animationPlayState = "paused"; });
+    });
+    tmq.addEventListener("pointermove", (e) => {
+      if (!dragging) return;
+      off = Math.max(-380, Math.min(380, base + e.clientX - sx));
+      tmq.style.setProperty("--drag", off + "px");
+    });
+    const endDrag = () => {
+      if (!dragging) return;
+      dragging = false;
+      tmq.classList.remove("dragging");
+      $$(".mtrack", tmq).forEach((t) => { t.style.animationPlayState = ""; });
+      (function decay() {
+        off *= 0.94;
+        tmq.style.setProperty("--drag", off.toFixed(1) + "px");
+        if (Math.abs(off) > 0.5 && !dragging) requestAnimationFrame(decay);
+      })();
+    };
+    tmq.addEventListener("pointerup", endDrag);
+    tmq.addEventListener("pointercancel", endDrag);
+  }
+  if (lang === "en") setLang("en");   // aplicar idioma guardado al cargar
+
+  /* ---------- 19. Newsletter (footer) ----------
+     Sin backend: abre un mail de suscripción prellenado y muestra "Listo ✓".
+     Para automatizarlo: reemplazar por fetch al endpoint de Formspree/
+     Buttondown/Mailchimp con el mismo input. */
+  const nlForm = $("#nlForm");
+  nlForm?.addEventListener("submit", (e) => {
+    e.preventDefault();
+    nlForm.classList.add("tried");
+    if (!nlForm.checkValidity()) { nlForm.reportValidity(); return; }
+    const em = nlForm.email.value.trim();
+    const subj = lang === "en" ? "Newsletter signup" : "Suscripci\u00f3n a novedades";
+    const body = lang === "en" ? `Please add me to the list: ${em}` : `Sumame a la lista: ${em}`;
+    location.href = `mailto:david_taranto@outlook.es?subject=${encodeURIComponent(subj)}&body=${encodeURIComponent(body)}`;
+    const btn = $(".nl-btn", nlForm);
+    const prev = btn.textContent;
+    btn.textContent = lang === "en" ? "Done \u2713" : "Listo \u2713";
+    setTimeout(() => { btn.textContent = prev; nlForm.reset(); nlForm.classList.remove("tried"); }, 2500);
+  });
+
+  /* ---------- 17. Acordeón de servicios (Stökt) ----------
+     Un panel abierto a la vez; los cerrados quedan como franjas con el
+     título vertical. La animación es CSS (transition de flex). */
+  const acc = $("#acc");
+  const accReset = $("#accReset");
+  if (acc) {
+    const closeAll = () => {
+      $$(".acc-p", acc).forEach((p) => {
+        p.classList.remove("open");
+        $(".acc-tab", p)?.setAttribute("aria-expanded", "false");
+      });
+    };
+    $$(".acc-tab", acc).forEach((tab) =>
+      tab.addEventListener("click", () => {
+        closeAll();
+        const p = tab.closest(".acc-p");
+        p.classList.add("open");
+        tab.setAttribute("aria-expanded", "true");
+        acc.classList.add("has-open");         // modo detalle
+        accReset?.removeAttribute("hidden");
+      })
+    );
+    // Mini botón de reset: cierra todo y vuelve a la grilla inicial
+    accReset?.addEventListener("click", () => {
+      closeAll();
+      acc.classList.remove("has-open");
+      accReset.setAttribute("hidden", "");
+    });
+  }
+
+  /* ---------- 18. Cursor inteligente (Stökt) ----------
+     Cuadradito blanco con mix-blend-mode: difference → invierte lo que
+     tiene debajo, así SIEMPRE contrasta (fondo claro → se ve oscuro y
+     viceversa), sin medir píxeles. Sigue al mouse con lerp (rAF) y crece
+     sobre elementos interactivos. Solo mouse fino; nunca touch/reduced. */
+  if (!reduced && matchMedia("(hover: hover) and (pointer: fine)").matches) {
+    const cur = document.createElement("div");
+    cur.className = "cursor";
+    cur.setAttribute("aria-hidden", "true");
+    const curTxt = document.createElement("span");   // texto del cursor-pill
+    cur.appendChild(curTxt);
+    document.body.appendChild(cur);
+    root.classList.add("cursor-on");     // oculta el cursor nativo vía CSS
+    let tx = innerWidth / 2, ty = -40, x = tx, y = ty;
+    addEventListener("mousemove", (e) => {
+      tx = e.clientX; ty = e.clientY;
+      const it = e.target.closest && e.target.closest("a, button, summary, .pw, .acc-tab");
+      cur.classList.toggle("on", !!it);
+      // ¿El elemento (o un ancestro) declara una acción? → el cursor se
+      // transforma en una pill con texto (estilo Stökt "LEARN MORE")
+      const lb = e.target.closest && e.target.closest("[data-cursor]");
+      if (lb) curTxt.textContent = (lang === "en" && lb.dataset.cursorEn) || lb.dataset.cursor;
+      cur.classList.toggle("label", !!lb);
+    }, { passive: true });
+    addEventListener("mousedown", () => cur.classList.add("down"));
+    addEventListener("mouseup", () => cur.classList.remove("down"));
+    document.documentElement.addEventListener("mouseleave", () => { cur.style.opacity = "0"; });
+    document.documentElement.addEventListener("mouseenter", () => { cur.style.opacity = "1"; });
+    (function follow() {
+      x += (tx - x) * 0.22; y += (ty - y) * 0.22;
+      cur.style.left = x + "px"; cur.style.top = y + "px";
+      requestAnimationFrame(follow);
+    })();
+  }
+})();
