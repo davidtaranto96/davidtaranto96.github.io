@@ -32,11 +32,18 @@
       vt.ready.then(() => {
         // Radio: distancia del botón a la esquina más lejana del viewport
         const r = Math.hypot(Math.max(x, innerWidth - x), Math.max(y, innerHeight - y));
-        root.animate(
-          { clipPath: [`circle(0px at ${x}px ${y}px)`, `circle(${r}px at ${x}px ${y}px)`] },
-          { duration: 550, easing: "cubic-bezier(0.4,0,0.2,1)", pseudoElement: "::view-transition-new(root)" }
-        );
+        try {
+          root.animate(
+            { clipPath: [`circle(0px at ${x}px ${y}px)`, `circle(${r}px at ${x}px ${y}px)`] },
+            { duration: 550, easing: "cubic-bezier(0.4,0,0.2,1)", pseudoElement: "::view-transition-new(root)" }
+          );
+        } catch { vt.skipTransition(); }
       }).catch(() => {});
+      // Red de seguridad: como el CSS anula la animación default de la VT,
+      // si animate() del pseudo-elemento falla o el navegador congela la
+      // transición (pasa en algunos mobiles), la captura VIEJA quedaría
+      // pegada en pantalla. Pasados 900ms la salteamos sí o sí.
+      setTimeout(() => { try { vt.skipTransition(); } catch { /* ya terminó */ } }, 900);
     } else {
       // Fallback: cross-fade de colores
       root.classList.add("theme-fade");
@@ -487,7 +494,7 @@
     demo_eb: "Live demos", demo_h: "Try it yourself.",
     demo_sub: "No polished screenshots: these are the real systems, running right now.",
     d1s: "CRM panel \u00b7 Next.js + Claude", d2s: "Interactive guide \u00b7 free",
-    d3h: "Next project", d3s: "In progress",
+    d3s: "AI personal-finance app · in beta",
     cta_eb: "Seriously", cta_h: "LET'S TALK.",
     cta_sub: "Got an idea? Tell me about it. My assistant replies instantly, understands your case and hands it to me pre-digested.",
     cta_btn: "Talk to my assistant",
