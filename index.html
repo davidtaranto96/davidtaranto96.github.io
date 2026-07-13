@@ -16,8 +16,10 @@
        texto 'DT System', estilo SaaS premium, 1200x630" -->
   <meta property="og:image" content="assets/og.png">
   <!-- Favicon: marca "dt/" en SVG inline (sin archivo extra) -->
-  <link rel="icon" href="assets/brand/favicon-64.png" type="image/png">
-  <link rel="apple-touch-icon" href="assets/brand/logo-dt.png">
+  <!-- ?v=2 fuerza a los navegadores a descartar el favicon viejo cacheado -->
+  <link rel="icon" href="assets/brand/favicon-64.png?v=2" type="image/png" sizes="64x64">
+  <link rel="icon" href="assets/brand/logo-dt.png?v=2" type="image/png" sizes="512x512">
+  <link rel="apple-touch-icon" href="assets/brand/logo-dt.png?v=2">
 
   <!-- ============ Fonts: Geist (títulos) + Geist Mono (todo lo demás) ============
        Único recurso externo permitido. preload + display=swap. -->
@@ -81,7 +83,7 @@
     <!-- Header estilo Stökt: UNA barra de vidrio transparente (blur 15px) -->
     <header class="hdr">
       <div class="hdr-pill">
-        <a class="logo" href="#top"><img class="logo-img" src="assets/brand/logo-dt.png" alt="" width="26" height="26">dt<b>/</b>system</a>
+        <a class="logo" href="#top">dt<b>/</b>system</a>
         <nav class="nav" aria-label="Principal">
           <a href="#top"><span class="nl"><span data-i18n="nav_inicio">Inicio</span><span aria-hidden="true" data-i18n="nav_inicio">Inicio</span></span></a>
           <a href="#servicios"><span class="nl"><span data-i18n="nav_prod">Productos</span><span aria-hidden="true" data-i18n="nav_prod">Productos</span></span></a>
@@ -638,7 +640,7 @@
       </div>
       <div class="footer-cols">
         <div class="f-brand">
-          <a class="logo" href="#top"><img class="logo-img" src="assets/brand/logo-dt.png" alt="" width="26" height="26">dt<b>/</b>system</a>
+          <a class="logo" href="#top">dt<b>/</b>system</a>
           <p>Automate the boring stuff, focus on what matters.</p>
         </div>
         <div class="f-col">
