@@ -488,56 +488,143 @@
       </div>
     </section>
 
-    <!-- ============ 8. DEMOS EN VIVO ============ -->
+    <!-- ============ 8. CASOS — TRABAJO ENTREGADO ============
+         Grilla filtrable de proyectos reales. Cada card reusa .demo (misma
+         card que los demos de abajo); el filtro es por data-cat y se aplica
+         con el atributo `hidden` para no romper el flujo del grid. -->
     <section id="proyectos">
       <div class="wrap">
         <div class="sec-head">
-          <span class="eyebrow" data-i18n="demo_eb">Demos en vivo</span>
-          <h2 class="h2" data-i18n="demo_h">Probalo vos mismo.</h2>
-          <p class="sub" data-i18n="demo_sub">Nada de screenshots retocados: son los sistemas reales, corriendo ahora.</p>
+          <span class="eyebrow" data-i18n="cs_eb">Casos</span>
+          <h2 class="h2" data-i18n="cs_h">Trabajo entregado.</h2>
+          <p class="sub" data-i18n="cs_sub">Clientes reales, en producción. Lo que tiene link, lo podés abrir ahora mismo.</p>
         </div>
 
-        <div class="demo-grid">
-          <a class="demo" data-cursor="Visitar ↗" data-cursor-en="Visit ↗" href="https://dt-systems.up.railway.app" target="_blank" rel="noopener">
-            <!-- PROMPT HIGGSFIELD: "Screenshot del panel DT-System, dashboard con kanban y métricas,
-                 dark UI, acento celeste #52BFFE, 640x400" -->
-            <img src="assets/ph-demo-1.svg" width="640" height="400" alt="Demo del panel DT-System" loading="lazy">
+        <div class="stats">
+          <div class="stat"><b data-count="12">12</b><span data-i18n="cs_s1">proyectos entregados</span></div>
+          <div class="stat"><b data-count="11">11</b><span data-i18n="cs_s2">en línea ahora mismo</span></div>
+          <div class="stat"><b data-count="3">3</b><span data-i18n="cs_s3">con dominio propio</span></div>
+        </div>
+
+        <div class="af-chips cs-filter" id="csFilter" role="group" aria-label="Filtrar proyectos por tipo">
+          <button type="button" class="af-chip on" data-f="all" data-i18n="cs_f0">Todos</button>
+          <button type="button" class="af-chip" data-f="web" data-i18n="cs_f1">Webs y tiendas</button>
+          <button type="button" class="af-chip" data-f="sys" data-i18n="cs_f2">Sistemas y CRM</button>
+          <button type="button" class="af-chip" data-f="app" data-i18n="cs_f3">Apps móviles</button>
+          <button type="button" class="af-chip" data-f="ia" data-i18n="cs_f4">Automatización IA</button>
+        </div>
+
+        <div class="demo-grid cs-grid" id="csGrid">
+
+          <!-- TODO: reemplazar case-dtsystem.jpg (hoy es la portada de login) por
+               una captura del panel adentro: pipeline kanban o dashboard. -->
+          <a class="demo" data-cat="ia" data-cursor="Visitar ↗" data-cursor-en="Visit ↗" href="https://dt-systems.up.railway.app" target="_blank" rel="noopener">
+            <img src="assets/casos/case-dtsystem.jpg" width="640" height="400" alt="Panel de DT-System, CRM con bot de WhatsApp" loading="lazy">
             <div class="demo-info">
-              <div>
-                <h3>DT-System</h3>
-                <small data-i18n="d1s">Panel CRM · Next.js + Claude</small>
-              </div>
+              <div><h3>DT-System</h3><small data-i18n="c0s">CRM + bot de WhatsApp con IA</small></div>
               <span class="live"><i aria-hidden="true"></i> Live</span>
             </div>
             <div class="demo-ov" aria-hidden="true"><span>Visitar ↗</span></div>
           </a>
 
-          <a class="demo" data-cursor="Visitar ↗" data-cursor-en="Visit ↗" href="https://davidtaranto96.github.io/Blog-AI" target="_blank" rel="noopener">
-            <!-- PROMPT HIGGSFIELD: "Screenshot de guía interactiva sobre agentes de IA, layout editorial
-                 limpio, código resaltado, acento celeste #52BFFE, 640x400" -->
-            <img src="assets/ph-demo-2.svg" width="640" height="400" alt="Guía interactiva Claude: de 0 a Agentes" loading="lazy">
+          <a class="demo" data-cat="web" data-cursor="Visitar ↗" data-cursor-en="Visit ↗" href="https://melou.com.ar" target="_blank" rel="noopener">
+            <img src="assets/casos/case-melou.jpg" width="640" height="400" alt="Sitio de melou, retiros de bienestar en Salta" loading="lazy">
             <div class="demo-info">
-              <div>
-                <h3>Claude: de 0 a Agentes</h3>
-                <small data-i18n="d2s">Guía interactiva · gratis</small>
-              </div>
+              <div><h3>melou.</h3><small data-i18n="c1s">Web + reservas · retiros en Salta</small></div>
               <span class="live"><i aria-hidden="true"></i> Live</span>
             </div>
             <div class="demo-ov" aria-hidden="true"><span>Visitar ↗</span></div>
           </a>
 
-          <!-- PLACEHOLDER: próximo proyecto -->
-          <a class="demo" data-cursor="Visitar ↗" data-cursor-en="Visit ↗" href="#" target="_blank" rel="noopener">
-            <img src="assets/ph-demo-3.svg" width="640" height="400" alt="sencillo — app de finanzas personales con IA" loading="lazy">
+          <a class="demo" data-cat="web" data-cursor="Visitar ↗" data-cursor-en="Visit ↗" href="https://baza.com.ar" target="_blank" rel="noopener">
+            <img src="assets/casos/case-baza.jpg" width="640" height="400" alt="Tienda online de BAZA, atelier de cuero de Salta" loading="lazy">
             <div class="demo-info">
-              <div>
-                <h3>sencillo</h3>
-                <small data-i18n="d3s">App de finanzas con IA · en beta</small>
-              </div>
-              <span class="live" style="color: var(--muted); border-color: var(--line);"><i style="background: var(--muted); animation: none;" aria-hidden="true"></i> Soon</span>
+              <div><h3>BAZA</h3><small data-i18n="c2s">Tienda a medida · atelier de cuero</small></div>
+              <span class="live"><i aria-hidden="true"></i> Live</span>
             </div>
             <div class="demo-ov" aria-hidden="true"><span>Visitar ↗</span></div>
           </a>
+
+          <a class="demo" data-cat="sys" data-cursor="Ver demo ↗" data-cursor-en="View demo ↗" href="https://davidtaranto96.github.io/crm-berni/" target="_blank" rel="noopener">
+            <img src="assets/casos/case-brujula.jpg" width="640" height="400" alt="Brújula, CRM interno de Berni Studio" loading="lazy">
+            <div class="demo-info">
+              <div><h3>Brújula</h3><small data-i18n="c3s">CRM a medida · en uso diario</small></div>
+              <span class="live"><i aria-hidden="true"></i> Live</span>
+            </div>
+            <div class="demo-ov" aria-hidden="true"><span>Ver demo ↗</span></div>
+          </a>
+
+          <a class="demo" data-cat="web" data-cursor="Visitar ↗" data-cursor-en="Visit ↗" href="https://canadahumeda.com.ar" target="_blank" rel="noopener">
+            <img src="assets/casos/case-canada.jpg" width="640" height="400" alt="Sitio institucional de Cañada Húmeda, grupo agroindustrial de Salta" loading="lazy">
+            <div class="demo-info">
+              <div><h3>Cañada Húmeda</h3><small data-i18n="c4s">Institucional trilingüe · agro</small></div>
+              <span class="live"><i aria-hidden="true"></i> Live</span>
+            </div>
+            <div class="demo-ov" aria-hidden="true"><span>Visitar ↗</span></div>
+          </a>
+
+          <a class="demo" data-cat="web" data-cursor="Visitar ↗" data-cursor-en="Visit ↗" href="https://davidtaranto96.github.io/Aires-SanLorenzo/" target="_blank" rel="noopener">
+            <img src="assets/casos/case-aires.jpg" width="640" height="400" alt="Landing de Aires de San Lorenzo, barrio privado en Salta" loading="lazy">
+            <div class="demo-info">
+              <div><h3>Aires de San Lorenzo</h3><small data-i18n="c5s">Barrio privado · real estate</small></div>
+              <span class="live"><i aria-hidden="true"></i> Live</span>
+            </div>
+            <div class="demo-ov" aria-hidden="true"><span>Visitar ↗</span></div>
+          </a>
+
+          <a class="demo" data-cat="web" data-cursor="Visitar ↗" data-cursor-en="Visit ↗" href="https://davidtaranto96.github.io/tierras-merida/" target="_blank" rel="noopener">
+            <img src="assets/casos/case-tierras.jpg" width="640" height="400" alt="Landing de Tierras Mérida, lotes en Yucatán, México" loading="lazy">
+            <div class="demo-info">
+              <div><h3>Tierras Mérida</h3><small data-i18n="c6s">Venta de lotes · Yucatán, MX</small></div>
+              <span class="live"><i aria-hidden="true"></i> Live</span>
+            </div>
+            <div class="demo-ov" aria-hidden="true"><span>Visitar ↗</span></div>
+          </a>
+
+          <a class="demo" data-cat="sys" data-cursor="Visitar ↗" data-cursor-en="Visit ↗" href="https://davidtaranto96.github.io/BerMX/" target="_blank" rel="noopener">
+            <img src="assets/casos/case-bermx.jpg" width="640" height="400" alt="BerMX, plataforma de captación de leads para real estate" loading="lazy">
+            <div class="demo-info">
+              <div><h3>BerMX</h3><small data-i18n="c7s">Captación de leads · real estate</small></div>
+              <span class="live"><i aria-hidden="true"></i> Live</span>
+            </div>
+            <div class="demo-ov" aria-hidden="true"><span>Visitar ↗</span></div>
+          </a>
+
+          <div class="demo" data-cat="app">
+            <img src="assets/casos/case-apunto.jpg" width="640" height="400" alt="Apunto, app de tareas y hábitos para Android" loading="lazy">
+            <div class="demo-info">
+              <div><h3>Apunto</h3><small data-i18n="c8s">Tareas y hábitos · Android</small></div>
+              <span class="live off"><i aria-hidden="true"></i> Beta</span>
+            </div>
+          </div>
+
+          <a class="demo" data-cat="ia" data-cursor="Visitar ↗" data-cursor-en="Visit ↗" href="https://davidtaranto96.github.io/Blog-AI/" target="_blank" rel="noopener">
+            <img src="assets/casos/case-blogai.jpg" width="640" height="400" alt="Guía interactiva Claude: de 0 a Agentes" loading="lazy">
+            <div class="demo-info">
+              <div><h3>Claude: de 0 a Agentes</h3><small data-i18n="c9s">Guía interactiva · gratis</small></div>
+              <span class="live"><i aria-hidden="true"></i> Live</span>
+            </div>
+            <div class="demo-ov" aria-hidden="true"><span>Visitar ↗</span></div>
+          </a>
+
+          <a class="demo" data-cat="web" data-cursor="Visitar ↗" data-cursor-en="Visit ↗" href="https://davidtaranto96.github.io/Casamiento/" target="_blank" rel="noopener">
+            <img src="assets/casos/case-casamiento.jpg" width="640" height="400" alt="Invitación digital de casamiento con confirmación de asistencia" loading="lazy">
+            <div class="demo-info">
+              <div><h3>Invitación digital</h3><small data-i18n="c10s">RSVP a planilla · sin backend</small></div>
+              <span class="live"><i aria-hidden="true"></i> Live</span>
+            </div>
+            <div class="demo-ov" aria-hidden="true"><span>Visitar ↗</span></div>
+          </a>
+
+          <a class="demo" data-cat="web" data-cursor="Jugar ↗" data-cursor-en="Play ↗" href="https://davidtaranto96.github.io/El-Faro-del-fin-del-mundo/" target="_blank" rel="noopener">
+            <img src="assets/casos/case-faro.jpg" width="640" height="400" alt="El Faro del Fin del Mundo, aventura narrativa interactiva" loading="lazy">
+            <div class="demo-info">
+              <div><h3>El Faro del Fin del Mundo</h3><small data-i18n="c11s">Aventura narrativa · web</small></div>
+              <span class="live"><i aria-hidden="true"></i> Live</span>
+            </div>
+            <div class="demo-ov" aria-hidden="true"><span>Jugar ↗</span></div>
+          </a>
+
         </div>
       </div>
     </section>

@@ -491,10 +491,23 @@
     test_eb: "Trust", test_h: "Results, not promises.",
     test_note: "*Straight from clients",
     cta_note: "*No fluff",
-    demo_eb: "Live demos", demo_h: "Try it yourself.",
-    demo_sub: "No polished screenshots: these are the real systems, running right now.",
-    d1s: "CRM panel \u00b7 Next.js + Claude", d2s: "Interactive guide \u00b7 free",
-    d3s: "AI personal-finance app · in beta",
+    cs_eb: "Cases", cs_h: "Work delivered.",
+    cs_sub: "Real clients, in production. Anything with a link, you can open right now.",
+    cs_s1: "projects delivered", cs_s2: "online right now", cs_s3: "on their own domain",
+    cs_f0: "All", cs_f1: "Sites & stores", cs_f2: "Systems & CRM",
+    cs_f3: "Mobile apps", cs_f4: "AI automation",
+    c0s: "CRM + AI WhatsApp bot",
+    c1s: "Site + bookings · Salta retreats",
+    c2s: "Custom store · leather atelier",
+    c3s: "Custom CRM · used every day",
+    c4s: "Trilingual corporate site · agri",
+    c5s: "Gated community · real estate",
+    c6s: "Land lots · Yucatán, MX",
+    c7s: "Lead capture · real estate",
+    c8s: "Tasks & habits · Android",
+    c9s: "Interactive guide · free",
+    c10s: "RSVP to a spreadsheet · no backend",
+    c11s: "Narrative adventure · web",
     cta_eb: "Seriously", cta_h: "LET'S TALK.",
     cta_sub: "Got an idea? Tell me about it. My assistant replies instantly, understands your case and hands it to me pre-digested.",
     cta_btn: "Talk to my assistant",
@@ -661,5 +674,35 @@
       cur.style.left = x + "px"; cur.style.top = y + "px";
       requestAnimationFrame(follow);
     })();
+  }
+
+  /* ---------- 20. Filtro de casos ----------
+     Los chips filtran por data-cat sin tocar el DOM: solo [hidden]. El
+     contador de resultados se lee por lector de pantalla (aria-live). */
+  const csFilter = $("#csFilter"), csGrid = $("#csGrid");
+  if (csFilter && csGrid) {
+    const cards = $$(".demo", csGrid);
+    const chips = $$(".af-chip", csFilter);
+    const status = document.createElement("p");
+    status.className = "sr-only";
+    status.setAttribute("aria-live", "polite");
+    csGrid.parentNode.insertBefore(status, csGrid);
+
+    const apply = (f) => {
+      let n = 0;
+      cards.forEach((c) => {
+        const show = f === "all" || c.dataset.cat === f;
+        c.hidden = !show;
+        if (show) n++;
+      });
+      status.textContent = n + (lang === "en" ? " projects shown" : " proyectos visibles");
+    };
+
+    chips.forEach((chip) => {
+      chip.addEventListener("click", () => {
+        chips.forEach((c) => c.classList.toggle("on", c === chip));
+        apply(chip.dataset.f);
+      });
+    });
   }
 })();
