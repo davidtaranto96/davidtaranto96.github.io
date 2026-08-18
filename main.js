@@ -44,11 +44,16 @@
       // transición (pasa en algunos mobiles), la captura VIEJA quedaría
       // pegada en pantalla. Pasados 900ms la salteamos sí o sí.
       setTimeout(() => { try { vt.skipTransition(); } catch { /* ya terminó */ } }, 900);
-    } else {
+    } else if (!reduced) {
       // Fallback: cross-fade de colores
       root.classList.add("theme-fade");
       applyTheme(next);
       setTimeout(() => root.classList.remove("theme-fade"), 600);
+    } else {
+      // Con reduced-motion, .theme-fade (0,1,1) le gana por especificidad
+      // a la regla universal del @media y dispara un cross-fade de 550ms
+      // sobre todo el DOM: justo lo que el usuario pidio no tener.
+      applyTheme(next);
     }
   });
 
@@ -203,15 +208,17 @@
         `${L.need}: ${tipo}`,
         `${L.idea}: ${idea}`
       ].filter(Boolean).join("\n");
+      // Sin espera artificial: no hay backend que esperar, el spinner
+      // simulaba trabajo inexistente y le costaba 600ms a la conversion.
+      // La clase sigue puesta un rato porque es el guard anti doble-submit
+      // (se chequea arriba), pero ya no bloquea el envio.
       btn.classList.add("is-loading");
-      setTimeout(() => {
-        btn.classList.remove("is-loading");
-        if (via === "mail") {
-          location.href = `mailto:david_taranto@outlook.es?subject=${encodeURIComponent(L.subj)}&body=${encodeURIComponent(msg)}`;
-        } else {
-          open(`https://wa.me/5493875454070?text=${encodeURIComponent(msg)}`, "_blank", "noopener");
-        }
-      }, 600);
+      setTimeout(() => btn.classList.remove("is-loading"), 1200);
+      if (via === "mail") {
+        location.href = `mailto:david_taranto@outlook.es?subject=${encodeURIComponent(L.subj)}&body=${encodeURIComponent(msg)}`;
+      } else {
+        open(`https://wa.me/5493875454070?text=${encodeURIComponent(msg)}`, "_blank", "noopener");
+      }
     });
   }
 
@@ -669,11 +676,19 @@
     addEventListener("mouseup", () => cur.classList.remove("down"));
     document.documentElement.addEventListener("mouseleave", () => { cur.style.opacity = "0"; });
     document.documentElement.addEventListener("mouseenter", () => { cur.style.opacity = "1"; });
-    (function follow() {
+    // El loop se corta cuando el cursor alcanzo al mouse y lo relanza el
+    // proximo mousemove. Antes corria un rAF por frame para siempre, aunque
+    // el mouse estuviera quieto o la pestaña sin uso.
+    let siguiendo = false;
+    const follow = () => {
       x += (tx - x) * 0.22; y += (ty - y) * 0.22;
       cur.style.left = x + "px"; cur.style.top = y + "px";
+      if (Math.abs(tx - x) < 0.1 && Math.abs(ty - y) < 0.1) { siguiendo = false; return; }
       requestAnimationFrame(follow);
-    })();
+    };
+    const arrancar = () => { if (!siguiendo) { siguiendo = true; requestAnimationFrame(follow); } };
+    addEventListener("mousemove", arrancar, { passive: true });
+    arrancar();
   }
 
   /* ---------- 20. Filtro de casos ----------

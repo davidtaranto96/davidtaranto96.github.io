@@ -672,6 +672,10 @@ section { padding: 96px 0; }
    lo que tenga debajo → contraste garantizado sobre cualquier fondo.
    Solo se activa con mouse fino (JS agrega .cursor-on a <html>). */
 html.cursor-on, html.cursor-on * { cursor: none !important; }
+/* Los campos conservan el I-beam: sin esto no se ve donde estas tipeando
+   justo en el formulario, que es el objetivo de conversion de la pagina. */
+html.cursor-on input, html.cursor-on textarea,
+html.cursor-on [contenteditable] { cursor: auto !important; }
 .cursor {
   position: fixed; left: 50%; top: -40px; width: 14px; height: 14px;
   border-radius: 4px; background: #FFFFFF;
@@ -731,12 +735,26 @@ html.lang-swap [data-i18n] { animation: langswap 0.5s cubic-bezier(0.4, 0, 0.2, 
     animation-duration: 0.01ms !important;
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
+    /* Los delays tambien: sin esto sobreviven el stagger del menu mobile y
+       los 6 nth-child del acordeon, que arrancan en opacity:0 — o sea,
+       contenido invisible justo para quien pidio menos movimiento. */
+    animation-delay: 0ms !important;
+    transition-delay: 0ms !important;
     scroll-behavior: auto !important;
   }
-  .mtrack { animation: none !important; }   /* marquees quietos */
+  /* Marquees quietos, pero alcanzables: parkeados dentro de un
+     overflow:hidden con mask se veian 6 de 13 logos y no habia forma de
+     llegar al resto. Se suaviza, no se apaga. */
+  .mtrack { animation: none !important; }
+  .marquee { overflow-x: auto; overscroll-behavior-x: contain; mask-image: none; -webkit-mask-image: none; }
+  .mtrack[aria-hidden="true"] { display: none; }   /* el track duplicado sobra si se scrollea a mano */
   .fx-spot { display: none; }               /* sin spotlight */
   .caret { animation: none; }               /* caret fijo */
-  .cursor { display: none; }                /* cursor nativo */
+  /* El cursor custom se oculta, pero .cursor-on sigue en <html> poniendo
+     cursor:none en todo: sin esto el visitante se queda SIN puntero. */
+  .cursor { display: none; }
+  html.cursor-on, html.cursor-on * { cursor: auto !important; }
+  html.cursor-on .acc-pill, html.cursor-on .demo-ov { display: revert; }
   .btn-ai, .btn-ai::before { animation: none; }        /* gradiente estático */
   .beam-card::after { animation: none; opacity: 0.4; }  /* beam estático */
   .h2 .w { opacity: 1 !important; transform: none !important; transition: none !important; }
