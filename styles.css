@@ -19,6 +19,12 @@
   --grid-color: rgba(51, 51, 51, 0.08);   /* texto al 8% */
   --font-head: "Instrument Sans", system-ui, sans-serif;
   --font-mono: "Geist Mono", ui-monospace, Menlo, monospace;
+  /* Tiempos. Toda duracion nueva sale de aca, igual que los colores. */
+  --fx-ease: cubic-bezier(0.4, 0, 0.2, 1);
+  --fx-tap: 140ms;    /* feedback de pulsado */
+  --fx-rapido: 180ms; /* hover, tooltips */
+  --fx-medio: 260ms;  /* dropdowns, acordeones */
+  --fx-lento: 520ms;  /* reveal al scroll, modales */
   color-scheme: light;
 }
 [data-theme="dark"] {
@@ -75,11 +81,14 @@ html.theme-fade *, html.theme-fade *::before, html.theme-fade *::after {
 
 /* Accesibilidad */
 .skip {
-  position: absolute; left: 16px; top: -60px; z-index: 200;
+  position: absolute; left: 16px; top: 12px; z-index: 200;
   background: var(--accent); color: #0E0F12; padding: 10px 16px;
-  border-radius: 8px; font-size: 12px; transition: top 0.2s;
+  border-radius: 8px; font-size: 12px;
+  /* transform en vez de top: no toca layout */
+  transform: translateY(-80px);
+  transition: transform var(--fx-rapido) var(--fx-ease);
 }
-.skip:focus { top: 12px; }
+.skip:focus { transform: none; }
 :focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; border-radius: 4px; }
 
 /* ---------- 3. Capa de efectos global (z-index:-1) ---------- */
@@ -668,6 +677,9 @@ html.cursor-on, html.cursor-on * { cursor: none !important; }
   border-radius: 4px; background: #FFFFFF;
   mix-blend-mode: difference; pointer-events: none; z-index: 9999;
   translate: -50% -50%;
+  /* width/height a proposito: el elemento es fixed, asi que no re-layoutea
+     el documento, y el estado .label mide segun su texto — un scale() lo
+     deformaria. Es la excepcion consciente a la regla de solo transform. */
   transition: width 0.25s, height 0.25s, border-radius 0.25s, opacity 0.2s;
 }
 .cursor.on { width: 34px; height: 34px; border-radius: 999px; }   /* redondo sobre botones */
@@ -1009,4 +1021,54 @@ html.lang-swap [data-i18n] { animation: langswap 0.5s cubic-bezier(0.4, 0, 0.2, 
   .founder { grid-template-columns: 1fr; gap: 22px; }
   .founder-fig img { min-height: 0; aspect-ratio: 1; }
   .founder-cta { align-self: flex-start; margin-top: 6px; }
+}
+
+/* ============================================================
+   19. RENDIMIENTO Y COSTURAS — pausa fuera de pantalla,
+       reveal de casos y feedback de pulsado
+   ============================================================ */
+
+/* ---------- Pausa fuera de pantalla ----------
+   Las animaciones CSS NO se pausan solas cuando el elemento sale del
+   viewport: sin esto quedan ~33 loops corriendo, 24 de ellos sobre cosas
+   que nadie está mirando. El JS marca cada <section> con .fx-quieto al
+   salir. Usamos animation-play-state (no animation:none) porque conserva
+   el progreso: al volver el loop sigue donde estaba, sin reinicio ni salto.
+   Incluye pseudo-elementos: el halo del botón y el border beam viven ahí. */
+.fx-quieto,
+.fx-quieto *,
+.fx-quieto::before,   .fx-quieto::after,
+.fx-quieto *::before, .fx-quieto *::after {
+  animation-play-state: paused !important;
+}
+/* Excepcion: langswap (el fundido al cambiar de idioma) arranca en
+   opacity:0 y corre sobre TODO [data-i18n], en las 8 secciones a la vez.
+   Pausado dejaria ese texto invisible los 650ms que dura la clase, y el
+   usuario que scrollea en el medio veria huecos. Es one-shot, asi que
+   dejarlo correr no cuesta nada. */
+.fx-quieto [data-i18n] { animation-play-state: running !important; }
+
+/* ---------- Reveal de las cards de casos ----------
+   Las 12 cards aparecían de golpe. El estado escondido cuelga de .fx-on,
+   que el JS agrega antes del primer pintado: si el script no carga o falla,
+   la clase nunca aparece y las cards quedan visibles. Nunca se entrega una
+   página donde un JS caído deja el contenido invisible. */
+html.fx-on .cs-grid .demo {
+  opacity: 0;
+  transform: translateY(14px);
+  transition: opacity var(--fx-lento) var(--fx-ease) var(--fx-d, 0ms),
+              transform var(--fx-lento) var(--fx-ease) var(--fx-d, 0ms);
+}
+html.fx-on .cs-grid .demo.fx-visto { opacity: 1; transform: none; }
+
+/* ---------- Feedback de pulsado ----------
+   Sólo .btn tenía :active. Los chips de filtro, las cards y el menú no
+   acusaban recibo al tocarlos, que en mobile se siente como que no anduvo. */
+.af-chip, .cs-grid .demo, .pw, summary { transition: transform var(--fx-tap) var(--fx-ease); }
+.af-chip:active, .pw:active, summary:active { transform: scale(0.97); }
+.cs-grid a.demo:active { transform: scale(0.985); }
+
+@media (prefers-reduced-motion: reduce) {
+  html.fx-on .cs-grid .demo { opacity: 1 !important; transform: none !important; transition: none !important; }
+  .af-chip:active, .pw:active, summary:active, .cs-grid a.demo:active { transform: none; }
 }

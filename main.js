@@ -702,7 +702,90 @@
       chip.addEventListener("click", () => {
         chips.forEach((c) => c.classList.toggle("on", c === chip));
         apply(chip.dataset.f);
+        revelarVisibles();   // el filtro puede mostrar cards aún sin revelar
       });
     });
+  }
+
+  /* ---------- 21. Reveal escalonado de las cards de casos ----------
+     Las 12 cards entraban de golpe. El escalonado se corta a las 8 primeras
+     de cada tanda: más que eso y la última tarda casi medio segundo de más.
+     Dos redes de seguridad, porque el modo de falla de este efecto es dejar
+     contenido invisible para siempre:
+       a) el gate .fx-on (en el <head>): si el JS no corre, todo se ve;
+       b) el barrido de abajo, para el que scrollea rápido o entra por
+          #proyectos — ahí el observer nunca cruza un umbral y no dispara. */
+  let revelarVisibles = () => {};
+  const csCards = $$(".cs-grid .demo");
+  if (csCards.length) {
+    if (reduced) {
+      csCards.forEach((c) => c.classList.add("fx-visto"));
+    } else if ("IntersectionObserver" in window) {
+      let pendientes = csCards.slice();
+      const marcar = (el, i) => {
+        el.style.setProperty("--fx-d", Math.min(i, 7) * 55 + "ms");
+        el.classList.add("fx-visto");
+        rio.unobserve(el);
+      };
+      const rio = new IntersectionObserver((ents) => {
+        let i = 0;
+        ents.forEach((en) => { if (en.isIntersecting) marcar(en.target, i++); });
+        pendientes = pendientes.filter((el) => !el.classList.contains("fx-visto"));
+      }, { threshold: 0.1, rootMargin: "0px 0px -40px 0px" });
+      csCards.forEach((el) => rio.observe(el));
+
+      // Rescate: lo que quedó POR ENCIMA de la pantalla se muestra sin
+      // transición. Si el usuario saltó con #proyectos o scrolleó de golpe,
+      // el observer nunca cruza un umbral y esas cards no se enterarían.
+      // Sólo mira r.bottom < 0: las que están a la vista las maneja el
+      // observer, con su escalonado — rescatarlas acá lo anularía.
+      const rescatarArriba = () => {
+        for (let i = pendientes.length - 1; i >= 0; i--) {
+          const el = pendientes[i];
+          if (el.getBoundingClientRect().bottom < 0) {
+            el.style.setProperty("--fx-d", "0ms");
+            el.classList.add("fx-visto");
+            rio.unobserve(el);
+            pendientes.splice(i, 1);
+          }
+        }
+      };
+      addEventListener("scroll", rescatarArriba, { passive: true });
+      addEventListener("resize", rescatarArriba, { passive: true });
+      rescatarArriba();
+
+      // El filtro puede sacar de [hidden] una card que nunca se reveló: si
+      // ya está en pantalla, el observer no vuelve a dispararse por ella.
+      revelarVisibles = () => {
+        for (let i = pendientes.length - 1; i >= 0; i--) {
+          const el = pendientes[i];
+          if (el.hidden) continue;
+          const r = el.getBoundingClientRect();
+          if (r.top < innerHeight && r.bottom > 0) {
+            el.style.setProperty("--fx-d", "0ms");
+            el.classList.add("fx-visto");
+            rio.unobserve(el);
+            pendientes.splice(i, 1);
+          }
+        }
+      };
+    } else {
+      csCards.forEach((c) => c.classList.add("fx-visto"));
+    }
+  }
+
+  /* ---------- 22. Pausar animaciones fuera del viewport ----------
+     Las animaciones CSS siguen corriendo aunque el elemento no se vea: sin
+     esto quedan ~33 loops activos, 24 de ellos invisibles, gastando batería.
+     Se observan las <section> (8 observers en vez de 30) y el CSS pausa todo
+     lo que cuelgue de la sección, pseudo-elementos incluidos.
+     El rootMargin de 250px hace que la sección ya venga animando cuando
+     asoma, así nunca se ve el arranque de un loop. La barra sticky queda
+     afuera a propósito: siempre está a la vista. */
+  if ("IntersectionObserver" in window && !reduced) {
+    const pio = new IntersectionObserver((ents) => {
+      ents.forEach((en) => en.target.classList.toggle("fx-quieto", !en.isIntersecting));
+    }, { rootMargin: "250px 0px" });
+    $$("section").forEach((sec) => pio.observe(sec));
   }
 })();

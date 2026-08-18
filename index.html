@@ -37,6 +37,11 @@
       var t = localStorage.getItem("dt-theme")
            || (matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light");
       document.documentElement.dataset.theme = t;
+      // Gate del reveal: el estado escondido de las cards cuelga de .fx-on.
+      // Va acá y no en main.js (que es defer) para que se aplique antes del
+      // primer pintado. Si este script no corre, la clase nunca se agrega y
+      // las cards quedan visibles: un JS caído nunca deja la página en blanco.
+      document.documentElement.classList.add("fx-on");
     })();
   </script>
 
