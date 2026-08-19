@@ -1148,14 +1148,14 @@ html.fx-on .cs-grid .demo.fx-visto { opacity: 1; transform: none; }
 
 /* ---------- Objetos 3D del acordeon (tecnica de Stokt) ----------
    Video WebM con canal alfa: el objeto flota recortado, sin caja. Con
-   preload="none" no se descarga un byte hasta que el usuario pasa el
-   mouse; hasta entonces se ve el poster, que es un frame del mismo
-   objeto para que al reproducirse no salte la imagen. */
+   WebP animado (no WebM: Safari no soporta alfa ahi y el objeto sale
+   dentro de un rectangulo negro). En reposo se ve un PNG estatico, que es
+   el frame 0 del mismo objeto; el WebP se descarga recien al hover. */
 /* El objeto vive centrado en un frame 16:10 con aire alrededor. En el cover
    se lo deja desbordar para que llene el panel: .acc-p ya recorta con
    overflow:hidden, asi que lo unico que se pierde es ese aire. */
 .srv-obj { display: block; background: none; }
-.acc-cover video.srv-obj {
+.acc-cover img.srv-obj {
   --obj-w: min(190%, 560px);
   width: var(--obj-w); max-width: none; margin-block: auto;
   /* en flex, un item mas ancho que la linea desborda hacia un lado aunque
@@ -1163,7 +1163,7 @@ html.fx-on .cs-grid .demo.fx-visto { opacity: 1; transform: none; }
   margin-inline: calc((100% - var(--obj-w)) / 2);
 }
 @media (max-width: 720px) {
-  .acc-cover video.srv-obj { width: 120px; max-width: 120px; margin: 0 -17px; align-self: auto; }
+  .acc-cover img.srv-obj { width: 120px; max-width: 120px; margin: 0 -17px; align-self: auto; }
 }
 @media (prefers-reduced-motion: reduce) {
   .srv-obj { pointer-events: none; }   /* el JS ya no lo reproduce */

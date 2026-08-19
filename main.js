@@ -794,21 +794,27 @@
   }
 
   /* ---------- 22. Objetos 3D del acordeon ----------
-     Tecnica tomada de wearestokt.com: el video no se descarga hasta que
-     el usuario muestra interes. Con preload="none" el readyState arranca
-     en 0 y recien al hover carga y reproduce; mientras tanto se ve el
-     poster. Al salir se pausa, asi no queda decodificando de fondo.
-     Con reduced-motion no se toca: queda el poster fijo. */
+     Mismo patron que wearestokt.com: el objeto flota recortado y solo se
+     anima cuando el usuario muestra interes. Ellos usan WebM con canal
+     alfa; nosotros WebP animado, porque Safari NO soporta alfa en WebM y
+     ahi el objeto sale dentro de un rectangulo negro.
+     El PNG estatico es el estado en reposo; al hover se cambia el src por
+     el WebP, que recien ahi se descarga. Al salir vuelve al PNG. */
   if (!reduced) {
-    $$(".acc-p").forEach((panel) => {
-      const v = $("video.srv-obj", panel);
-      if (!v) return;
-      const arrancar = () => { v.play().catch(() => {}); };
-      const frenar = () => { if (!v.paused) v.pause(); };
-      panel.addEventListener("pointerenter", arrancar);
+    $$("img.srv-obj[data-anim]").forEach((img) => {
+      const panel = img.closest(".acc-p");
+      if (!panel) return;
+      const quieto = img.getAttribute("src");
+      const animado = img.dataset.anim;
+      let precargado = false;
+      const animar = () => {
+        if (!precargado) { new Image().src = animado; precargado = true; }
+        img.src = animado;
+      };
+      const frenar = () => { img.src = quieto; };
+      panel.addEventListener("pointerenter", animar);
       panel.addEventListener("pointerleave", frenar);
-      // el foco de teclado tambien lo dispara: no solo con mouse
-      panel.addEventListener("focusin", arrancar);
+      panel.addEventListener("focusin", animar);
       panel.addEventListener("focusout", frenar);
     });
   }
