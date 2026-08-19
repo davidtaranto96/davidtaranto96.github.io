@@ -793,7 +793,27 @@
     }
   }
 
-  /* ---------- 22. Pausar animaciones fuera del viewport ----------
+  /* ---------- 22. Objetos 3D del acordeon ----------
+     Tecnica tomada de wearestokt.com: el video no se descarga hasta que
+     el usuario muestra interes. Con preload="none" el readyState arranca
+     en 0 y recien al hover carga y reproduce; mientras tanto se ve el
+     poster. Al salir se pausa, asi no queda decodificando de fondo.
+     Con reduced-motion no se toca: queda el poster fijo. */
+  if (!reduced) {
+    $$(".acc-p").forEach((panel) => {
+      const v = $("video.srv-obj", panel);
+      if (!v) return;
+      const arrancar = () => { v.play().catch(() => {}); };
+      const frenar = () => { if (!v.paused) v.pause(); };
+      panel.addEventListener("pointerenter", arrancar);
+      panel.addEventListener("pointerleave", frenar);
+      // el foco de teclado tambien lo dispara: no solo con mouse
+      panel.addEventListener("focusin", arrancar);
+      panel.addEventListener("focusout", frenar);
+    });
+  }
+
+  /* ---------- 23. Pausar animaciones fuera del viewport ----------
      Las animaciones CSS siguen corriendo aunque el elemento no se vea: sin
      esto quedan ~33 loops activos, 24 de ellos invisibles, gastando batería.
      Se observan las <section> (8 observers en vez de 30) y el CSS pausa todo

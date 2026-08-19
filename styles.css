@@ -597,12 +597,12 @@ section { padding: 96px 0; }
   display: flex; flex-direction: column; padding: 26px;
   transition: opacity 0.35s;
 }
-.acc-cover img {
+.acc-cover :is(img, video) {
   width: min(80%, 360px); height: auto; margin: auto; border-radius: 10px;
   transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
 }
 /* Hover: la imagen "flota" y aparece la pill de detalle */
-.acc-p:not(.open):hover .acc-cover img { transform: translateY(-10px) rotate(-2deg) scale(1.05); }
+.acc-p:not(.open):hover .acc-cover :is(img, video) { transform: translateY(-10px) rotate(-2deg) scale(1.05); }
 .acc-cover h3 { font-size: 21px; font-weight: 500; }
 .acc-pill {
   position: absolute; left: 50%; top: 50%; translate: -50% -50%; z-index: 2;
@@ -658,7 +658,7 @@ section { padding: 96px 0; }
   .acc-p { flex: none !important; min-width: 0; }
   .acc-vert { display: none; }
   .acc-cover { position: relative; inset: auto; flex-direction: row; align-items: center; gap: 18px; padding: 18px 20px; }
-  .acc-cover img { width: 86px; margin: 0; }
+  .acc-cover :is(img, video) { width: 86px; margin: 0; }
   .acc-cover h3 { font-size: 17px; }
   .acc-pill { position: static; inset: auto; translate: none; opacity: 1; pointer-events: none; order: 1; margin-left: auto; padding: 8px 12px; font-size: 10px; }
   .acc.has-open .acc-p:not(.open) .acc-cover { opacity: 1; pointer-events: auto; }
@@ -1096,7 +1096,7 @@ html.fx-on .cs-grid .demo.fx-visto { opacity: 1; transform: none; }
    no pasa nada y el click se siente perdido. La especificidad tiene que
    ganarle a la regla de hover de .acc-cover img (0,4,1), por eso el
    selector arranca en .acc-p:not(.open). */
-.acc-p:not(.open) .acc-tab:active ~ .acc-cover img {
+.acc-p:not(.open) .acc-tab:active ~ .acc-cover :is(img, video) {
   transform: scale(0.97);
   transition-duration: var(--fx-tap);
 }
@@ -1144,4 +1144,27 @@ html.fx-on .cs-grid .demo.fx-visto { opacity: 1; transform: none; }
   .m-baza  { width: 50px; height: 23px; }
   .m-canada{ width: 32px; height: 37px; }
   .m-aires { width: 148px; height: 21px; }
+}
+
+/* ---------- Objetos 3D del acordeon (tecnica de Stokt) ----------
+   Video WebM con canal alfa: el objeto flota recortado, sin caja. Con
+   preload="none" no se descarga un byte hasta que el usuario pasa el
+   mouse; hasta entonces se ve el poster, que es un frame del mismo
+   objeto para que al reproducirse no salte la imagen. */
+/* El objeto vive centrado en un frame 16:10 con aire alrededor. En el cover
+   se lo deja desbordar para que llene el panel: .acc-p ya recorta con
+   overflow:hidden, asi que lo unico que se pierde es ese aire. */
+.srv-obj { display: block; background: none; }
+.acc-cover video.srv-obj {
+  --obj-w: min(190%, 560px);
+  width: var(--obj-w); max-width: none; margin-block: auto;
+  /* en flex, un item mas ancho que la linea desborda hacia un lado aunque
+     tenga align-self:center. El margen negativo simetrico si lo centra. */
+  margin-inline: calc((100% - var(--obj-w)) / 2);
+}
+@media (max-width: 720px) {
+  .acc-cover video.srv-obj { width: 120px; max-width: 120px; margin: 0 -17px; align-self: auto; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .srv-obj { pointer-events: none; }   /* el JS ya no lo reproduce */
 }
