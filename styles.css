@@ -1107,3 +1107,41 @@ html.fx-on .cs-grid .demo.fx-visto { opacity: 1; transform: none; }
   .acc-p:not(.open) .acc-tab:active ~ .acc-cover img,
   .acc-reset:active { transform: none; }
 }
+
+/* ---------- 20. Marcas ----------
+   Los logos son siluetas PNG: la forma vive en el canal alfa y el color
+   lo pone currentColor a traves de mask-image. Por eso no hacen falta
+   variantes para claro y oscuro, y el hover es solo un cambio de opacidad. */
+.marcas-sec { padding: 62px 0 !important; }
+.marcas-h {
+  text-align: center; font-size: 11px; letter-spacing: 0.14em;
+  text-transform: uppercase; color: var(--muted); margin-bottom: 30px;
+}
+.marcas {
+  list-style: none; display: flex; flex-wrap: wrap;
+  align-items: center; justify-content: center; gap: 26px 58px;
+}
+.marcas a { display: block; opacity: 0.55; transition: opacity var(--fx-rapido) var(--fx-ease); }
+.marcas a:hover, .marcas a:focus-visible { opacity: 1; }
+.marca {
+  display: block; background-color: currentColor;
+  -webkit-mask-position: center; mask-position: center;
+  -webkit-mask-size: contain;    mask-size: contain;
+  -webkit-mask-repeat: no-repeat; mask-repeat: no-repeat;
+}
+/* Alturas por marca: equilibrio optico, no matematico. El logo de Cañada
+   es apilado (simbolo sobre texto), asi que necesita mas alto para pesar
+   lo mismo que un wordmark de una linea. */
+.m-melou  { width: 104px; height: 31px; -webkit-mask-image: url(assets/marcas/marca-melou.png);  mask-image: url(assets/marcas/marca-melou.png); }
+.m-baza   { width: 62px;  height: 29px; -webkit-mask-image: url(assets/marcas/marca-baza.png);   mask-image: url(assets/marcas/marca-baza.png); }
+.m-canada { width: 39px;  height: 45px; -webkit-mask-image: url(assets/marcas/marca-canada.png); mask-image: url(assets/marcas/marca-canada.png); }
+.m-aires  { width: 189px; height: 27px; -webkit-mask-image: url(assets/marcas/marca-aires.png);  mask-image: url(assets/marcas/marca-aires.png); }
+.marcas-sec .astnote { display: block; text-align: center; margin-top: 26px; }
+
+@media (max-width: 720px) {
+  .marcas { gap: 22px 34px; }
+  .m-melou { width: 84px; height: 25px; }
+  .m-baza  { width: 50px; height: 23px; }
+  .m-canada{ width: 32px; height: 37px; }
+  .m-aires { width: 148px; height: 21px; }
+}

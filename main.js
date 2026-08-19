@@ -498,6 +498,8 @@
     test_eb: "Trust", test_h: "Results, not promises.",
     test_note: "*Straight from clients",
     cta_note: "*No fluff",
+    mk_h: "Brands that already trusted me",
+    mk_note: "*Delivered work, not filler logos",
     cs_eb: "Cases", cs_h: "Work delivered.",
     cs_sub: "Real clients, in production. Anything with a link, you can open right now.",
     cs_s1: "projects delivered", cs_s2: "online right now", cs_s3: "on their own domain",
