@@ -1090,3 +1090,20 @@ html.fx-on .cs-grid .demo.fx-visto { opacity: 1; transform: none; }
   html.fx-on .cs-grid .demo { opacity: 1 !important; transform: none !important; transition: none !important; }
   .af-chip:active, .pw:active, summary:active, .cs-grid a.demo:active { transform: none; }
 }
+
+/* ---------- Feedback al apretar un panel del acordeón ----------
+   Abrir tarda 650ms (flex-basis). Sin esto, el primer cuarto de segundo
+   no pasa nada y el click se siente perdido. La especificidad tiene que
+   ganarle a la regla de hover de .acc-cover img (0,4,1), por eso el
+   selector arranca en .acc-p:not(.open). */
+.acc-p:not(.open) .acc-tab:active ~ .acc-cover img {
+  transform: scale(0.97);
+  transition-duration: var(--fx-tap);
+}
+.acc-tab:active .acc-vert { opacity: 0.55; transition: opacity var(--fx-tap) var(--fx-ease); }
+.acc-reset:active { transform: scale(0.97); transition: transform var(--fx-tap) var(--fx-ease); }
+
+@media (prefers-reduced-motion: reduce) {
+  .acc-p:not(.open) .acc-tab:active ~ .acc-cover img,
+  .acc-reset:active { transform: none; }
+}
