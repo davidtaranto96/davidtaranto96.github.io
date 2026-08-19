@@ -505,6 +505,7 @@
     cs_s1: "projects delivered", cs_s2: "online right now", cs_s3: "on their own domain",
     cs_f0: "All", cs_f1: "Sites & stores", cs_f2: "Systems & CRM",
     cs_f3: "Mobile apps", cs_f4: "AI automation",
+    // CASOS:INICIO
     c0s: "CRM + AI WhatsApp bot",
     c1s: "Site + bookings · Salta retreats",
     c2s: "Custom store · leather atelier",
@@ -517,6 +518,7 @@
     c9s: "Interactive guide · free",
     c10s: "RSVP to a spreadsheet · no backend",
     c11s: "Narrative adventure · web",
+    // CASOS:FIN
     cta_eb: "Seriously", cta_h: "LET'S TALK.",
     cta_sub: "Got an idea? Tell me about it. My assistant replies instantly, understands your case and hands it to me pre-digested.",
     cta_btn: "Talk to my assistant",
