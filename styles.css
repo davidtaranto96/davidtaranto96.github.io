@@ -1155,15 +1155,17 @@ html.fx-on .cs-grid .demo.fx-visto { opacity: 1; transform: none; }
    se lo deja desbordar para que llene el panel: .acc-p ya recorta con
    overflow:hidden, asi que lo unico que se pierde es ese aire. */
 .srv-obj { display: block; background: none; }
-.acc-cover img.srv-obj {
-  --obj-w: min(190%, 560px);
+.acc-cover canvas.srv-obj {
+  /* los objetos de Claude Design llenan casi todo el frame 720x450,
+     asi que no admiten el desborde que necesitaban los anteriores */
+  --obj-w: min(132%, 400px);
   width: var(--obj-w); max-width: none; margin-block: auto;
   /* en flex, un item mas ancho que la linea desborda hacia un lado aunque
      tenga align-self:center. El margen negativo simetrico si lo centra. */
   margin-inline: calc((100% - var(--obj-w)) / 2);
 }
 @media (max-width: 720px) {
-  .acc-cover img.srv-obj { width: 120px; max-width: 120px; margin: 0 -17px; align-self: auto; }
+  .acc-cover canvas.srv-obj { width: 120px; max-width: 120px; height: auto; margin: 0 -17px; align-self: auto; }
 }
 @media (prefers-reduced-motion: reduce) {
   .srv-obj { pointer-events: none; }   /* el JS ya no lo reproduce */

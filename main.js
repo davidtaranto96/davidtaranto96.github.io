@@ -793,31 +793,37 @@
     }
   }
 
-  /* ---------- 22. Objetos 3D del acordeon ----------
-     Mismo patron que wearestokt.com: el objeto flota recortado y solo se
-     anima cuando el usuario muestra interes. Ellos usan WebM con canal
-     alfa; nosotros WebP animado, porque Safari NO soporta alfa en WebM y
-     ahi el objeto sale dentro de un rectangulo negro.
-     El PNG estatico es el estado en reposo; al hover se cambia el src por
-     el WebP, que recien ahi se descarga. Al salir vuelve al PNG. */
-  if (!reduced) {
-    $$("img.srv-obj[data-anim]").forEach((img) => {
-      const panel = img.closest(".acc-p");
-      if (!panel) return;
-      const quieto = img.getAttribute("src");
-      const animado = img.dataset.anim;
-      let precargado = false;
-      const animar = () => {
-        if (!precargado) { new Image().src = animado; precargado = true; }
-        img.src = animado;
-      };
-      const frenar = () => { img.src = quieto; };
-      panel.addEventListener("pointerenter", animar);
-      panel.addEventListener("pointerleave", frenar);
-      panel.addEventListener("focusin", animar);
-      panel.addEventListener("focusout", frenar);
-    });
-  }
+  /* ---------- 22. Objetos animados del acordeon ----------
+     Se resuelven en vivo sobre un <canvas>, no son video ni WebP: asi la
+     animacion corre a la tasa de refresco real de la pantalla (120 Hz si la
+     hay) y el dibujo sale nitido a cualquier densidad, cosa que un archivo
+     con fps y resolucion fijos no puede dar. Ademas pesan 48 KB los cuatro
+     contra 1,5 MB en WebP.
+     En reposo se dibuja un frame quieto —el mas legible de cada animacion—
+     y el bucle arranca recien al hover. */
+  const REPOSO = { web: 18, sys: 18, app: 17, ia: 9 };
+  $$("canvas.srv-obj[data-obj]").forEach((cv) => {
+    const panel = cv.closest(".acc-p");
+    const crear = window.DTAnim && window.DTAnim[cv.dataset.obj];
+    if (!panel || !crear) return;
+    // el canvas se dibuja a la densidad del dispositivo; el tamaño en pantalla
+    // lo sigue mandando el CSS
+    const dpr = Math.min(3, window.devicePixelRatio || 1);
+    let obj;
+    try { obj = crear(cv, { q: "scale=" + dpr, reposo: REPOSO[cv.dataset.obj] || 0 }); }
+    catch (e) { return; }
+    if (reduced || !obj) return;          // con movimiento reducido queda el frame quieto
+    panel.addEventListener("pointerenter", obj.start);
+    panel.addEventListener("pointerleave", obj.stop);
+    panel.addEventListener("focusin", obj.start);
+    panel.addEventListener("focusout", obj.stop);
+    // si la seccion sale de pantalla, no tiene sentido seguir dibujando
+    if ("IntersectionObserver" in window) {
+      new IntersectionObserver((es) => {
+        es.forEach((e) => { if (!e.isIntersecting) obj.stop(); });
+      }, { rootMargin: "120px 0px" }).observe(panel);
+    }
+  });
 
   /* ---------- 23. Pausar animaciones fuera del viewport ----------
      Las animaciones CSS siguen corriendo aunque el elemento no se vea: sin

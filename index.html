@@ -231,8 +231,8 @@
             <!-- Cover: lo que se ve en la grilla inicial (imagen animada + título) -->
             <div class="acc-cover" aria-hidden="true">
               <span class="acc-pill" data-i18n="acc_pill">Ver detalle →</span>
-              <img class="srv-obj" src="assets/obj-web.png" data-anim="assets/obj-web.webp"
-                   width="720" height="450" alt="" loading="lazy">
+              <canvas class="srv-obj" data-obj="web" width="720" height="450"
+                      aria-hidden="true"></canvas>
               <h3 data-i18n="s1_h">Webs y Tiendas</h3>
             </div>
             <div class="acc-body">
@@ -260,8 +260,8 @@
             <!-- Cover: lo que se ve en la grilla inicial (imagen animada + título) -->
             <div class="acc-cover" aria-hidden="true">
               <span class="acc-pill" data-i18n="acc_pill">Ver detalle →</span>
-              <img class="srv-obj" src="assets/obj-sys.png" data-anim="assets/obj-sys.webp"
-                   width="720" height="450" alt="" loading="lazy">
+              <canvas class="srv-obj" data-obj="sys" width="720" height="450"
+                      aria-hidden="true"></canvas>
               <h3 data-i18n="s2_h">Sistemas y CRM</h3>
             </div>
             <div class="acc-body">
@@ -288,8 +288,8 @@
             <!-- Cover: lo que se ve en la grilla inicial (imagen animada + título) -->
             <div class="acc-cover" aria-hidden="true">
               <span class="acc-pill" data-i18n="acc_pill">Ver detalle →</span>
-              <img class="srv-obj" src="assets/obj-app.png" data-anim="assets/obj-app.webp"
-                   width="720" height="450" alt="" loading="lazy">
+              <canvas class="srv-obj" data-obj="app" width="720" height="450"
+                      aria-hidden="true"></canvas>
               <h3 data-i18n="s3_h">Apps móviles</h3>
             </div>
             <div class="acc-body">
@@ -316,8 +316,8 @@
             <!-- Cover: lo que se ve en la grilla inicial (imagen animada + título) -->
             <div class="acc-cover" aria-hidden="true">
               <span class="acc-pill" data-i18n="acc_pill">Ver detalle →</span>
-              <img class="srv-obj" src="assets/obj-ia.png" data-anim="assets/obj-ia.webp"
-                   width="720" height="450" alt="" loading="lazy">
+              <canvas class="srv-obj" data-obj="ia" width="720" height="450"
+                      aria-hidden="true"></canvas>
               <h3 data-i18n="s4_h">Automatización IA</h3>
             </div>
             <div class="acc-body">
@@ -779,6 +779,7 @@
   </footer>
 
   <script src="assets/land-data.js" defer></script>
+  <script src="objetos.js" defer></script>
   <script src="main.js" defer></script>
 </body>
 </html>
