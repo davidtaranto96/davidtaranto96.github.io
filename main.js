@@ -795,32 +795,50 @@
 
   /* ---------- 22. Objetos animados del acordeon ----------
      Se resuelven en vivo sobre un <canvas>, no son video ni WebP: asi la
-     animacion corre a la tasa de refresco real de la pantalla (120 Hz si la
-     hay) y el dibujo sale nitido a cualquier densidad, cosa que un archivo
-     con fps y resolucion fijos no puede dar. Ademas pesan 48 KB los cuatro
-     contra 1,5 MB en WebP.
-     En reposo se dibuja un frame quieto —el mas legible de cada animacion—
-     y el bucle arranca recien al hover. */
+     animacion corre a la tasa de refresco real de la pantalla y el dibujo
+     sale nitido a cualquier densidad. 48 KB los cuatro modulos.
+     Cada panel tiene DOS canvas del mismo objeto: el del cover (quieto en
+     su frame mas legible; anima al hover) y el del detalle, que corre en
+     loop continuo mientras el panel esta abierto — como la referencia de
+     wearestokt.com, donde el objeto sigue vivo en la card expandida. */
   const REPOSO = { web: 18, sys: 18, app: 17, ia: 9 };
-  $$("canvas.srv-obj[data-obj]").forEach((cv) => {
-    const panel = cv.closest(".acc-p");
-    const crear = window.DTAnim && window.DTAnim[cv.dataset.obj];
-    if (!panel || !crear) return;
-    // el canvas se dibuja a la densidad del dispositivo; el tamaño en pantalla
-    // lo sigue mandando el CSS
+  $$(".acc-p").forEach((panel) => {
     const dpr = Math.min(3, window.devicePixelRatio || 1);
-    let obj;
-    try { obj = crear(cv, { q: "scale=" + dpr, reposo: REPOSO[cv.dataset.obj] || 0 }); }
-    catch (e) { return; }
-    if (reduced || !obj) return;          // con movimiento reducido queda el frame quieto
-    panel.addEventListener("pointerenter", obj.start);
-    panel.addEventListener("pointerleave", obj.stop);
-    panel.addEventListener("focusin", obj.start);
-    panel.addEventListener("focusout", obj.stop);
-    // si la seccion sale de pantalla, no tiene sentido seguir dibujando
+    const instanciar = (cv) => {
+      const crear = window.DTAnim && window.DTAnim[cv.dataset.obj];
+      if (!crear) return null;
+      try { return crear(cv, { q: "scale=" + dpr, reposo: REPOSO[cv.dataset.obj] || 0 }); }
+      catch (e) { return null; }
+    };
+    const cover = instanciar($(".acc-cover canvas.srv-obj", panel));
+    const detalle = instanciar($(".acc-img canvas.srv-obj", panel));
+    if (reduced) return;                  // quedan los frames quietos
+
+    // cover: anima al hover, solo mientras el panel este cerrado
+    if (cover) {
+      const entra = () => { if (!panel.classList.contains("open")) cover.start(); };
+      panel.addEventListener("pointerenter", entra);
+      panel.addEventListener("pointerleave", cover.stop);
+      panel.addEventListener("focusin", entra);
+      panel.addEventListener("focusout", cover.stop);
+    }
+    // detalle: loop continuo mientras el panel este abierto. Se observa la
+    // clase .open en vez de engancharse al modulo del acordeon: cubre
+    // tambien el boton de reset y no acopla los dos modulos.
+    if (detalle && "MutationObserver" in window) {
+      new MutationObserver(() => {
+        if (panel.classList.contains("open")) { cover && cover.stop(); detalle.start(); }
+        else detalle.stop();
+      }).observe(panel, { attributes: true, attributeFilter: ["class"] });
+    }
+    // fuera del viewport nadie dibuja; al volver, el detalle retoma si
+    // el panel sigue abierto
     if ("IntersectionObserver" in window) {
       new IntersectionObserver((es) => {
-        es.forEach((e) => { if (!e.isIntersecting) obj.stop(); });
+        es.forEach((e) => {
+          if (!e.isIntersecting) { cover && cover.stop(); detalle && detalle.stop(); }
+          else if (detalle && panel.classList.contains("open")) detalle.start();
+        });
       }, { rootMargin: "120px 0px" }).observe(panel);
     }
   });
