@@ -1170,3 +1170,69 @@ html.fx-on .cs-grid .demo.fx-visto { opacity: 1; transform: none; }
 @media (prefers-reduced-motion: reduce) {
   .srv-obj { pointer-events: none; }   /* el JS ya no lo reproduce */
 }
+
+/* ============================================================
+   21. TARJETA HOLOGRAFICA DEL FOUNDER
+   Adaptacion del ProfileCard de React Bits a vanilla. El original usa un
+   holograma arcoiris tipo carta coleccionable; aca la paleta se acota al
+   gradiente de la marca (celeste -> violeta) para no romper el mono-tech.
+   El JS (main.js §24) setea las variables segun el puntero; el CSS solo
+   las consume, asi que sin JS la foto se ve normal y nada se rompe.
+   ============================================================ */
+.pf-card {
+  --pointer-x: 50%;  --pointer-y: 50%;
+  --pointer-from-center: 0;
+  --rotate-x: 0deg;  --rotate-y: 0deg;
+  --pf-op: 0;                                  /* intensidad, sube al entrar */
+  transform: rotateX(var(--rotate-x)) rotateY(var(--rotate-y));
+  transform-style: preserve-3d;
+  transition: transform var(--fx-medio) var(--fx-ease);
+  will-change: transform;
+}
+/* La perspectiva vive en el padre del elemento que rota */
+.founder { perspective: 1100px; }
+.pf-card .founder-id { z-index: 2; }           /* el nombre, siempre encima */
+
+.pf-shine, .pf-glare {
+  position: absolute; inset: 0; pointer-events: none;
+  border-radius: inherit;
+  opacity: var(--pf-op);
+  transition: opacity var(--fx-medio) var(--fx-ease);
+}
+/* Bandas iridiscentes que se desplazan con el puntero.
+   Muy contenidas a proposito: sobre una foto de una persona, el color-dodge
+   del original convierte la cara en un arcoiris. Aca el brillo se apoya en
+   soft-light y el iridiscente apenas se insinua. */
+.pf-shine {
+  background-image:
+    repeating-linear-gradient(
+      -22deg,
+      transparent 0%,
+      color-mix(in srgb, var(--accent) 62%, transparent) 7%,
+      color-mix(in srgb, #8B7CF6 50%, transparent) 12%,
+      transparent 20%),
+    radial-gradient(circle at var(--pointer-x) var(--pointer-y),
+      rgba(255, 255, 255, 0.30) 0%, transparent 55%);
+  background-size: 300% 300%, 100% 100%;
+  background-position: var(--pointer-x) var(--pointer-y), center;
+  mix-blend-mode: overlay;
+  opacity: calc(var(--pf-op) * 0.7);
+}
+/* Reflejo de vidrio: es el que hace el trabajo, el iridiscente solo acompaña */
+.pf-glare {
+  background-image: radial-gradient(farthest-corner circle at var(--pointer-x) var(--pointer-y),
+    rgba(255, 255, 255, 0.42) 5%,
+    color-mix(in srgb, var(--accent) 30%, transparent) 34%,
+    transparent 70%);
+  mix-blend-mode: screen;
+  opacity: calc(var(--pf-op) * 0.8);
+}
+
+@media (hover: none), (pointer: coarse) {
+  .pf-card { transform: none; }                /* en tactil no hay puntero que seguir */
+  .pf-shine, .pf-glare { display: none; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .pf-card { transform: none !important; transition: none; }
+  .pf-shine, .pf-glare { display: none; }
+}

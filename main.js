@@ -857,4 +857,55 @@
     }, { rootMargin: "250px 0px" });
     $$("section").forEach((sec) => pio.observe(sec));
   }
+
+  /* ---------- 24. Tarjeta holografica del founder ----------
+     Portado del ProfileCard de React Bits. El puntero define cuatro
+     variables CSS y el CSS hace todo el trabajo visual; aca solo se
+     calculan numeros.
+     El seguimiento es con lerp (no salto directo): el valor corre hacia
+     el objetivo un 14% por frame, que es lo que le da la sensacion de
+     peso. Al salir vuelve al centro y el rAF se corta solo, asi no queda
+     un bucle girando de fondo. */
+  const pfCard = $(".pf-card");
+  if (pfCard && !reduced && matchMedia("(hover: hover) and (pointer: fine)").matches) {
+    const TAU = 0.14;
+    let px = 50, py = 50, tx = 50, ty = 50;     // actual y objetivo, en %
+    let raf = null, activo = false;
+
+    const pintar = () => {
+      const dx = tx - px, dy = ty - py;
+      px += dx * TAU; py += dy * TAU;
+      const alCentro = Math.min(1, Math.hypot(py - 50, px - 50) / 50);
+      const st = pfCard.style;
+      st.setProperty("--pointer-x", px.toFixed(2) + "%");
+      st.setProperty("--pointer-y", py.toFixed(2) + "%");
+      st.setProperty("--pointer-from-center", alCentro.toFixed(3));
+      st.setProperty("--rotate-x", (-(py - 50) / 6).toFixed(2) + "deg");
+      st.setProperty("--rotate-y", ((px - 50) / 5).toFixed(2) + "deg");
+      // se corta cuando alcanzo al puntero y ya no hay nadie encima
+      if (!activo && Math.abs(dx) < 0.1 && Math.abs(dy) < 0.1) { raf = null; return; }
+      raf = requestAnimationFrame(pintar);
+    };
+    const arrancar = () => { if (raf === null) raf = requestAnimationFrame(pintar); };
+
+    pfCard.addEventListener("pointermove", (e) => {
+      const r = pfCard.getBoundingClientRect();
+      tx = ((e.clientX - r.left) / r.width) * 100;
+      ty = ((e.clientY - r.top) / r.height) * 100;
+      arrancar();
+    }, { passive: true });
+    pfCard.addEventListener("pointerenter", () => {
+      activo = true;
+      pfCard.style.setProperty("--pf-op", "1");
+      pfCard.style.transition = "none";          // el tilt lo maneja el rAF
+      arrancar();
+    });
+    pfCard.addEventListener("pointerleave", () => {
+      activo = false;
+      tx = 50; ty = 50;                          // vuelve al centro
+      pfCard.style.setProperty("--pf-op", "0");
+      pfCard.style.transition = "";              // y el CSS suaviza la vuelta
+      arrancar();
+    });
+  }
 })();
