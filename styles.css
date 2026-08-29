@@ -44,7 +44,11 @@
 
 /* TRUCO: el color de fondo vive en <html>; el body es transparente
    para que la capa de efectos (.fx, z-index:-1) se vea a través. */
-html { background: var(--bg); scroll-behavior: smooth; overflow-x: clip; }
+html {
+  background: var(--bg); scroll-behavior: smooth; overflow-x: clip;
+  /* el header fijo tapa el titulo al saltar por ancla sin esto */
+  scroll-padding-top: 96px;
+}
 body {
   background: transparent;
   color: var(--text);
@@ -1117,12 +1121,22 @@ html.fx-on .cs-grid .demo.fx-visto { opacity: 1; transform: none; }
   text-align: center; font-size: 11px; letter-spacing: 0.14em;
   text-transform: uppercase; color: var(--muted); margin-bottom: 30px;
 }
+/* Carrusel de dos pistas en direcciones opuestas, como el de Cañada Húmeda.
+   Reusa .marquee/.mtrack (loop infinito + mask lateral + pausa fuera de
+   viewport ya montada). La segunda pista es refuerzo visual: aria-hidden. */
+.marcas-carrusel { margin-bottom: 6px; }
+.marcas-carrusel .mtrack { --speed: 36s; }
+.marcas-carrusel.rev .mtrack { animation-direction: reverse; }
 .marcas {
-  list-style: none; display: flex; flex-wrap: wrap;
-  align-items: center; justify-content: center; gap: 26px 58px;
+  list-style: none; display: flex; flex-wrap: nowrap;
+  align-items: center; gap: 0 58px; padding-right: 58px;
 }
-.marcas a { display: block; opacity: 0.55; transition: opacity var(--fx-rapido) var(--fx-ease); }
-.marcas a:hover, .marcas a:focus-visible { opacity: 1; }
+.marca-txt {
+  font-family: var(--font-mono); font-size: 13px; letter-spacing: 0.10em;
+  text-transform: uppercase; color: var(--text); white-space: nowrap;
+}
+.marcas a, .marcas .marca-txt { display: block; opacity: 0.55; transition: opacity var(--fx-rapido) var(--fx-ease); }
+.marcas a:hover, .marcas a:focus-visible, .marcas li:hover .marca-txt { opacity: 1; }
 .marca {
   display: block; background-color: currentColor;
   -webkit-mask-position: center; mask-position: center;
@@ -1235,4 +1249,86 @@ html.fx-on .cs-grid .demo.fx-visto { opacity: 1; transform: none; }
 @media (prefers-reduced-motion: reduce) {
   .pf-card { transform: none !important; transition: none; }
   .pf-shine, .pf-glare { display: none; }
+}
+
+/* Chip Cliente/Propio en cada caso: separa trabajo para clientes de
+   productos propios sin necesitar una leyenda aparte. */
+.origen {
+  margin-left: auto; flex-shrink: 0;
+  font-family: var(--font-mono); font-size: 9px; letter-spacing: 0.08em;
+  text-transform: uppercase; color: var(--muted);
+  border: 1px solid var(--line); padding: 3px 8px; border-radius: 999px;
+  white-space: nowrap;
+}
+.origen + .live { margin-left: 6px; }
+.m-saurium { width: 133px; height: 44px; -webkit-mask-image: url(assets/marcas/marca-saurium.png); mask-image: url(assets/marcas/marca-saurium.png); }
+@media (max-width: 720px) {
+  .marcas { gap: 0 34px; padding-right: 34px; }
+  .m-saurium { width: 106px; height: 35px; }
+  .marca-txt { font-size: 11px; }
+}
+.m-molins { width: 44px; height: 45px; -webkit-mask-image: url(assets/marcas/marca-molins.png); mask-image: url(assets/marcas/marca-molins.png); }
+@media (max-width: 720px) { .m-molins { width: 36px; height: 37px; } }
+
+/* ============================================================
+   22. REVELADO AL SCROLL GENERALIZADO + NAV REACTIVO + PARALLAX
+   Mismo contrato que el reveal de la grilla de casos: el estado oculto
+   cuelga de html.fx-on (JS caido = todo visible), el observer marca
+   .fx-visto, y el rescate por geometria cubre saltos de ancla y scroll
+   rapido. Direccion variada por data-rv para que no se lea como plugin.
+   ============================================================ */
+html.fx-on [data-rv] {
+  opacity: 0;
+  transition: opacity var(--fx-lento) var(--fx-ease),
+              translate var(--fx-lento) var(--fx-ease),
+              scale var(--fx-lento) var(--fx-ease);
+}
+html.fx-on [data-rv="up"]   { translate: 0 18px; }
+html.fx-on [data-rv="down"] { translate: 0 -14px; }
+html.fx-on [data-rv="zoom"] { scale: 0.975; }
+/* fade: solo opacidad — para bloques con transform propio (laptop, marquees) */
+html.fx-on [data-rv].fx-visto { opacity: 1; translate: 0 0; scale: 1; }
+
+/* Stagger del acordeon: los 4 paneles entran escalonados la primera vez.
+   Va por animation y no por transition para no pisar la de flex-grow/basis
+   que maneja la apertura. */
+html.fx-on .acc:not(.fx-visto) .acc-p { opacity: 0; }
+.acc.fx-visto .acc-p {
+  animation: rv-in 0.55s var(--fx-ease) both;
+  animation-delay: calc(var(--i, 0) * 80ms);
+}
+.acc-p:nth-child(2) { --i: 1; } .acc-p:nth-child(3) { --i: 2; } .acc-p:nth-child(4) { --i: 3; }
+
+/* Stagger de los campos del formulario al entrar */
+html.fx-on .ai-form:not(.fx-visto) .af-field { opacity: 0; }
+.ai-form.fx-visto .af-field {
+  animation: rv-in 0.5s var(--fx-ease) both;
+  animation-delay: calc(var(--i, 0) * 60ms);
+}
+.af-field:nth-child(2) { --i: 1; } .af-field:nth-child(3) { --i: 2; }
+.af-field:nth-child(4) { --i: 3; } .ai-form > .af-field:nth-of-type(1) { --i: 4; }
+
+@keyframes rv-in {
+  from { opacity: 0; translate: 0 14px; }
+  to   { opacity: 1; translate: 0 0; }
+}
+
+/* Nav reactivo: la pill gana cuerpo al despegarse del tope */
+.hdr-pill { transition: background-color var(--fx-medio) var(--fx-ease), box-shadow var(--fx-medio) var(--fx-ease); }
+html.nav-lejos .hdr-pill {
+  background: color-mix(in srgb, var(--bg) 86%, transparent);
+  box-shadow: inset 0 1px 0 color-mix(in srgb, #FFFFFF 30%, transparent),
+              0 14px 34px -16px rgba(14, 15, 18, 0.65);
+}
+
+/* Parallax corto del poster de la laptop: la imagen es mas alta que su
+   caja y el JS la desplaza hasta 40px segun el scroll. */
+.lap-screen { position: relative; }
+.lap-screen .lap-px { height: 114%; width: 100%; object-fit: cover; will-change: translate; }
+
+@media (prefers-reduced-motion: reduce) {
+  html.fx-on [data-rv] { opacity: 1 !important; translate: 0 0 !important; scale: 1 !important; transition: none !important; }
+  html.fx-on .acc:not(.fx-visto) .acc-p, html.fx-on .ai-form:not(.fx-visto) .af-field { opacity: 1; }
+  .acc.fx-visto .acc-p, .ai-form.fx-visto .af-field { animation: none; }
+  .lap-screen .lap-px { translate: 0 0 !important; height: 100%; }
 }

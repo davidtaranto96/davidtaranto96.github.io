@@ -18,7 +18,8 @@
         "es": "Visitar ↗",
         "en": "Visit ↗"
       },
-      "nota": "TODO: reemplazar case-dtsystem.jpg (hoy es la portada de login) por una captura del panel adentro"
+      "nota": "TODO: reemplazar case-dtsystem.jpg (hoy es la portada de login) por una captura del panel adentro",
+      "origen": "propio"
     },
     {
       "id": "melou",
@@ -35,7 +36,8 @@
       "cursor": {
         "es": "Visitar ↗",
         "en": "Visit ↗"
-      }
+      },
+      "origen": "cliente"
     },
     {
       "id": "baza",
@@ -52,7 +54,8 @@
       "cursor": {
         "es": "Visitar ↗",
         "en": "Visit ↗"
-      }
+      },
+      "origen": "cliente"
     },
     {
       "id": "brujula",
@@ -69,7 +72,8 @@
       "cursor": {
         "es": "Ver demo ↗",
         "en": "View demo ↗"
-      }
+      },
+      "origen": "cliente"
     },
     {
       "id": "canada",
@@ -86,7 +90,8 @@
       "cursor": {
         "es": "Visitar ↗",
         "en": "Visit ↗"
-      }
+      },
+      "origen": "cliente"
     },
     {
       "id": "aires",
@@ -103,14 +108,34 @@
       "cursor": {
         "es": "Visitar ↗",
         "en": "Visit ↗"
-      }
+      },
+      "origen": "cliente"
+    },
+    {
+      "id": "mavenz",
+      "nombre": "MAVENZ",
+      "cat": "web",
+      "url": "https://davidtaranto96.github.io/mavenz-web/demo/",
+      "estado": "demo",
+      "i18n": "c12s",
+      "origen": "cliente",
+      "sub": {
+        "es": "Comercializadora inmobiliaria · Salta",
+        "en": "Real-estate brokerage · Salta"
+      },
+      "alt": "Demo del sitio de MAVENZ, comercializadora inmobiliaria de Salta",
+      "cursor": {
+        "es": "Ver demo ↗",
+        "en": "View demo ↗"
+      },
+      "nota": "Propuesta en curso: va como Demo hasta que cierre."
     },
     {
       "id": "tierras",
       "nombre": "Tierras Mérida",
       "cat": "web",
       "url": "https://davidtaranto96.github.io/tierras-merida/",
-      "estado": "live",
+      "estado": "demo",
       "i18n": "c6s",
       "sub": {
         "es": "Venta de lotes · Yucatán, MX",
@@ -120,24 +145,9 @@
       "cursor": {
         "es": "Visitar ↗",
         "en": "Visit ↗"
-      }
-    },
-    {
-      "id": "bermx",
-      "nombre": "BerMX",
-      "cat": "sys",
-      "url": "https://davidtaranto96.github.io/BerMX/",
-      "estado": "live",
-      "i18n": "c7s",
-      "sub": {
-        "es": "Captación de leads · real estate",
-        "en": "Lead capture · real estate"
       },
-      "alt": "BerMX, plataforma de captación de leads para real estate",
-      "cursor": {
-        "es": "Visitar ↗",
-        "en": "Visit ↗"
-      }
+      "nota": "Demo: descartado comercialmente (vault). No venderlo como obra en produccion.",
+      "origen": "cliente"
     },
     {
       "id": "apunto",
@@ -154,7 +164,8 @@
       "cursor": {
         "es": "Visitar ↗",
         "en": "Visit ↗"
-      }
+      },
+      "origen": "propio"
     },
     {
       "id": "blogai",
@@ -171,7 +182,8 @@
       "cursor": {
         "es": "Visitar ↗",
         "en": "Visit ↗"
-      }
+      },
+      "origen": "propio"
     },
     {
       "id": "casamiento",
@@ -188,7 +200,8 @@
       "cursor": {
         "es": "Visitar ↗",
         "en": "Visit ↗"
-      }
+      },
+      "origen": "propio"
     },
     {
       "id": "faro",
@@ -205,7 +218,8 @@
       "cursor": {
         "es": "Jugar ↗",
         "en": "Play ↗"
-      }
+      },
+      "origen": "propio"
     }
   ]
 }

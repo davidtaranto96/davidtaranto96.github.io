@@ -483,8 +483,8 @@
     s4_l1: "WhatsApp bots with AI (Claude)",
     s4_l2: "M365/Azure flows and Graph API",
     s4_l3: "Integrations across your tools",
-    lap_eb: "See it working", lap_h: "This is how DT-System works.",
-    lap_sub: "From the WhatsApp lead to the paid invoice, all in one panel.",
+    lap_eb: "See it working", lap_h: "One of my CRMs at work.",
+    lap_sub: "This is Brújula, the CRM I built for Berni Studio — shown with demo data.",
     about_eb: "About me", about_h: "The person behind the system.",
     f_p1: "SysAdmin at JBKnowledge (a global company) based in Salta, Argentina. Computer Engineering student, 5+ years managing M365, Azure and automation.",
     f_p2: "I build DT-System: a WhatsApp AI bot that handles and qualifies leads 24/7, plus a full CRM with pipeline, quotes and finances. Running in production.",
@@ -512,12 +512,13 @@
     c3s: "Custom CRM · used every day",
     c4s: "Trilingual corporate site · agri",
     c5s: "Gated community · real estate",
+    c12s: "Real-estate brokerage · Salta",
     c6s: "Land lots · Yucatán, MX",
-    c7s: "Lead capture · real estate",
     c8s: "Tasks & habits · Android",
     c9s: "Interactive guide · free",
     c10s: "RSVP to a spreadsheet · no backend",
     c11s: "Narrative adventure · web",
+    or_c: "Client", or_p: "Own",
     // CASOS:FIN
     cta_eb: "Seriously", cta_h: "LET'S TALK.",
     cta_sub: "Got an idea? Tell me about it. My assistant replies instantly, understands your case and hands it to me pre-digested.",
@@ -856,6 +857,73 @@
       ents.forEach((en) => en.target.classList.toggle("fx-quieto", !en.isIntersecting));
     }, { rootMargin: "250px 0px" });
     $$("section").forEach((sec) => pio.observe(sec));
+  }
+
+  /* ---------- 23b. Revelado generalizado + nav reactivo + parallax ----------
+     Mismo contrato que el reveal de los casos: estado oculto solo bajo
+     html.fx-on, observer que marca .fx-visto, y rescate POR GEOMETRIA
+     (nunca por reloj — ver el error del timer ciego en la wiki): lo que
+     quedo con el borde inferior por encima del viewport se muestra sin
+     transicion. */
+  const rvEls = $$("[data-rv]");
+  if (rvEls.length) {
+    if (reduced || !("IntersectionObserver" in window)) {
+      rvEls.forEach((el) => el.classList.add("fx-visto"));
+    } else {
+      let pend = rvEls.slice();
+      const rvo = new IntersectionObserver((es) => {
+        es.forEach((e) => {
+          if (!e.isIntersecting) return;
+          e.target.classList.add("fx-visto");
+          rvo.unobserve(e.target);
+        });
+        pend = pend.filter((el) => !el.classList.contains("fx-visto"));
+      }, { threshold: 0.12, rootMargin: "0px 0px -30px 0px" });
+      rvEls.forEach((el) => rvo.observe(el));
+      const rescate = () => {
+        for (let i = pend.length - 1; i >= 0; i--) {
+          const el = pend[i];
+          if (el.getBoundingClientRect().bottom < 0) {
+            el.style.transition = "none";
+            el.classList.add("fx-visto");
+            rvo.unobserve(el);
+            pend.splice(i, 1);
+          }
+        }
+      };
+      addEventListener("scroll", rescate, { passive: true });
+      rescate();
+    }
+  }
+
+  /* Nav reactivo: la pill gana cuerpo al despegarse del tope. Un solo
+     listener con bandera para no tocar clases en cada frame. */
+  {
+    let lejos = false;
+    const medir = () => {
+      const ahora = scrollY > 24;
+      if (ahora !== lejos) { lejos = ahora; root.classList.toggle("nav-lejos", ahora); }
+    };
+    addEventListener("scroll", medir, { passive: true });
+    medir();
+  }
+
+  /* Parallax corto del poster de la laptop: recorrido de 40px, batcheado
+     con rAF, apagado en tactil y reduced. */
+  const lapPx = $(".lap-px");
+  if (lapPx && !reduced && matchMedia("(hover: hover) and (pointer: fine)").matches) {
+    let pedido = false;
+    const mover = () => {
+      pedido = false;
+      const r = lapPx.parentElement.getBoundingClientRect();
+      if (r.bottom < 0 || r.top > innerHeight) return;
+      const p = (r.top + r.height / 2 - innerHeight / 2) / innerHeight;  // -0.5..0.5
+      lapPx.style.translate = "0 " + (-p * 40).toFixed(1) + "px";
+    };
+    addEventListener("scroll", () => {
+      if (!pedido) { pedido = true; requestAnimationFrame(mover); }
+    }, { passive: true });
+    mover();
   }
 
   /* ---------- 24. Tarjeta holografica del founder ----------

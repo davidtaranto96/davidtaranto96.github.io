@@ -6,15 +6,18 @@
 
   <!-- ============ SEO ============ -->
   <title>David Taranto — Sistemas con IA para tu negocio | DT System</title>
-  <meta name="description" content="Bots de WhatsApp con IA que atienden y venden 24/7, CRM a medida y automatización. Construido en Salta, Argentina, usado en producción. Windows SysAdmin + builder de productos con IA.">
+  <meta name="description" content="Bots de WhatsApp con IA que atienden y venden 24/7, CRM a medida y automatización. Hecho en Salta, Argentina, usado en producción. 12 proyectos entregados, 11 en línea.">
   <meta property="og:type" content="website">
   <meta property="og:title" content="David Taranto — Sistemas con IA para tu negocio">
   <meta property="og:description" content="Bots de WhatsApp que venden por vos, CRM a medida y automatización. Hablá con mi asistente IA.">
-  <!-- PLACEHOLDER: generar assets/og.png (1200×630).
-       PROMPT HIGGSFIELD: "Open Graph banner para portfolio dev, mockups de dashboard CRM flotando
-       en 3D suave, paleta celeste #52BFFE sobre fondo oscuro #0E0F12, tipografía mono-tech,
-       texto 'DT System', estilo SaaS premium, 1200x630" -->
-  <meta property="og:image" content="assets/og.png">
+  <meta property="og:url" content="https://davidtaranto96.github.io/">
+  <!-- La URL de la imagen social DEBE ser absoluta: los scrapers de
+       LinkedIn/WhatsApp no resuelven rutas relativas. -->
+  <meta property="og:image" content="https://davidtaranto96.github.io/assets/og.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:image" content="https://davidtaranto96.github.io/assets/og.png">
   <!-- Favicon: marca "dt/" en SVG inline (sin archivo extra) -->
   <!-- ?v=2 fuerza a los navegadores a descartar el favicon viejo cacheado -->
   <link rel="icon" href="assets/brand/favicon-64.png?v=2" type="image/png" sizes="64x64">
@@ -168,7 +171,7 @@
     <section class="mobile-sec">
       <div class="mobile-head wrap">
         <span class="eyebrow" data-i18n="mob_eb">Mobile-first de verdad</span>
-        <h2 class="h2" data-i18n="mob_h">Hecho para cómo se usa en serio: desde el celular.</h2>
+        <h2 class="h2" data-rv="up" data-i18n="mob_h">Hecho para cómo se usa en serio: desde el celular.</h2>
       </div>
 
       <!-- Marquee infinito: el track se duplica con aria-hidden="true"
@@ -215,7 +218,7 @@
     <!-- ============ 5. SERVICIOS ============ -->
     <section id="servicios">
       <div class="wrap">
-        <div class="sec-head">
+        <div class="sec-head" data-rv="up">
           <span class="eyebrow" data-i18n="srv_eb">Productos</span>
           <h2 class="h2" data-i18n="srv_h">Elegí por dónde empezar.</h2>
           <p class="sub" data-i18n="srv_sub">Cuatro formas de trabajar conmigo, de la web con bot al sistema completo.</p>
@@ -225,7 +228,7 @@
         <!-- Acordeón horizontal estilo Stökt (full-bleed): el panel abierto
              crece y su contenido entra en cascada; los cerrados son franjas
              con el título vertical. -->
-        <div class="acc" id="acc">
+        <div class="acc" data-rv="fade" id="acc">
           <article class="acc-p">
             <button class="acc-tab" type="button" aria-expanded="false" data-cursor="Ver detalle →" data-cursor-en="See details →"><span class="acc-vert" data-i18n="s1_h">Webs y Tiendas</span></button>
             <!-- Cover: lo que se ve en la grilla inicial (imagen animada + título) -->
@@ -350,23 +353,21 @@
     <section class="laptop-sec" id="dt-system">
       <div class="wrap">
         <span class="eyebrow" data-i18n="lap_eb">Miralo funcionando</span>
-        <h2 class="h2" data-i18n="lap_h">Así trabaja DT-System.</h2>
-        <p class="sub" style="margin: 0 auto;" data-i18n="lap_sub">Del lead en WhatsApp a la factura cobrada, todo en un solo panel.</p>
+        <h2 class="h2" data-i18n="lap_h">Así trabaja un CRM mío.</h2>
+        <p class="sub" style="margin: 0 auto;" data-i18n="lap_sub">Este es Brújula, el CRM que le hice a Berni Studio — acá con datos de demo.</p>
 
-        <div class="laptop">
+        <div class="laptop" data-rv="fade">
           <div class="lap-lid">
             <span class="lap-cam" aria-hidden="true"></span>
             <div class="lap-screen">
-              <!-- Imagen fija hasta tener el screencast. Cuando exista
-                   assets/dt-system-demo.mp4 (16:10), volver al <video>:
-                   <video id="lapVideo" autoplay muted loop playsinline
-                          poster="assets/laptop-poster.jpg">
-                     <source src="assets/dt-system-demo.mp4" type="video/mp4">
-                   </video>
-                   El módulo que lo pausa fuera del viewport ya contempla
-                   que #lapVideo no exista. -->
-              <img src="assets/laptop-poster.jpg" width="1280" height="800"
-                   alt="Panel de DT-System corriendo en una laptop" loading="lazy">
+              <!-- Screencast real: el demo de Brújula (CRM hecho para Berni Studio)
+                   navegado con datos ficticios. El módulo 7 de main.js lo pausa
+                   fuera del viewport. -->
+              <video id="lapVideo" autoplay muted loop playsinline disablepictureinpicture
+                     poster="assets/laptop-poster.jpg"
+                     aria-label="Recorrido por Brújula, un CRM hecho por DT System">
+                <source src="assets/dt-system-demo.mp4" type="video/mp4">
+              </video>
             </div>
           </div>
           <div class="lap-hinge" aria-hidden="true"></div>
@@ -383,7 +384,7 @@
     <!-- ============ 7. SOBRE MÍ — BENTO GRID (franja invertida estilo Stökt) ============ -->
     <section class="bento-sec" id="sobre-mi">
       <div class="wrap">
-        <div class="sec-head">
+        <div class="sec-head" data-rv="down">
           <span class="eyebrow" data-i18n="about_eb">Sobre mí</span>
           <h2 class="h2" data-i18n="about_h">La persona detrás del sistema.</h2>
         </div>
@@ -502,13 +503,51 @@
          estatica a proposito — un marquee sumaria loops infinitos. -->
     <section id="marcas" class="marcas-sec">
       <div class="wrap">
-        <p class="marcas-h" data-i18n="mk_h">Marcas que ya confiaron</p>
-        <ul class="marcas">
-          <li><a href="https://melou.com.ar" target="_blank" rel="noopener" aria-label="melou"><span class="marca m-melou"></span></a></li>
-          <li><a href="https://baza.com.ar" target="_blank" rel="noopener" aria-label="BAZA Atelier"><span class="marca m-baza"></span></a></li>
-          <li><a href="https://canadahumeda.com.ar" target="_blank" rel="noopener" aria-label="Cañada Húmeda"><span class="marca m-canada"></span></a></li>
-          <li><a href="https://davidtaranto96.github.io/Aires-SanLorenzo/" target="_blank" rel="noopener" aria-label="Aires de San Lorenzo"><span class="marca m-aires"></span></a></li>
-        </ul>
+        <p class="marcas-h" data-rv="down" data-i18n="mk_h">Marcas que ya confiaron</p>
+        <div class="marcas-carrusel marquee">
+          <ul class="marcas mtrack">
+              <li><a href="https://melou.com.ar" target="_blank" rel="noopener" aria-label="melou"><span class="marca m-melou"></span></a></li>
+              <li><a href="https://baza.com.ar" target="_blank" rel="noopener" aria-label="BAZA Atelier"><span class="marca m-baza"></span></a></li>
+              <li><a href="https://canadahumeda.com.ar" target="_blank" rel="noopener" aria-label="Cañada Húmeda"><span class="marca m-canada"></span></a></li>
+              <li><a href="https://davidtaranto96.github.io/Aires-SanLorenzo/" target="_blank" rel="noopener" aria-label="Aires de San Lorenzo"><span class="marca m-aires"></span></a></li>
+              <li><a href="https://davidtaranto96.github.io/saurium-web/" target="_blank" rel="noopener" aria-label="Saurium"><span class="marca m-saurium"></span></a></li>
+              <li><span class="marca m-molins" role="img" aria-label="Molins Negocios"></span></li>
+              <li><span class="marca-txt">Berni Studio</span></li>
+              <li><span class="marca-txt">Estudio Taranto</span></li>
+          </ul>
+          <ul class="marcas mtrack" aria-hidden="true">
+              <li><a href="https://melou.com.ar" target="_blank" rel="noopener" aria-label="melou"><span class="marca m-melou"></span></a></li>
+              <li><a href="https://baza.com.ar" target="_blank" rel="noopener" aria-label="BAZA Atelier"><span class="marca m-baza"></span></a></li>
+              <li><a href="https://canadahumeda.com.ar" target="_blank" rel="noopener" aria-label="Cañada Húmeda"><span class="marca m-canada"></span></a></li>
+              <li><a href="https://davidtaranto96.github.io/Aires-SanLorenzo/" target="_blank" rel="noopener" aria-label="Aires de San Lorenzo"><span class="marca m-aires"></span></a></li>
+              <li><a href="https://davidtaranto96.github.io/saurium-web/" target="_blank" rel="noopener" aria-label="Saurium"><span class="marca m-saurium"></span></a></li>
+              <li><span class="marca m-molins" role="img" aria-label="Molins Negocios"></span></li>
+              <li><span class="marca-txt">Berni Studio</span></li>
+              <li><span class="marca-txt">Estudio Taranto</span></li>
+          </ul>
+        </div>
+        <div class="marcas-carrusel marquee rev" aria-hidden="true">
+          <ul class="marcas mtrack">
+              <li><a href="https://melou.com.ar" target="_blank" rel="noopener" aria-label="melou"><span class="marca m-melou"></span></a></li>
+              <li><a href="https://baza.com.ar" target="_blank" rel="noopener" aria-label="BAZA Atelier"><span class="marca m-baza"></span></a></li>
+              <li><a href="https://canadahumeda.com.ar" target="_blank" rel="noopener" aria-label="Cañada Húmeda"><span class="marca m-canada"></span></a></li>
+              <li><a href="https://davidtaranto96.github.io/Aires-SanLorenzo/" target="_blank" rel="noopener" aria-label="Aires de San Lorenzo"><span class="marca m-aires"></span></a></li>
+              <li><a href="https://davidtaranto96.github.io/saurium-web/" target="_blank" rel="noopener" aria-label="Saurium"><span class="marca m-saurium"></span></a></li>
+              <li><span class="marca m-molins" role="img" aria-label="Molins Negocios"></span></li>
+              <li><span class="marca-txt">Berni Studio</span></li>
+              <li><span class="marca-txt">Estudio Taranto</span></li>
+          </ul>
+          <ul class="marcas mtrack" aria-hidden="true">
+              <li><a href="https://melou.com.ar" target="_blank" rel="noopener" aria-label="melou"><span class="marca m-melou"></span></a></li>
+              <li><a href="https://baza.com.ar" target="_blank" rel="noopener" aria-label="BAZA Atelier"><span class="marca m-baza"></span></a></li>
+              <li><a href="https://canadahumeda.com.ar" target="_blank" rel="noopener" aria-label="Cañada Húmeda"><span class="marca m-canada"></span></a></li>
+              <li><a href="https://davidtaranto96.github.io/Aires-SanLorenzo/" target="_blank" rel="noopener" aria-label="Aires de San Lorenzo"><span class="marca m-aires"></span></a></li>
+              <li><a href="https://davidtaranto96.github.io/saurium-web/" target="_blank" rel="noopener" aria-label="Saurium"><span class="marca m-saurium"></span></a></li>
+              <li><span class="marca m-molins" role="img" aria-label="Molins Negocios"></span></li>
+              <li><span class="marca-txt">Berni Studio</span></li>
+              <li><span class="marca-txt">Estudio Taranto</span></li>
+          </ul>
+        </div>
         <span class="astnote" data-i18n="mk_note">*Trabajo entregado, no logos de relleno</span>
       </div>
     </section>
@@ -519,7 +558,7 @@
          con el atributo `hidden` para no romper el flujo del grid. -->
     <section id="proyectos">
       <div class="wrap">
-        <div class="sec-head">
+        <div class="sec-head" data-rv="fade">
           <span class="eyebrow" data-i18n="cs_eb">Casos</span>
           <h2 class="h2" data-i18n="cs_h">Trabajo entregado.</h2>
           <p class="sub" data-i18n="cs_sub">Clientes reales, en producción. Lo que tiene link, lo podés abrir ahora mismo.</p>
@@ -546,6 +585,7 @@
             <img src="assets/casos/case-dtsystem.jpg" width="640" height="400" alt="Panel de DT-System, CRM con bot de WhatsApp" loading="lazy">
             <div class="demo-info">
               <div><h3>DT-System</h3><small data-i18n="c0s">CRM + bot de WhatsApp con IA</small></div>
+              <span class="origen" data-i18n="or_p">Propio</span>
               <span class="live"><i aria-hidden="true"></i> Live</span>
             </div>
             <div class="demo-ov" aria-hidden="true"><span>Visitar ↗</span></div>
@@ -555,6 +595,7 @@
             <img src="assets/casos/case-melou.jpg" width="640" height="400" alt="Sitio de melou, retiros de bienestar en Salta" loading="lazy">
             <div class="demo-info">
               <div><h3>melou.</h3><small data-i18n="c1s">Web + reservas · retiros en Salta</small></div>
+              <span class="origen" data-i18n="or_c">Cliente</span>
               <span class="live"><i aria-hidden="true"></i> Live</span>
             </div>
             <div class="demo-ov" aria-hidden="true"><span>Visitar ↗</span></div>
@@ -564,6 +605,7 @@
             <img src="assets/casos/case-baza.jpg" width="640" height="400" alt="Tienda online de BAZA, atelier de cuero de Salta" loading="lazy">
             <div class="demo-info">
               <div><h3>BAZA</h3><small data-i18n="c2s">Tienda a medida · atelier de cuero</small></div>
+              <span class="origen" data-i18n="or_c">Cliente</span>
               <span class="live"><i aria-hidden="true"></i> Live</span>
             </div>
             <div class="demo-ov" aria-hidden="true"><span>Visitar ↗</span></div>
@@ -573,6 +615,7 @@
             <img src="assets/casos/case-brujula.jpg" width="640" height="400" alt="Brújula, CRM interno de Berni Studio" loading="lazy">
             <div class="demo-info">
               <div><h3>Brújula</h3><small data-i18n="c3s">CRM a medida · en uso diario</small></div>
+              <span class="origen" data-i18n="or_c">Cliente</span>
               <span class="live"><i aria-hidden="true"></i> Live</span>
             </div>
             <div class="demo-ov" aria-hidden="true"><span>Ver demo ↗</span></div>
@@ -582,6 +625,7 @@
             <img src="assets/casos/case-canada.jpg" width="640" height="400" alt="Sitio institucional de Cañada Húmeda, grupo agroindustrial de Salta" loading="lazy">
             <div class="demo-info">
               <div><h3>Cañada Húmeda</h3><small data-i18n="c4s">Institucional trilingüe · agro</small></div>
+              <span class="origen" data-i18n="or_c">Cliente</span>
               <span class="live"><i aria-hidden="true"></i> Live</span>
             </div>
             <div class="demo-ov" aria-hidden="true"><span>Visitar ↗</span></div>
@@ -591,25 +635,30 @@
             <img src="assets/casos/case-aires.jpg" width="640" height="400" alt="Landing de Aires de San Lorenzo, barrio privado en Salta" loading="lazy">
             <div class="demo-info">
               <div><h3>Aires de San Lorenzo</h3><small data-i18n="c5s">Barrio privado · real estate</small></div>
+              <span class="origen" data-i18n="or_c">Cliente</span>
               <span class="live"><i aria-hidden="true"></i> Live</span>
             </div>
             <div class="demo-ov" aria-hidden="true"><span>Visitar ↗</span></div>
           </a>
 
+          <!-- Propuesta en curso: va como Demo hasta que cierre. -->
+          <a class="demo" data-cat="web" data-cursor="Ver demo ↗" data-cursor-en="View demo ↗" href="https://davidtaranto96.github.io/mavenz-web/demo/" target="_blank" rel="noopener">
+            <img src="assets/casos/case-mavenz.jpg" width="640" height="400" alt="Demo del sitio de MAVENZ, comercializadora inmobiliaria de Salta" loading="lazy">
+            <div class="demo-info">
+              <div><h3>MAVENZ</h3><small data-i18n="c12s">Comercializadora inmobiliaria · Salta</small></div>
+              <span class="origen" data-i18n="or_c">Cliente</span>
+              <span class="live off"><i aria-hidden="true"></i> Demo</span>
+            </div>
+            <div class="demo-ov" aria-hidden="true"><span>Ver demo ↗</span></div>
+          </a>
+
+          <!-- Demo: descartado comercialmente (vault). No venderlo como obra en produccion. -->
           <a class="demo" data-cat="web" data-cursor="Visitar ↗" data-cursor-en="Visit ↗" href="https://davidtaranto96.github.io/tierras-merida/" target="_blank" rel="noopener">
             <img src="assets/casos/case-tierras.jpg" width="640" height="400" alt="Landing de Tierras Mérida, lotes en Yucatán, México" loading="lazy">
             <div class="demo-info">
               <div><h3>Tierras Mérida</h3><small data-i18n="c6s">Venta de lotes · Yucatán, MX</small></div>
-              <span class="live"><i aria-hidden="true"></i> Live</span>
-            </div>
-            <div class="demo-ov" aria-hidden="true"><span>Visitar ↗</span></div>
-          </a>
-
-          <a class="demo" data-cat="sys" data-cursor="Visitar ↗" data-cursor-en="Visit ↗" href="https://davidtaranto96.github.io/BerMX/" target="_blank" rel="noopener">
-            <img src="assets/casos/case-bermx.jpg" width="640" height="400" alt="BerMX, plataforma de captación de leads para real estate" loading="lazy">
-            <div class="demo-info">
-              <div><h3>BerMX</h3><small data-i18n="c7s">Captación de leads · real estate</small></div>
-              <span class="live"><i aria-hidden="true"></i> Live</span>
+              <span class="origen" data-i18n="or_c">Cliente</span>
+              <span class="live off"><i aria-hidden="true"></i> Demo</span>
             </div>
             <div class="demo-ov" aria-hidden="true"><span>Visitar ↗</span></div>
           </a>
@@ -618,6 +667,7 @@
             <img src="assets/casos/case-apunto.jpg" width="640" height="400" alt="Apunto, app de tareas y hábitos para Android" loading="lazy">
             <div class="demo-info">
               <div><h3>Apunto</h3><small data-i18n="c8s">Tareas y hábitos · Android</small></div>
+              <span class="origen" data-i18n="or_p">Propio</span>
               <span class="live off"><i aria-hidden="true"></i> Beta</span>
             </div>
           </div>
@@ -626,6 +676,7 @@
             <img src="assets/casos/case-blogai.jpg" width="640" height="400" alt="Guía interactiva Claude: de 0 a Agentes" loading="lazy">
             <div class="demo-info">
               <div><h3>Claude: de 0 a Agentes</h3><small data-i18n="c9s">Guía interactiva · gratis</small></div>
+              <span class="origen" data-i18n="or_p">Propio</span>
               <span class="live"><i aria-hidden="true"></i> Live</span>
             </div>
             <div class="demo-ov" aria-hidden="true"><span>Visitar ↗</span></div>
@@ -635,6 +686,7 @@
             <img src="assets/casos/case-casamiento.jpg" width="640" height="400" alt="Invitación digital de casamiento con confirmación de asistencia" loading="lazy">
             <div class="demo-info">
               <div><h3>Invitación digital</h3><small data-i18n="c10s">RSVP a planilla · sin backend</small></div>
+              <span class="origen" data-i18n="or_p">Propio</span>
               <span class="live"><i aria-hidden="true"></i> Live</span>
             </div>
             <div class="demo-ov" aria-hidden="true"><span>Visitar ↗</span></div>
@@ -644,6 +696,7 @@
             <img src="assets/casos/case-faro.jpg" width="640" height="400" alt="El Faro del Fin del Mundo, aventura narrativa interactiva" loading="lazy">
             <div class="demo-info">
               <div><h3>El Faro del Fin del Mundo</h3><small data-i18n="c11s">Aventura narrativa · web</small></div>
+              <span class="origen" data-i18n="or_p">Propio</span>
               <span class="live"><i aria-hidden="true"></i> Live</span>
             </div>
             <div class="demo-ov" aria-hidden="true"><span>Jugar ↗</span></div>
@@ -655,7 +708,7 @@
 
     <!-- ============ 9. CTA FINAL (gigante, estilo Stökt) ============ -->
     <section id="contacto" class="cta-final">
-      <div class="wrap sec-head">
+      <div class="wrap sec-head" data-rv="zoom">
         <span class="eyebrow" data-i18n="cta_eb">En serio</span>
         <h2 class="h2 cta-giant" data-i18n="cta_h">HABLEMOS.</h2>
         <span class="astnote" data-i18n="cta_note">*Sin vueltas</span>
@@ -664,7 +717,7 @@
              Sin backend (GitHub Pages): al enviar arma el mensaje y lo manda
              al asistente de WhatsApp con el texto prellenado (wa.me?text=).
              El borde vivo es el mismo border-beam sincronizado al reloj. -->
-        <form class="ai-form beam-card" id="aiForm" novalidate>
+        <form class="ai-form beam-card" data-rv="up" id="aiForm" novalidate>
           <div class="af-head">
             <span class="af-dot" aria-hidden="true"></span>
             <span data-i18n="af_head">Briefing para mi asistente</span>

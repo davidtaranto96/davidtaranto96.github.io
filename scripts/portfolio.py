@@ -117,9 +117,12 @@ def tarjeta(c):
         badge = '<span class="live"><i aria-hidden="true"></i> Live</span>'
     else:
         badge = f'<span class="live off"><i aria-hidden="true"></i> {c["estado"].capitalize()}</span>'
+    chip = ('<span class="origen" data-i18n="or_c">Cliente</span>' if c.get("origen") == "cliente"
+            else '<span class="origen" data-i18n="or_p">Propio</span>')
     info = (f'<div class="demo-info">\n'
             f'              <div><h3>{c["nombre"]}</h3>'
             f'<small data-i18n="{c["i18n"]}">{c["sub"]["es"]}</small></div>\n'
+            f'              {chip}\n'
             f'              {badge}\n'
             f'            </div>')
     if not c["url"]:
@@ -155,7 +158,7 @@ def build(doc):
     html = entre_marcadores(html, "<!-- CASOS:INICIO -->", "<!-- CASOS:FIN -->",
                             "\n\n".join(tarjeta(c) for c in casos), "la grilla en index.html")
     # los stats se derivan de los datos: nunca afirman algo que el JSON no sostenga
-    vivos = sum(1 for c in casos if c["estado"] == "live")
+    vivos = sum(1 for c in casos if c["url"].startswith("http"))
     propios = sum(1 for c in casos
                   if c["url"] and "github.io" not in c["url"] and "railway.app" not in c["url"])
     for clave, valor in (("cs_s1", len(casos)), ("cs_s2", vivos), ("cs_s3", propios)):
@@ -165,6 +168,7 @@ def build(doc):
 
     js = JS.read_text(encoding="utf-8")
     i18n = "\n".join(f'    {c["i18n"]}: "{c["sub"]["en"]}",' for c in casos)
+    i18n += '\n    or_c: "Client", or_p: "Own",'
     js = entre_marcadores(js, "// CASOS:INICIO", "// CASOS:FIN", i18n, "el i18n en main.js")
     JS.write_text(js, encoding="utf-8")
 
