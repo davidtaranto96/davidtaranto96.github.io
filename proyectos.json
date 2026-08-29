@@ -3,25 +3,6 @@
   "_orden": "El orden del array es el orden en la web. Ordenado por impacto de venta.",
   "casos": [
     {
-      "id": "dtsystem",
-      "nombre": "DT-System",
-      "cat": "ia",
-      "url": "https://dt-systems.up.railway.app",
-      "estado": "live",
-      "i18n": "c0s",
-      "sub": {
-        "es": "CRM + bot de WhatsApp con IA",
-        "en": "CRM + AI WhatsApp bot"
-      },
-      "alt": "Panel de DT-System, CRM con bot de WhatsApp",
-      "cursor": {
-        "es": "Visitar ↗",
-        "en": "Visit ↗"
-      },
-      "nota": "TODO: reemplazar case-dtsystem.jpg (hoy es la portada de login) por una captura del panel adentro",
-      "origen": "propio"
-    },
-    {
       "id": "melou",
       "nombre": "melou.",
       "cat": "web",
@@ -54,24 +35,6 @@
       "cursor": {
         "es": "Visitar ↗",
         "en": "Visit ↗"
-      },
-      "origen": "cliente"
-    },
-    {
-      "id": "brujula",
-      "nombre": "Brújula",
-      "cat": "sys",
-      "url": "https://davidtaranto96.github.io/crm-berni/",
-      "estado": "live",
-      "i18n": "c3s",
-      "sub": {
-        "es": "CRM a medida · en uso diario",
-        "en": "Custom CRM · used every day"
-      },
-      "alt": "Brújula, CRM interno de Berni Studio",
-      "cursor": {
-        "es": "Ver demo ↗",
-        "en": "View demo ↗"
       },
       "origen": "cliente"
     },
@@ -129,25 +92,6 @@
         "en": "View demo ↗"
       },
       "nota": "Propuesta en curso: va como Demo hasta que cierre."
-    },
-    {
-      "id": "tierras",
-      "nombre": "Tierras Mérida",
-      "cat": "web",
-      "url": "https://davidtaranto96.github.io/tierras-merida/",
-      "estado": "demo",
-      "i18n": "c6s",
-      "sub": {
-        "es": "Venta de lotes · Yucatán, MX",
-        "en": "Land lots · Yucatán, MX"
-      },
-      "alt": "Landing de Tierras Mérida, lotes en Yucatán, México",
-      "cursor": {
-        "es": "Visitar ↗",
-        "en": "Visit ↗"
-      },
-      "nota": "Demo: descartado comercialmente (vault). No venderlo como obra en produccion.",
-      "origen": "cliente"
     },
     {
       "id": "apunto",

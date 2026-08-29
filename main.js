@@ -506,14 +506,11 @@
     cs_f0: "All", cs_f1: "Sites & stores", cs_f2: "Systems & CRM",
     cs_f3: "Mobile apps", cs_f4: "AI automation",
     // CASOS:INICIO
-    c0s: "CRM + AI WhatsApp bot",
     c1s: "Site + bookings · Salta retreats",
     c2s: "Custom store · leather atelier",
-    c3s: "Custom CRM · used every day",
     c4s: "Trilingual corporate site · agri",
     c5s: "Gated community · real estate",
     c12s: "Real-estate brokerage · Salta",
-    c6s: "Land lots · Yucatán, MX",
     c8s: "Tasks & habits · Android",
     c9s: "Interactive guide · free",
     c10s: "RSVP to a spreadsheet · no backend",
@@ -718,6 +715,12 @@
       status.textContent = n + (lang === "en" ? " projects shown" : " proyectos visibles");
     };
 
+    // un chip cuya categoria no tiene casos hoy se esconde: si mañana
+    // se agrega un caso de esa categoria, reaparece solo
+    chips.forEach((chip) => {
+      const f = chip.dataset.f;
+      if (f !== "all" && !cards.some((c) => c.dataset.cat === f)) chip.hidden = true;
+    });
     chips.forEach((chip) => {
       chip.addEventListener("click", () => {
         chips.forEach((c) => c.classList.toggle("on", c === chip));
