@@ -704,6 +704,15 @@
     status.setAttribute("aria-live", "polite");
     csGrid.parentNode.insertBefore(status, csGrid);
 
+    // la grilla va en medias columnas: 6 = tres casos por fila, 4 = dos, 1 = uno
+    const centrarUltimaFila = () => {
+      const visibles = cards.filter((c) => !c.hidden);
+      visibles.forEach((c) => c.style.removeProperty("--ini"));
+      const porFila = Math.floor(getComputedStyle(csGrid).gridTemplateColumns.split(" ").length / 2);
+      const sobran = porFila > 1 ? visibles.length % porFila : 0;
+      if (sobran) visibles[visibles.length - sobran].style.setProperty("--ini", 1 + porFila - sobran);
+    };
+
     const apply = (f) => {
       let n = 0;
       cards.forEach((c) => {
@@ -712,7 +721,11 @@
         if (show) n++;
       });
       status.textContent = n + (lang === "en" ? " projects shown" : " proyectos visibles");
+      centrarUltimaFila();
     };
+    centrarUltimaFila();
+    matchMedia("(max-width: 980px)").addEventListener("change", centrarUltimaFila);
+    matchMedia("(max-width: 720px)").addEventListener("change", centrarUltimaFila);
 
     // un chip cuya categoria no tiene casos hoy se esconde: si mañana
     // se agrega un caso de esa categoria, reaparece solo

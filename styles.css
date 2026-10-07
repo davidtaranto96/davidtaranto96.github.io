@@ -476,6 +476,15 @@ section { padding: 96px 0; }
 .cs-grid { margin-top: 26px; }
 .cs-grid .demo[hidden] { display: none !important; }
 .cs-grid .demo img { aspect-ratio: 16 / 10; object-fit: cover; }
+/* Sin huecos: la grilla va en medias columnas y cada caso ocupa dos. main.js le pone --ini
+   al primero de la última fila incompleta para centrarla, también con un filtro activo. */
+.demo-grid.cs-grid { grid-template-columns: repeat(6, minmax(0, 1fr)); }
+.cs-grid .demo { grid-column: var(--ini, auto) / span 2; }
+@media (max-width: 980px) { .demo-grid.cs-grid { grid-template-columns: repeat(4, minmax(0, 1fr)); } }
+@media (max-width: 720px) {
+  .demo-grid.cs-grid { grid-template-columns: minmax(0, 1fr); }
+  .cs-grid .demo { grid-column: auto; }
+}
 /* Card sin link (proyecto sin demo pública): no debe simular ser clickeable */
 .cs-grid div.demo { cursor: default; }
 /* Badge apagado para lo que todavía no está publicado */
