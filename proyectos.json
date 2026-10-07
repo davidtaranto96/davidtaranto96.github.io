@@ -3,6 +3,42 @@
   "_orden": "El orden del array es el orden en la web. Ordenado por impacto de venta.",
   "casos": [
     {
+      "id": "latorre",
+      "nombre": "Edificio La Torre",
+      "cat": "web",
+      "url": "https://edificiolatorre.com",
+      "estado": "live",
+      "i18n": "c13s",
+      "origen": "cliente",
+      "sub": {
+        "es": "Emprendimiento inmobiliario · Salta",
+        "en": "Real-estate development · Salta"
+      },
+      "alt": "Sitio del Edificio La Torre, emprendimiento inmobiliario en Salta",
+      "cursor": {
+        "es": "Visitar ↗",
+        "en": "Visit ↗"
+      }
+    },
+    {
+      "id": "fmolins",
+      "nombre": "Francisco Molins",
+      "cat": "sys",
+      "url": "https://franciscomolins.com",
+      "estado": "live",
+      "i18n": "c14s",
+      "origen": "cliente",
+      "sub": {
+        "es": "CRM a medida + portal · Salta",
+        "en": "Custom CRM + portal · Salta"
+      },
+      "alt": "Portal inmobiliario de Francisco Molins, alimentado por su CRM",
+      "cursor": {
+        "es": "Visitar ↗",
+        "en": "Visit ↗"
+      }
+    },
+    {
       "id": "melou",
       "nombre": "melou.",
       "cat": "web",
@@ -39,6 +75,24 @@
       "origen": "cliente"
     },
     {
+      "id": "saurium",
+      "nombre": "Saurium",
+      "cat": "web",
+      "url": "https://sauriumchukum.com",
+      "estado": "live",
+      "i18n": "c16s",
+      "origen": "cliente",
+      "sub": {
+        "es": "Chukum de Yucatán · bilingüe",
+        "en": "Yucatán chukum · bilingual"
+      },
+      "alt": "Sitio de Saurium, recubrimiento de chukum de la península de Yucatán",
+      "cursor": {
+        "es": "Visitar ↗",
+        "en": "Visit ↗"
+      }
+    },
+    {
       "id": "canada",
       "nombre": "Cañada Húmeda",
       "cat": "web",
@@ -60,7 +114,7 @@
       "id": "aires",
       "nombre": "Aires de San Lorenzo",
       "cat": "web",
-      "url": "https://davidtaranto96.github.io/Aires-SanLorenzo/",
+      "url": "https://airesdesanlorenzo.com",
       "estado": "live",
       "i18n": "c5s",
       "sub": {
@@ -92,78 +146,6 @@
         "en": "View demo ↗"
       },
       "nota": "Propuesta en curso: va como Demo hasta que cierre."
-    },
-    {
-      "id": "apunto",
-      "nombre": "Apunto",
-      "cat": "app",
-      "url": "",
-      "estado": "beta",
-      "i18n": "c8s",
-      "sub": {
-        "es": "Tareas y hábitos · Android",
-        "en": "Tasks & habits · Android"
-      },
-      "alt": "Apunto, app de tareas y hábitos para Android",
-      "cursor": {
-        "es": "Visitar ↗",
-        "en": "Visit ↗"
-      },
-      "origen": "propio"
-    },
-    {
-      "id": "blogai",
-      "nombre": "Claude: de 0 a Agentes",
-      "cat": "ia",
-      "url": "https://davidtaranto96.github.io/Blog-AI/",
-      "estado": "live",
-      "i18n": "c9s",
-      "sub": {
-        "es": "Guía interactiva · gratis",
-        "en": "Interactive guide · free"
-      },
-      "alt": "Guía interactiva Claude: de 0 a Agentes",
-      "cursor": {
-        "es": "Visitar ↗",
-        "en": "Visit ↗"
-      },
-      "origen": "propio"
-    },
-    {
-      "id": "casamiento",
-      "nombre": "Invitación digital",
-      "cat": "web",
-      "url": "https://davidtaranto96.github.io/Casamiento/",
-      "estado": "live",
-      "i18n": "c10s",
-      "sub": {
-        "es": "RSVP a planilla · sin backend",
-        "en": "RSVP to a spreadsheet · no backend"
-      },
-      "alt": "Invitación digital de casamiento con confirmación de asistencia",
-      "cursor": {
-        "es": "Visitar ↗",
-        "en": "Visit ↗"
-      },
-      "origen": "propio"
-    },
-    {
-      "id": "faro",
-      "nombre": "El Faro del Fin del Mundo",
-      "cat": "web",
-      "url": "https://davidtaranto96.github.io/El-Faro-del-fin-del-mundo/",
-      "estado": "live",
-      "i18n": "c11s",
-      "sub": {
-        "es": "Aventura narrativa · web",
-        "en": "Narrative adventure · web"
-      },
-      "alt": "El Faro del Fin del Mundo, aventura narrativa interactiva",
-      "cursor": {
-        "es": "Jugar ↗",
-        "en": "Play ↗"
-      },
-      "origen": "propio"
     }
   ]
 }

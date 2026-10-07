@@ -8,12 +8,13 @@ sea editar el JSON y correr esto — nunca tocar la grilla a mano.
 
   --check     busca repos con GitHub Pages activo que no esten en el JSON
   --capture   captura los casos que no tengan imagen todavia
-  --build     regenera la grilla en index.html y el i18n en main.js
+  --build     regenera la grilla en index.html y el i18n en main.js (y og.png)
+  --og        rehace solo assets/og.png con los numeros del JSON
   --all       las tres cosas, en orden
 
 Requiere: gh (autenticado), Google Chrome, sips. Todo local, cero tokens.
 """
-import argparse, json, os, re, shutil, subprocess, sys, urllib.request
+import argparse, json, os, re, shutil, subprocess, sys, time, urllib.request
 from pathlib import Path
 
 RAIZ = Path(__file__).resolve().parent.parent
@@ -23,6 +24,7 @@ JS   = RAIZ / "main.js"
 CAPS = RAIZ / "assets" / "casos"
 USUARIO = "davidtaranto96"
 CHROME = "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome"
+OG = RAIZ / "assets" / "og.png"
 
 # repos que nunca van al portfolio (perfil, forks, experimentos viejos)
 EXCLUIDOS = {"davidtaranto96", "davidtaranto96.github.io", "flutter_app", "Juli"}
@@ -117,12 +119,13 @@ def tarjeta(c):
         badge = '<span class="live"><i aria-hidden="true"></i> Live</span>'
     else:
         badge = f'<span class="live off"><i aria-hidden="true"></i> {c["estado"].capitalize()}</span>'
-    chip = ('<span class="origen" data-i18n="or_c">Cliente</span>' if c.get("origen") == "cliente"
-            else '<span class="origen" data-i18n="or_p">Propio</span>')
+    # la grilla es de clientes: el chip solo aparece si alguna vez entra algo propio
+    chip = ('              <span class="origen" data-i18n="or_p">Propio</span>\n'
+            if c.get("origen") == "propio" else "")
     info = (f'<div class="demo-info">\n'
             f'              <div><h3>{c["nombre"]}</h3>'
             f'<small data-i18n="{c["i18n"]}">{c["sub"]["es"]}</small></div>\n'
-            f'              {chip}\n'
+            f'{chip}'
             f'              {badge}\n'
             f'            </div>')
     if not c["url"]:
@@ -158,12 +161,14 @@ def build(doc):
     html = entre_marcadores(html, "<!-- CASOS:INICIO -->", "<!-- CASOS:FIN -->",
                             "\n\n".join(tarjeta(c) for c in casos), "la grilla en index.html")
     # los stats se derivan de los datos: nunca afirman algo que el JSON no sostenga
-    vivos = sum(1 for c in casos if c["url"].startswith("http"))
-    propios = sum(1 for c in casos
-                  if c["url"] and "github.io" not in c["url"] and "railway.app" not in c["url"])
+    _, vivos, propios = numeros(casos)
     for clave, valor in (("cs_s1", len(casos)), ("cs_s2", vivos), ("cs_s3", propios)):
         html = re.sub(r'(<b data-count=")\d+(">)\d+(</b><span data-i18n="%s")' % clave,
                       rf'\g<1>{valor}\g<2>{valor}\g<3>', html)
+    html, n = re.subn(r"\d+ proyectos de clientes, \d+ en línea",
+                      f"{len(casos)} proyectos de clientes, {vivos} en línea", html)
+    if not n:
+        print("  aviso: la meta description no tiene la frase de los numeros; actualizala a mano")
     HTML.write_text(html, encoding="utf-8")
 
     js = JS.read_text(encoding="utf-8")
@@ -173,6 +178,30 @@ def build(doc):
     JS.write_text(js, encoding="utf-8")
 
     print(f"grilla regenerada: {len(casos)} casos · {vivos} en linea · {propios} con dominio propio")
+    og(casos)
+
+
+def numeros(casos):
+    vivos = sum(1 for c in casos if c["url"].startswith("http"))
+    propios = sum(1 for c in casos
+                  if c["url"] and "github.io" not in c["url"] and "railway.app" not in c["url"])
+    return len(casos), vivos, propios
+
+
+# ---------------------------------------------------------------- og
+def og(casos):
+    """La imagen que se ve al compartir el link lleva los mismos numeros que la grilla."""
+    if not Path(CHROME).exists():
+        print("  aviso: sin Chrome no se rehace og.png"); return
+    total, vivos, _ = numeros(casos)
+    url = (RAIZ / "scripts" / "og.html").as_uri() + f"?n={total}&v={vivos}"
+    antes = time.time()
+    subprocess.run([CHROME, "--headless", "--no-sandbox", "--hide-scrollbars",
+                    "--virtual-time-budget=4000", "--window-size=1200,630",
+                    f"--screenshot={OG}", url], capture_output=True, timeout=90)
+    if not OG.exists() or OG.stat().st_mtime < antes or OG.stat().st_size < 20000:
+        sys.exit("ERROR: og.png no se rehizo; revisa scripts/og.html")
+    print(f"og.png rehecha: {total} proyectos de clientes · {vivos} en linea")
 
 
 def main():
@@ -180,15 +209,17 @@ def main():
     ap.add_argument("--check", action="store_true")
     ap.add_argument("--capture", action="store_true")
     ap.add_argument("--build", action="store_true")
+    ap.add_argument("--og", action="store_true")
     ap.add_argument("--all", action="store_true")
     ap.add_argument("--forzar", action="store_true", help="recapturar aunque ya exista la imagen")
     a = ap.parse_args()
-    if not any([a.check, a.capture, a.build, a.all]):
+    if not any([a.check, a.capture, a.build, a.og, a.all]):
         ap.print_help(); return
     doc = cargar()
     if a.check or a.all:   check(doc)
     if a.capture or a.all: capture(doc, forzar=a.forzar)
     if a.build or a.all:   build(doc)
+    elif a.og:             og(doc["casos"])
 
 
 if __name__ == "__main__":

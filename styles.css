@@ -1125,7 +1125,7 @@ html.fx-on .cs-grid .demo.fx-visto { opacity: 1; transform: none; }
    Reusa .marquee/.mtrack (loop infinito + mask lateral + pausa fuera de
    viewport ya montada). La segunda pista es refuerzo visual: aria-hidden. */
 .marcas-carrusel { margin-bottom: 6px; }
-.marcas-carrusel .mtrack { --speed: 36s; }
+.marcas-carrusel .mtrack { --speed: 38s; }
 .marcas-carrusel.rev .mtrack { animation-direction: reverse; }
 .marcas {
   list-style: none; display: flex; flex-wrap: nowrap;
@@ -1269,6 +1269,11 @@ html.fx-on .cs-grid .demo.fx-visto { opacity: 1; transform: none; }
 }
 .m-molins { width: 44px; height: 45px; -webkit-mask-image: url(assets/marcas/marca-molins.png); mask-image: url(assets/marcas/marca-molins.png); }
 @media (max-width: 720px) { .m-molins { width: 36px; height: 37px; } }
+/* Clientes nuevos (2026-10): equilibrio óptico, no matemático — lo apilado lleva más alto */
+.m-latorre { width: 40px;  height: 45px; -webkit-mask-image: url(assets/marcas/marca-latorre.png); mask-image: url(assets/marcas/marca-latorre.png); }
+@media (max-width: 720px) {
+  .m-latorre { width: 33px;  height: 37px; }
+}
 
 /* ============================================================
    22. REVELADO AL SCROLL GENERALIZADO + NAV REACTIVO + PARALLAX
