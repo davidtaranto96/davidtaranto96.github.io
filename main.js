@@ -262,14 +262,28 @@
   fModo();
   fMq.addEventListener("change", fModo);
 
-  /* ---------- 11. Menú mobile: cerrar al navegar ---------- */
+  /* ---------- 11. Menú mobile: hoja a pantalla completa ----------
+     Abierto, tapa la página, que queda inert y sin scroll (CSS). Idioma y
+     tema se cambian sin cerrarlo; cierra al navegar, con Escape o si la
+     ventana pasa a escritorio. --menu-top es donde termina el header. */
   const menu = $("#menu");
+  const fondo = [$("#bar"), $("#main"), $(".footer")].filter(Boolean);
+  $("summary", menu || document)?.addEventListener("click", () => {
+    menu.style.setProperty("--menu-top", `${Math.round($(".hdr-pill").getBoundingClientRect().bottom)}px`);
+  });
+  menu?.addEventListener("toggle", () => fondo.forEach((el) => { el.inert = menu.open; }));
   $$(".menu-pop a", menu || document).forEach((a) =>
     a.addEventListener("click", () => menu?.removeAttribute("open"))
   );
   addEventListener("click", (e) => {
-    if (menu?.open && !menu.contains(e.target)) menu.removeAttribute("open");
+    if (menu?.open && !menu.contains(e.target) && !e.target.closest(".tgl")) menu.removeAttribute("open");
   });
+  addEventListener("keydown", (e) => {
+    if (e.key !== "Escape" || !menu?.open) return;
+    menu.removeAttribute("open");
+    $("summary", menu).focus();
+  });
+  matchMedia("(min-width: 841px)").addEventListener("change", (e) => { if (e.matches) menu?.removeAttribute("open"); });
 
   /* ---------- 12. Count-up de stats del bento ----------
      Cuentan de 0 al valor (~1s, easeOutCubic) al entrar al viewport.
@@ -474,7 +488,7 @@
      volver a ES se restaura. Persistido en localStorage (dt-lang). */
   const EN = {
     skip: "Skip to content",
-    bar_t: "Available for new projects \u2014",
+    bar_t: "Available for <span class=\"bar-largo\">new </span>projects<span class=\"bar-largo\"> \u2014</span>",
     bar_l: "Chat on WhatsApp",
     nav_inicio: "Home", nav_prod: "Products", nav_proy: "Projects", nav_sobre: "About me", nav_contacto: "Contact",
     chat: "Get in touch",

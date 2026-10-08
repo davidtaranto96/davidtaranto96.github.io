@@ -137,7 +137,8 @@ html.theme-fade *, html.theme-fade *::before, html.theme-fade *::after {
 @media (max-width: 720px) {
   .bar { font-size: var(--t-min); gap: 6px; padding: 8px calc(38px + env(safe-area-inset-right)) 8px max(10px, env(safe-area-inset-left)); white-space: nowrap; }
   .bar > span[data-i18n] { overflow: hidden; text-overflow: ellipsis; min-width: 0; }
-  .bar a { flex: none; }
+  /* Solo "Disponible para proyectos": el WhatsApp ya está en el hero */
+  .bar .bar-largo, .bar a { display: none; }
 }
 .bar a { color: var(--accent); text-decoration: none; }
 @media (hover: hover) { .bar a:hover { text-decoration: underline; } }
@@ -227,6 +228,9 @@ html.theme-fade *, html.theme-fade *::before, html.theme-fade *::after {
 }
 @media (hover: hover) { .menu-pop a:hover { background: var(--line); } }
 @keyframes mitem { to { opacity: 1; transform: none; } }
+/* Tres rayas cerrado, X abierto, en el mismo lugar */
+.menu .ico-cerrar, .menu[open] .ico-abrir { display: none; }
+.menu[open] .ico-cerrar { display: block; }
 
 /* ---------- 5. Layout común ---------- */
 .wrap { max-width: 1180px; margin: 0 auto; padding: 0 max(20px, env(safe-area-inset-right)) 0 max(20px, env(safe-area-inset-left)); }
@@ -584,7 +588,28 @@ section { padding: 96px 0; }
   .nav, .hdr .hdr-cta { display: none; }
   .hdr-pill { display: flex; justify-content: space-between; }
   .menu { display: block; }
+  /* Abierto, el menú es una hoja que tapa la pantalla y el header queda
+     encima (logo, idioma, tema y la X). El blur del header se apaga
+     mientras tanto: backdrop-filter encerraría a la hoja fixed en él */
+  html:has(.menu[open]) { overflow: hidden; }
+  .hdr:has(.menu[open]) { position: relative; z-index: 2; }
+  .hdr-pill:has(.menu[open]) { backdrop-filter: none; -webkit-backdrop-filter: none; }
+  .menu[open] .menu-pop {
+    position: fixed; inset: 0; z-index: -1; min-width: 0;
+    border: 0; border-radius: 0; box-shadow: none; background: var(--bg);
+    /* a los costados, el texto arranca donde arranca el logo */
+    padding: calc(var(--menu-top, 112px) + 16px) calc(max(14px, env(safe-area-inset-right)) + 23px) max(28px, env(safe-area-inset-bottom)) calc(max(14px, env(safe-area-inset-left)) + 23px);
+    overflow-y: auto; overscroll-behavior: contain;
+    animation: hoja-in 0.2s ease both;
+  }
+  .menu-pop a { font-size: clamp(1.75rem, 1.25rem + 2.5vw, 2.25rem); font-weight: 500; padding: 12px 0; border-radius: 0; border-bottom: 1px solid var(--line); }
 }
+/* Celular acostado: dos columnas y letra más chica, para que entre sin scroll */
+@media (max-width: 840px) and (max-height: 520px) {
+  .menu[open] .menu-pop { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); grid-template-rows: repeat(3, auto); grid-auto-flow: column; column-gap: 32px; align-content: start; }
+  .menu-pop a { font-size: 1.375rem; padding-block: 10px; }
+}
+@keyframes hoja-in { from { opacity: 0; } }
 @media (max-width: 720px) {
   section { padding: 68px 0; }
   .hero { padding: 88px 0 96px; }
@@ -833,6 +858,17 @@ html.lang-swap [data-i18n] { animation: langswap 0.5s cubic-bezier(0.4, 0, 0.2, 
 @keyframes ai-pan { 0%, 100% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } }
 /* En el hero, botones rectangulares redondeados como Clean Slate */
 .hero-ctas .btn { border-radius: 16px; }
+/* En el celular, una sola acción: WhatsApp es el botón y "Ver mi trabajo"
+   pasa a enlace debajo, con su área de 44 px */
+@media (max-width: 720px) {
+  .hero-ctas { flex-direction: column; align-items: center; gap: 6px; }
+  .hero-ctas .btn-sec {
+    border: 0; border-radius: 4px; padding: 0 12px; min-height: 44px;
+    font-size: 0.875rem; text-transform: none; letter-spacing: 0;
+    text-decoration: underline; text-decoration-color: var(--accent);
+    text-decoration-thickness: 1px; text-underline-offset: 5px;
+  }
+}
 
 /* ---------- Border beam (card destacada + card founder) ----------
    Truco: ::after cubre toda la card con un conic-gradient (cola que se
