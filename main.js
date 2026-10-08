@@ -8,6 +8,7 @@
   const $$ = (s, c = document) => [...c.querySelectorAll(s)];
   const reduced = matchMedia("(prefers-reduced-motion: reduce)").matches;
   let lang = localStorage.getItem("dt-lang") || "es";   // idioma actual (ES default)
+  const MAIL = "david_taranto@outlook.es";
 
   /* ---------- 1. TEMA (light/dark) ----------
      El default ya se aplicó con el script inline del <head> (evita flash).
@@ -177,6 +178,14 @@
           : (mail ? "Se abre tu correo con el briefing listo para enviar." : "Se abre en WhatsApp con tu briefing listo para enviar.");
       })
     );
+    // Enter en un campo pasa al siguiente (el teclado del celular dice
+    // "Siguiente"); en el textarea hace un renglón nuevo y el envío es el botón
+    const campos = $$("input, textarea", aiForm);
+    campos.forEach((c, i) => c.addEventListener("keydown", (e) => {
+      if (e.key !== "Enter" || e.isComposing || c.tagName === "TEXTAREA") return;
+      e.preventDefault();
+      campos[i + 1]?.focus();
+    }));
     // Auto-grow del textarea (fallback donde no hay field-sizing)
     const ta = $("textarea", aiForm);
     ta?.addEventListener("input", () => {
@@ -215,7 +224,7 @@
       btn.classList.add("is-loading");
       setTimeout(() => btn.classList.remove("is-loading"), 1200);
       if (via === "mail") {
-        location.href = `mailto:david_taranto@outlook.es?subject=${encodeURIComponent(L.subj)}&body=${encodeURIComponent(msg)}`;
+        location.href = `mailto:${MAIL}?subject=${encodeURIComponent(L.subj)}&body=${encodeURIComponent(msg)}`;
       } else {
         open(`https://wa.me/5493875454070?text=${encodeURIComponent(msg)}`, "_blank", "noopener");
       }
@@ -223,16 +232,35 @@
   }
 
   /* ---------- 10. Acordeón del footer (solo mobile) ----------
-     Una columna abierta a la vez; max-height animado por CSS. */
-  $$(".f-col h4").forEach((h) => {
-    h.addEventListener("click", () => {
-      if (!matchMedia("(max-width: 720px)").matches) return;
-      const col = h.parentElement;
-      const wasOpen = col.classList.contains("open");
-      $$(".f-col.open").forEach((c) => c.classList.remove("open"));
-      if (!wasOpen) col.classList.add("open");
+     Una columna abierta a la vez; max-height animado por CSS.
+     Con teclado: en el celular cada título es un botón (Enter o espacio). */
+  const fMq = matchMedia("(max-width: 720px)");
+  const fHeads = $$(".f-col h4");
+  function fToggle(h) {
+    if (!fMq.matches) return;
+    const col = h.parentElement;
+    const wasOpen = col.classList.contains("open");
+    $$(".f-col.open").forEach((c) => { c.classList.remove("open"); $("h4", c)?.setAttribute("aria-expanded", "false"); });
+    if (!wasOpen) { col.classList.add("open"); h.setAttribute("aria-expanded", "true"); }
+  }
+  function fModo() {
+    fHeads.forEach((h) => {
+      if (fMq.matches) {
+        h.setAttribute("role", "button"); h.tabIndex = 0;
+        h.setAttribute("aria-expanded", String(h.parentElement.classList.contains("open")));
+      } else {
+        h.removeAttribute("role"); h.removeAttribute("tabindex"); h.removeAttribute("aria-expanded");
+      }
+    });
+  }
+  fHeads.forEach((h) => {
+    h.addEventListener("click", () => fToggle(h));
+    h.addEventListener("keydown", (e) => {
+      if (e.key === "Enter" || e.key === " ") { e.preventDefault(); fToggle(h); }
     });
   });
+  fModo();
+  fMq.addEventListener("change", fModo);
 
   /* ---------- 11. Menú mobile: cerrar al navegar ---------- */
   const menu = $("#menu");
@@ -520,7 +548,7 @@
     cta_sub: "Got an idea? Tell me about it. Fill in the briefing and WhatsApp or your email opens with the message ready \u2014 I read it myself and get back to you.",
     cta_btn: "Talk to my assistant",
     af_head: "Tell me about your project",
-    af_badge: "AI \u00b7 instant reply",
+    af_badge: "Same-day reply",
     af_name: "Your name", af_from: "Your business / project",
     af_mail: "Your email", af_tel: "Your phone", af_opt: "\u00b7 optional",
     af_via: "Send via",
@@ -533,6 +561,7 @@
     nl_h: "News & deals",
     nl_p: "Launches, deals and lessons from building with AI. Zero spam.",
     nl_btn: "Count me in \u2192",
+    nl_ok: "Your mail app opened: send it and I'll add you.",
     f_proj: "Projects", f_rec: "Resources", f_cont: "Contact",
     f_wa: "WhatsApp", f_status: "Available for projects", f_crm: "Custom CRM",
     made: "Made in Salta, Argentina"
@@ -554,6 +583,12 @@
     $$("[data-ph]").forEach((el) => {
       if (el.dataset.esPh === undefined) el.dataset.esPh = el.placeholder;
       el.placeholder = l === "en" ? (PH_EN[el.dataset.ph] ?? el.placeholder) : el.dataset.esPh;
+    });
+    // Etiquetas para lectores de pantalla (data-i18n-aria = clave)
+    const ARIA_EN = { nav: "Main", bar_x: "Close announcement", theme: "Toggle light/dark theme", menu: "Open menu", nl_mail: "Your email", af_via: "Send via", af_tipo: "Project type", cs_filtro: "Filter projects by type" };
+    $$("[data-i18n-aria]").forEach((el) => {
+      if (el.dataset.esAria === undefined) el.dataset.esAria = el.getAttribute("aria-label") || "";
+      el.setAttribute("aria-label", l === "en" ? (ARIA_EN[el.dataset.i18nAria] ?? el.dataset.esAria) : el.dataset.esAria);
     });
     // Los H2 se re-parten palabra por palabra en el idioma nuevo
     if (!reduced) $$(".h2[data-i18n]").forEach((hEl) => { splitH2(hEl); hEl.classList.add("in"); });
@@ -601,22 +636,32 @@
   if (lang === "en") setLang("en");   // aplicar idioma guardado al cargar
 
   /* ---------- 19. Newsletter (footer) ----------
-     Sin backend: abre un mail de suscripción prellenado y muestra "Listo ✓".
+     Sin backend: abre un mail de suscripción prellenado y avisa que hay
+     que mandarlo (nada queda anotado hasta que llega).
      Para automatizarlo: reemplazar por fetch al endpoint de Formspree/
      Buttondown/Mailchimp con el mismo input. */
   const nlForm = $("#nlForm");
+  const nlEstado = $("#nlEstado");
+  // El aviso lleva data-i18n y su castellano en data-es: setLang lo traduce
+  // como a cualquier texto si se cambia de idioma con el aviso a la vista
+  function avisoNl(ver) {
+    if (!nlEstado) return;
+    if (!ver) { delete nlEstado.dataset.i18n; delete nlEstado.dataset.es; nlEstado.textContent = ""; return; }
+    nlEstado.dataset.i18n = "nl_ok";
+    nlEstado.dataset.es = "Se abri\u00f3 tu correo: mandalo y te sumo.";
+    nlEstado.textContent = lang === "en" ? EN.nl_ok : nlEstado.dataset.es;
+  }
   nlForm?.addEventListener("submit", (e) => {
     e.preventDefault();
+    avisoNl(false);
     nlForm.classList.add("tried");
     if (!nlForm.checkValidity()) { nlForm.reportValidity(); return; }
     const em = nlForm.email.value.trim();
     const subj = lang === "en" ? "Newsletter signup" : "Suscripci\u00f3n a novedades";
     const body = lang === "en" ? `Please add me to the list: ${em}` : `Sumame a la lista: ${em}`;
-    location.href = `mailto:david_taranto@outlook.es?subject=${encodeURIComponent(subj)}&body=${encodeURIComponent(body)}`;
-    const btn = $(".nl-btn", nlForm);
-    const prev = btn.textContent;
-    btn.textContent = lang === "en" ? "Done \u2713" : "Listo \u2713";
-    setTimeout(() => { btn.textContent = prev; nlForm.reset(); nlForm.classList.remove("tried"); }, 2500);
+    location.href = `mailto:${MAIL}?subject=${encodeURIComponent(subj)}&body=${encodeURIComponent(body)}`;
+    nlForm.classList.remove("tried");
+    avisoNl(true);
   });
 
   /* ---------- 17. Acordeón de servicios (Stökt) ----------

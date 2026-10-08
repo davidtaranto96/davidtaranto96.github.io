@@ -25,7 +25,8 @@
   --fx-rapido: 180ms; /* hover, tooltips */
   --fx-medio: 260ms;  /* dropdowns, acordeones */
   --fx-lento: 520ms;  /* reveal al scroll, modales */
-  color-scheme: light;
+  --t-min: 0.75rem;   /* letra mínima (12 px): rótulos, sellos y notas */
+  color-scheme: only light;   /* sin esto Android le aplica su oscurecido */
 }
 [data-theme="dark"] {
   --bg: #0E0F12;
@@ -54,7 +55,7 @@ body {
   color: var(--text);
   font-family: var(--font-mono);   /* cuerpo en mono, como Clean Slate */
   font-weight: 400;
-  font-size: 15px;
+  font-size: 0.9375rem;
   line-height: 1.65;
   overflow-x: clip;              /* floats y marquees no generan scroll-x */
   -webkit-font-smoothing: antialiased;
@@ -63,6 +64,10 @@ body {
 .eyebrow, .bar, .nav a, .btn, .logo, .chip, .pw, .live, .status,
 .srv-num, .role, .avail, .b-stat span, .f-col h4, .footer-bottom,
 .hdr-cta, .srv-price, .verified, .demo-info small, .tw-mono { font-family: var(--font-mono); }
+/* Palabras largas: en títulos 'anywhere', porque las palabras del h2 van en
+   inline-block y 'break-word' no achica su ancho mínimo */
+body { overflow-wrap: break-word; }
+h1, h2, h3, h4, .h2 .w { overflow-wrap: anywhere; }
 h1, h2, h3, h4 { font-family: var(--font-head); font-weight: 700; line-height: 1.1; letter-spacing: -0.02em; text-wrap: balance; }
 img, video { max-width: 100%; display: block; }
 a { color: inherit; }
@@ -87,7 +92,7 @@ html.theme-fade *, html.theme-fade *::before, html.theme-fade *::after {
 .skip {
   position: absolute; left: 16px; top: 12px; z-index: 200;
   background: var(--accent); color: #0E0F12; padding: 10px 16px;
-  border-radius: 8px; font-size: 12px;
+  border-radius: 8px; font-size: 0.75rem;
   /* transform en vez de top: no toca layout */
   transform: translateY(-80px);
   transition: transform var(--fx-rapido) var(--fx-ease);
@@ -121,8 +126,8 @@ html.theme-fade *, html.theme-fade *::before, html.theme-fade *::after {
 .bar {
   position: relative;
   display: flex; align-items: center; justify-content: center; gap: 8px;
-  padding: 9px 44px 9px 16px;
-  font-size: 12px;
+  padding: 9px calc(44px + env(safe-area-inset-right)) 9px max(16px, env(safe-area-inset-left));
+  font-size: 0.75rem;
   background: color-mix(in srgb, var(--bg) 82%, transparent);
   backdrop-filter: blur(10px);
   border-bottom: 1px solid var(--line);
@@ -130,12 +135,12 @@ html.theme-fade *, html.theme-fade *::before, html.theme-fade *::after {
 .bar[hidden] { display: none; }
 /* Mobile: una sola línea, sin que el texto pise la X */
 @media (max-width: 720px) {
-  .bar { font-size: 10.5px; gap: 6px; padding: 8px 38px 8px 10px; white-space: nowrap; }
+  .bar { font-size: var(--t-min); gap: 6px; padding: 8px calc(38px + env(safe-area-inset-right)) 8px max(10px, env(safe-area-inset-left)); white-space: nowrap; }
   .bar > span[data-i18n] { overflow: hidden; text-overflow: ellipsis; min-width: 0; }
   .bar a { flex: none; }
 }
 .bar a { color: var(--accent); text-decoration: none; }
-.bar a:hover { text-decoration: underline; }
+@media (hover: hover) { .bar a:hover { text-decoration: underline; } }
 /* Beam de luz que recorre el borde inferior en loop de 4s.
    El animation-delay negativo lo pone JS: -(Date.now()%4000)/1000 s,
    así el beam está "sincronizado al reloj" y nunca se resetea. */
@@ -150,16 +155,16 @@ html.theme-fade *, html.theme-fade *::before, html.theme-fade *::after {
   to   { transform: translateX(100vw); }
 }
 .bar-x {
-  position: absolute; right: 8px; top: 50%; transform: translateY(-50%);
+  position: absolute; right: calc(8px + env(safe-area-inset-right)); top: 50%; transform: translateY(-50%);
   width: 28px; height: 28px; display: grid; place-items: center;
   border-radius: 6px; color: var(--muted);
 }
-.bar-x:hover { background: var(--line); color: var(--text); }
+@media (hover: hover) { .bar-x:hover { background: var(--line); color: var(--text); } }
 
 /* Header estilo Stökt: UNA sola barra de vidrio transparente que agrupa
    logo + nav + acciones. Receta del Framer original: fondo translúcido
    al 50% + backdrop blur(15px) + borde 1px al 13% + radio generoso. */
-.hdr { max-width: 1240px; margin: 0 auto; padding: 10px 14px; }
+.hdr { max-width: 1240px; margin: 0 auto; padding: 10px max(14px, env(safe-area-inset-right)) 10px max(14px, env(safe-area-inset-left)); }
 .hdr-pill {
   display: grid; grid-template-columns: 1fr auto 1fr; align-items: center;
   padding: 8px 8px 8px 22px; border-radius: 18px;
@@ -169,35 +174,35 @@ html.theme-fade *, html.theme-fade *::before, html.theme-fade *::after {
   box-shadow: inset 0 1px 0 color-mix(in srgb, #FFFFFF 30%, transparent),
               0 10px 30px -18px rgba(14, 15, 18, 0.5);
 }
-.logo { font-family: var(--font-mono); font-size: 14px; text-decoration: none; letter-spacing: 0.02em; justify-self: start; }
+.logo { font-family: var(--font-mono); font-size: 0.875rem; text-decoration: none; letter-spacing: 0.02em; justify-self: start; }
 .logo b { color: var(--accent); font-weight: 400; }
 .nav { display: flex; gap: 2px; justify-self: center; }
 .nav a {
-  font-size: 11px; font-weight: 400; text-transform: uppercase;
+  font-size: 0.6875rem; font-weight: 400; text-transform: uppercase;
   text-decoration: none; color: var(--text); letter-spacing: 0.09em;
   padding: 9px 14px; border-radius: 999px; display: block;
 }
-.nav a:hover { color: var(--accent); }
+@media (hover: hover) { .nav a:hover { color: var(--accent); } }
 /* Hover "rotación vertical" (Stökt): el clip vive en .nl y la palabra que
    ENTRA lo hace en color acento — igual que en wearestokt.com. */
 .nl { display: inline-block; position: relative; overflow: hidden; vertical-align: top; }
 .nl > span { display: block; transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
 .nl > span + span { position: absolute; top: 100%; left: 0; color: var(--accent); }
-.nav a:hover .nl > span { transform: translateY(-100%); }
+@media (hover: hover) { .nav a:hover .nl > span { transform: translateY(-100%); } }
 .hdr-right { justify-self: end; display: flex; align-items: center; gap: 8px; }
 /* Botón de idioma (ES/EN) — .tgl.lang para ganarle a la regla base de .tgl */
-.tgl.lang { width: auto; display: inline-flex; align-items: center; gap: 6px; padding: 0 11px; height: 34px; font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.05em; border: 1px solid var(--line); border-radius: 999px; white-space: nowrap; }
+.tgl.lang { width: auto; display: inline-flex; align-items: center; gap: 6px; padding: 0 11px; height: 34px; font-family: var(--font-mono); font-size: var(--t-min); letter-spacing: 0.05em; border: 1px solid var(--line); border-radius: 999px; white-space: nowrap; }
 .hdr-cta {
   display: inline-flex; align-items: center; gap: 7px;
-  font-size: 12px; text-decoration: none;
-  padding: 8px 14px; border-radius: 999px;
+  font-size: 0.75rem; text-decoration: none;
+  padding: 8px 14px; border-radius: 999px; white-space: nowrap;
   background: var(--text); color: var(--bg);
 }
-.hdr-cta:hover { background: var(--accent); color: #0E0F12; }
+@media (hover: hover) { .hdr-cta:hover { background: var(--accent); color: #0E0F12; } }
 
 /* Toggle de tema (sol/luna via data-theme) */
-.tgl { width: 34px; height: 34px; border-radius: 8px; display: grid; place-items: center; color: var(--muted); }
-.tgl:hover { background: var(--line); color: var(--text); }
+.tgl { width: 34px; height: 34px; flex-shrink: 0; border-radius: 8px; display: grid; place-items: center; color: var(--muted); }
+@media (hover: hover) { .tgl:hover { background: var(--line); color: var(--text); } }
 .tgl .moon { display: none; }
 [data-theme="dark"] .tgl .sun { display: none; }
 [data-theme="dark"] .tgl .moon { display: block; }
@@ -206,7 +211,7 @@ html.theme-fade *, html.theme-fade *::before, html.theme-fade *::after {
 .menu { display: none; position: relative; margin-left: auto; }
 .menu summary { list-style: none; width: 38px; height: 38px; display: grid; place-items: center; border-radius: 8px; cursor: pointer; }
 .menu summary::-webkit-details-marker { display: none; }
-.menu summary:hover { background: var(--line); }
+@media (hover: hover) { .menu summary:hover { background: var(--line); } }
 .menu-pop {
   position: absolute; right: 0; top: calc(100% + 8px); min-width: 210px;
   background: var(--card); border: 1px solid var(--card-border);
@@ -214,22 +219,23 @@ html.theme-fade *, html.theme-fade *::before, html.theme-fade *::after {
   display: flex; flex-direction: column;
 }
 .menu-pop a {
-  font-family: var(--font-head); font-weight: 700; font-size: 13px;
+  font-family: var(--font-head); font-weight: 700; font-size: 0.8125rem;
   text-decoration: none; padding: 10px 12px; border-radius: 8px;
   opacity: 0; transform: translateY(-6px);
   animation: mitem 0.3s cubic-bezier(0.4, 0, 0.2, 1) forwards;
   animation-delay: calc(var(--i) * 55ms);      /* entrada escalonada */
 }
-.menu-pop a:hover { background: var(--line); }
+@media (hover: hover) { .menu-pop a:hover { background: var(--line); } }
 @keyframes mitem { to { opacity: 1; transform: none; } }
 
 /* ---------- 5. Layout común ---------- */
-.wrap { max-width: 1180px; margin: 0 auto; padding: 0 20px; }
+.wrap { max-width: 1180px; margin: 0 auto; padding: 0 max(20px, env(safe-area-inset-right)) 0 max(20px, env(safe-area-inset-left)); }
 section { padding: 96px 0; }
-/* Label de sección estilo Stökt: "( SOBRE MÍ ) ↓" en mono gris */
+/* Rótulo de sección: "↓ ( Sobre mí ) ↓" en mono gris, en minúscula:
+   el rótulo en mayúsculas por sección es el molde genérico */
 .eyebrow {
   display: inline-flex; align-items: center;
-  font-size: 11px; letter-spacing: 0.14em; text-transform: uppercase;
+  font-size: var(--t-min); letter-spacing: 0.02em;
   color: var(--muted);
 }
 .eyebrow::before { content: "↓ ( "; white-space: pre; }
@@ -237,27 +243,27 @@ section { padding: 96px 0; }
 /* Nota con asterisco bajo los títulos (Stökt) */
 .astnote {
   display: block; margin: 2px 0 10px;
-  font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.14em;
+  font-family: var(--font-mono); font-size: var(--t-min); letter-spacing: 0.14em;
   text-transform: uppercase; color: var(--accent);
 }
 /* Cabeceras de sección centradas (como Clean Slate) */
 .sec-head { text-align: center; }
 .sec-head .sub { margin-left: auto; margin-right: auto; }
-.h2 { font-size: clamp(28px, 4.2vw, 44px); margin: 14px 0 12px; font-weight: 500; letter-spacing: -0.01em; }
+.h2 { font-size: clamp(1.75rem, 4.2vw, 2.75rem); margin: 14px 0 12px; font-weight: 500; letter-spacing: -0.01em; }
 .sub { color: var(--muted); max-width: 560px; }
 
 /* Botones */
 .btn {
   display: inline-flex; align-items: center; justify-content: center; gap: 8px;
-  font-family: var(--font-mono); font-size: 12px; letter-spacing: 0.06em;
+  font-family: var(--font-mono); font-size: 0.75rem; letter-spacing: 0.06em;
   text-transform: uppercase; text-decoration: none;
   padding: 14px 26px; border-radius: 999px; transition: transform 0.15s, background 0.2s;
 }
 .btn:active { transform: scale(0.97); }
 .btn-pri { background: var(--accent); color: #0E0F12; }
-.btn-pri:hover { background: color-mix(in srgb, var(--accent) 85%, var(--text)); }
+@media (hover: hover) { .btn-pri:hover { background: color-mix(in srgb, var(--accent) 85%, var(--text)); } }
 .btn-sec { border: 1px solid var(--line); color: var(--text); }
-.btn-sec:hover { border-color: var(--accent); }
+@media (hover: hover) { .btn-sec:hover { border-color: var(--accent); } }
 /* Spinner del estado loading (hereda el color del texto del botón) */
 .spin {
   width: 15px; height: 15px; border-radius: 50%;
@@ -270,19 +276,27 @@ section { padding: 96px 0; }
 @keyframes spin { to { transform: rotate(360deg); } }
 
 /* ---------- 6. HERO ---------- */
-.hero { position: relative; padding: 120px 0 140px; text-align: center; }
-.hero-inner { max-width: 780px; margin: 0 auto; padding: 0 20px; position: relative; z-index: 2; }
-.hero h1 { font-size: clamp(38px, 6.4vw, 76px); margin-bottom: 22px; }
+/* Grilla [margen | texto | margen]: el texto toma su ancho y las tarjetas
+   flotantes viven en los márgenes, así nunca pisan el título. minmax(0, auto)
+   y width:100% (sin margin auto, que lo achica a su contenido) dejan que una
+   palabra larga se parta en vez de ensanchar la columna */
+.hero { position: relative; display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, auto) minmax(0, 1fr); padding: 120px 0 140px; text-align: center; }
+.hero-inner { grid-column: 2; width: 100%; max-width: 780px; padding: 0 max(20px, env(safe-area-inset-right)) 0 max(20px, env(safe-area-inset-left)); position: relative; z-index: 2; }
+.hero h1 { font-size: clamp(2.375rem, 6.4vw, 4.75rem); margin-bottom: 22px; }
 /* Palabra rotante del typewriter — gradiente "IA" animado (como el
    "beauty" de Clean Slate): clip del gradiente al texto + pan en loop */
 .tw {
-  white-space: nowrap;
   background: linear-gradient(115deg, #52BFFE, #8B7CF6 40%, #EC4899 70%, #52BFFE);
   background-size: 300% 100%;
   -webkit-background-clip: text; background-clip: text;
   color: transparent; -webkit-text-fill-color: transparent;
   animation: ai-pan 5s ease-in-out infinite;
 }
+/* La palabra va en su propio renglón y el título de arriba se equilibra solo
+   (text-wrap: balance no corre si hay un <br>). "tienda online" lleva &nbsp;
+   en data-words: no se parte en el espacio, y una palabra que no entra se
+   corta en vez de salirse de la pantalla. */
+.tw-linea { display: block; }
 .caret {
   display: inline-block; width: 0.09em; height: 0.92em;
   background: var(--accent); vertical-align: -0.08em; margin-left: 2px;
@@ -293,13 +307,26 @@ section { padding: 96px 0; }
 .hero-ctas { display: flex; gap: 14px; justify-content: center; flex-wrap: wrap; }
 
 /* Screenshots flotantes en las esquinas.
-   Cada .float: posición --x/--y, parallax --px/--py (JS, según data-depth),
-   rotación --rot y bob (flotación) con duración/delay propios. */
+   Cada .float es absolute dentro de su margen de la grilla (columna 1 o 3;
+   con una sola línea, un absolute llega hasta el borde del padding):
+   --x/--r es la distancia al borde de la pantalla y --w el ancho de diseño.
+   Si no entra, primero se acerca al borde y después se achica; 36 px de aire
+   cubren lo que asoma la tarjeta girada y el parallax (18 px como máximo).
+   Parallax --px/--py (JS, según data-depth), rotación --rot y bob propios. */
 .float {
-  position: absolute; left: var(--x); top: var(--y); z-index: 1;
+  --off: clamp(1vw, var(--x), 100% - var(--w) - 36px);
+  position: absolute; grid-column: 1 / 2; left: var(--off); top: var(--y); z-index: 1;
+  width: min(var(--w), 100% - var(--off) - 36px);
   transform: translate3d(var(--px, 0), var(--py, 0), 0);
   will-change: transform;
 }
+.float.der {
+  --off: clamp(1vw, var(--r) - var(--w), 100% - var(--w) - 36px);
+  grid-column: 3 / 4; left: auto; right: var(--off);
+}
+/* Hasta 1100 px los márgenes dejan tarjetas de menos de 145 px y antes
+   tapaban el título: hero limpio, solo tipografía, como en el celular */
+@media (max-width: 1100px) { .float { display: none; } }
 .float-card {
   border-radius: 14px; overflow: hidden;
   border: 1px solid var(--card-border);
@@ -339,7 +366,7 @@ section { padding: 96px 0; }
 .phone img { border-radius: 22px; width: 100%; height: auto; }
 
 /* ---------- 8. Servicios (3 cards estilo theme-picker) ---------- */
-.srv-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 22px; margin-top: 48px; }
+.srv-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 22px; margin-top: 48px; }
 .srv {
   position: relative; display: flex; flex-direction: column;
   border: 1px solid var(--card-border); border-radius: 18px;
@@ -351,19 +378,19 @@ section { padding: 96px 0; }
   background: radial-gradient(circle at 50% 110%, color-mix(in srgb, var(--accent) 35%, transparent), transparent 60%);
   pointer-events: none;
 }
-.srv-num { font-size: 11px; color: var(--muted); letter-spacing: 0.12em; }
-.srv h3 { font-size: 21px; margin: 6px 0 4px; }
-.srv-tag { font-size: 13px; color: var(--muted); margin-bottom: 16px; }
-.srv ul { list-style: none; display: flex; flex-direction: column; gap: 9px; margin-bottom: 20px; font-size: 13px; }
+.srv-num { font-size: var(--t-min); color: var(--muted); letter-spacing: 0.12em; }
+.srv h3 { font-size: 1.3125rem; margin: 6px 0 4px; }
+.srv-tag { font-size: 0.8125rem; color: var(--muted); margin-bottom: 16px; }
+.srv ul { list-style: none; display: flex; flex-direction: column; gap: 9px; margin-bottom: 20px; font-size: 0.8125rem; }
 .srv li { display: flex; gap: 9px; align-items: baseline; }
 .srv li::before { content: "✓"; color: var(--accent); font-weight: 700; }
-.srv-price { font-size: 12px; color: var(--muted); margin-bottom: 14px; }
+.srv-price { font-size: 0.75rem; color: var(--muted); margin-bottom: 14px; }
 .srv-price b { color: var(--text); font-weight: 400; }  /* slot listo para precio */
-.srv-cta { margin-top: auto; font-size: 13px; text-decoration: none; color: var(--accent); }
-.srv-cta:hover { text-decoration: underline; }
+.srv-cta { margin-top: auto; font-size: 0.8125rem; text-decoration: none; color: var(--accent); }
+@media (hover: hover) { .srv-cta:hover { text-decoration: underline; } }
 .ribbon {
   position: absolute; top: 14px; right: 14px; z-index: 2;
-  font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase;
+  font-size: var(--t-min); letter-spacing: 0.1em; text-transform: uppercase;
   background: var(--accent); color: #0E0F12; padding: 4px 10px; border-radius: 999px;
 }
 
@@ -412,35 +439,35 @@ section { padding: 96px 0; }
 /* ---------- 10. Testimonios ---------- */
 .stats { display: flex; justify-content: center; gap: 64px; flex-wrap: wrap; margin: 46px 0 60px; }
 .stat { text-align: center; }
-.stat b { display: block; font-family: var(--font-head); font-size: 42px; font-weight: 700; letter-spacing: -0.02em; }
-.stat span { font-size: 12px; color: var(--muted); }
+.stat b { display: block; font-family: var(--font-head); font-size: 2.625rem; font-weight: 700; letter-spacing: -0.02em; }
+.stat span { font-size: 0.75rem; color: var(--muted); }
 .review {
   max-width: 680px; margin: 0 auto 64px; text-align: center;
   border: 1px solid var(--card-border); border-radius: 20px;
   background: var(--card); padding: 40px 36px; position: relative;
 }
 .review-q { color: var(--accent); margin-bottom: 12px; }
-.review p { font-size: 17px; line-height: 1.7; margin-bottom: 22px; }
-.review-who { display: flex; align-items: center; justify-content: center; gap: 12px; font-size: 13px; }
+.review p { font-size: 1.0625rem; line-height: 1.7; margin-bottom: 22px; }
+.review-who { display: flex; align-items: center; justify-content: center; gap: 12px; font-size: 0.8125rem; }
 .avatar {
   width: 40px; height: 40px; border-radius: 50%; display: grid; place-items: center;
   background: var(--accent); color: #0E0F12; font-family: var(--font-head); font-weight: 700;
 }
-.verified { display: inline-flex; align-items: center; gap: 5px; font-size: 11px; color: var(--muted); border: 1px solid var(--line); padding: 3px 9px; border-radius: 999px; }
+.verified { display: inline-flex; align-items: center; gap: 5px; font-size: var(--t-min); color: var(--muted); border: 1px solid var(--line); padding: 3px 9px; border-radius: 999px; }
 .verified svg { color: var(--accent); }
 /* Marquee de testimonios (lento, ~55s) */
 .t-marquee { --speed: 55s; }
 .t-card {
   width: 320px; flex-shrink: 0;
   border: 1px solid var(--card-border); border-radius: 14px;
-  background: var(--card); padding: 20px; font-size: 13px;
+  background: var(--card); padding: 20px; font-size: 0.8125rem;
 }
 .t-card p { color: var(--muted); margin-bottom: 14px; }
-.t-card .who { display: flex; align-items: center; gap: 10px; font-size: 12px; }
-.t-card .avatar { width: 30px; height: 30px; font-size: 13px; }
+.t-card .who { display: flex; align-items: center; gap: 10px; font-size: 0.75rem; }
+.t-card .avatar { width: 30px; height: 30px; font-size: 0.8125rem; }
 
 /* ---------- 11. Demos en vivo ---------- */
-.demo-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 22px; margin-top: 48px; }
+.demo-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 22px; margin-top: 48px; }
 .demo {
   position: relative; border-radius: 16px; overflow: hidden;
   border: 1px solid var(--card-border); background: var(--card);
@@ -448,11 +475,11 @@ section { padding: 96px 0; }
 }
 .demo img { width: 100%; height: auto; }
 .demo-info { padding: 16px 18px; display: flex; align-items: center; gap: 10px; }
-.demo-info h3 { font-size: 15px; }
-.demo-info small { color: var(--muted); font-size: 11px; }
+.demo-info h3 { font-size: 0.9375rem; }
+.demo-info small { color: var(--muted); font-size: var(--t-min); }
 .live {
   margin-left: auto; display: inline-flex; align-items: center; gap: 6px;
-  font-size: 10px; letter-spacing: 0.08em; text-transform: uppercase;
+  font-size: var(--t-min); letter-spacing: 0.08em; text-transform: uppercase;
   color: #22C55E; border: 1px solid color-mix(in srgb, #22C55E 40%, transparent);
   padding: 3px 9px; border-radius: 999px; white-space: nowrap;
 }
@@ -465,8 +492,9 @@ section { padding: 96px 0; }
   backdrop-filter: blur(3px);
   opacity: 0; transition: opacity 0.25s;
 }
-.demo:hover .demo-ov, .demo:focus-visible .demo-ov { opacity: 1; }
-.demo-ov span { background: var(--text); color: var(--bg); padding: 10px 20px; border-radius: 999px; font-size: 13px; }
+.demo:focus-visible .demo-ov { opacity: 1; }
+@media (hover: hover) { .demo:hover .demo-ov { opacity: 1; } }
+.demo-ov span { background: var(--text); color: var(--bg); padding: 10px 20px; border-radius: 999px; font-size: 0.8125rem; }
 
 /* ---------- 11b. Casos (grilla filtrable) ----------
    Reusa .demo/.demo-grid. El filtro esconde con [hidden]; hace falta
@@ -498,10 +526,10 @@ section { padding: 96px 0; }
 /* Chip de password copiable */
 .pw {
   display: inline-flex; align-items: center; gap: 7px;
-  font-size: 11px; color: var(--muted);
+  font-size: var(--t-min); color: var(--muted);
   border: 1px dashed var(--line); border-radius: 999px; padding: 3px 10px;
 }
-.pw:hover { border-color: var(--accent); color: var(--text); }
+@media (hover: hover) { .pw:hover { border-color: var(--accent); color: var(--text); } }
 .pw.copied { color: #22C55E; border-color: #22C55E; }
 
 /* ---------- 12. CTA final ---------- */
@@ -511,13 +539,13 @@ section { padding: 96px 0; }
   background: var(--card); padding: 60px 40px;
   box-shadow: var(--shadow);
 }
-.cta-card .h2 { font-size: clamp(26px, 3.6vw, 38px); }
-.cta-links { display: flex; gap: 20px; justify-content: center; margin-top: 22px; font-size: 13px; }
+.cta-card .h2 { font-size: clamp(1.625rem, 3.6vw, 2.375rem); }
+.cta-links { display: flex; gap: 20px; justify-content: center; margin-top: 22px; font-size: 0.8125rem; }
 .cta-links a { color: var(--muted); text-decoration: none; }
-.cta-links a:hover { color: var(--accent); }
+@media (hover: hover) { .cta-links a:hover { color: var(--accent); } }
 
 /* ---------- 13. Footer ---------- */
-.footer { position: relative; overflow: hidden; border-top: 1px solid var(--line); padding: 80px 0 0; margin-top: 40px; }
+.footer { position: relative; overflow: hidden; border-top: 1px solid var(--line); padding: 80px 0 env(safe-area-inset-bottom); margin-top: 40px; }
 /* Wordmark gigante de fondo */
 .footer-giant {
   position: absolute; left: 50%; bottom: -0.18em; transform: translateX(-50%);
@@ -526,17 +554,17 @@ section { padding: 96px 0; }
   color: var(--text); opacity: 0.04; pointer-events: none; user-select: none;
   z-index: 0; line-height: 1;
 }
-.footer-cols { position: relative; z-index: 1; display: grid; grid-template-columns: 1.4fr 1fr 1fr 1fr; gap: 36px; padding-bottom: 70px; }
-.f-brand p { color: var(--muted); font-size: 13px; margin-top: 10px; max-width: 260px; }
-.f-col h4 { font-size: 12px; letter-spacing: 0.1em; text-transform: uppercase; display: flex; align-items: center; justify-content: space-between; }
+.footer-cols { position: relative; z-index: 1; display: grid; grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr) minmax(0, 1fr) minmax(0, 1fr); gap: 36px; padding-bottom: 70px; }
+.f-brand p { color: var(--muted); font-size: 0.8125rem; margin-top: 10px; max-width: 260px; }
+.f-col h4 { font-size: 0.75rem; letter-spacing: 0.1em; text-transform: uppercase; display: flex; align-items: center; justify-content: space-between; }
 .f-col h4 svg { display: none; transition: transform 0.3s; }
-.f-col ul { list-style: none; margin-top: 14px; display: flex; flex-direction: column; gap: 10px; font-size: 13px; }
+.f-col ul { list-style: none; margin-top: 14px; display: flex; flex-direction: column; gap: 10px; font-size: 0.8125rem; }
 .f-col a { color: var(--muted); text-decoration: none; }
-.f-col a:hover { color: var(--accent); }
+@media (hover: hover) { .f-col a:hover { color: var(--accent); } }
 .footer-bottom {
   position: relative; z-index: 1;
   display: flex; align-items: center; gap: 16px; flex-wrap: wrap;
-  border-top: 1px solid var(--line); padding: 18px 0 22px; font-size: 12px; color: var(--muted);
+  border-top: 1px solid var(--line); padding: 18px 0 22px; font-size: 0.75rem; color: var(--muted);
 }
 .status {
   display: inline-flex; align-items: center; gap: 7px;
@@ -547,30 +575,32 @@ section { padding: 96px 0; }
 
 /* ---------- 14. Responsive ---------- */
 @media (max-width: 980px) {
-  .srv-grid, .demo-grid { grid-template-columns: 1fr 1fr; }
-  .footer-cols { grid-template-columns: 1fr 1fr; }
-  /* En tablets achicamos los floats del hero */
-  .float { scale: 0.75; }
+  .srv-grid, .demo-grid { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); }
+  .footer-cols { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); }
 }
-@media (max-width: 720px) {
+/* El header completo pide 811 px en castellano (795 en inglés): debajo de
+   840 va el menú, así no se parte "Sobre mí" en dos renglones */
+@media (max-width: 840px) {
   .nav, .hdr .hdr-cta { display: none; }
   .hdr-pill { display: flex; justify-content: space-between; }
   .menu { display: block; }
+}
+@media (max-width: 720px) {
   section { padding: 68px 0; }
   .hero { padding: 88px 0 96px; }
-  /* En mobile los floats tapaban el H1 y los CTAs: hero limpio, solo tipografía */
-  .float { display: none; }
-  .srv-grid, .demo-grid { grid-template-columns: 1fr; }
+  .srv-grid, .demo-grid { grid-template-columns: minmax(0, 1fr); }
   .stats { gap: 34px; }
-  .footer-cols { grid-template-columns: 1fr; gap: 0; }
+  .footer-cols { grid-template-columns: minmax(0, 1fr); gap: 0; }
   .f-brand { margin-bottom: 26px; }
   /* Acordeón mobile: h4 clickeable, listas colapsadas con max-height animado */
   .f-col { border-top: 1px solid var(--line); }
   .f-col h4 { padding: 16px 0; cursor: pointer; }
   .f-col h4 svg { display: block; }
   .f-col.open h4 svg { transform: rotate(180deg); }
-  .f-col ul { overflow: hidden; max-height: 0; margin-top: 0; transition: max-height 0.35s cubic-bezier(0.4, 0, 0.2, 1); }
-  .f-col.open ul { max-height: 220px; padding-bottom: 16px; }
+  /* visibility: los enlaces de una columna cerrada no reciben el foco */
+  .f-col ul { overflow: hidden; max-height: 0; margin-top: 0; visibility: hidden; transition: max-height 0.35s cubic-bezier(0.4, 0, 0.2, 1), visibility 0s 0.35s; }
+  .f-col.open ul { max-height: 220px; padding-bottom: 16px; visibility: visible; transition-delay: 0s; }
+  .f-col h4:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; border-radius: 4px; }
 }
 
 /* ---------- 17. Acordeón de servicios (Stökt) ----------
@@ -597,7 +627,7 @@ section { padding: 96px 0; }
   position: absolute; bottom: 26px; left: 50%;
   transform: translateX(-50%) rotate(180deg);
   writing-mode: vertical-rl; white-space: nowrap;
-  font-family: var(--font-head); font-weight: 500; font-size: 20px;
+  font-family: var(--font-head); font-weight: 500; font-size: 1.25rem;
   color: var(--text); opacity: 0; transition: opacity 0.3s;
 }
 .acc-p.open .acc-vert { opacity: 0; }
@@ -615,16 +645,16 @@ section { padding: 96px 0; }
   transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
 }
 /* Hover: la imagen "flota" y aparece la pill de detalle */
-.acc-p:not(.open):hover .acc-cover :is(img, video) { transform: translateY(-10px) rotate(-2deg) scale(1.05); }
-.acc-cover h3 { font-size: 21px; font-weight: 500; }
+@media (hover: hover) { .acc-p:not(.open):hover .acc-cover :is(img, video) { transform: translateY(-10px) rotate(-2deg) scale(1.05); } }
+.acc-cover h3 { font-size: 1.3125rem; font-weight: 500; }
 .acc-pill {
   position: absolute; left: 50%; top: 50%; translate: -50% -50%; z-index: 2;
   background: var(--text); color: var(--bg);
-  font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.06em; text-transform: uppercase;
+  font-family: var(--font-mono); font-size: var(--t-min); letter-spacing: 0.06em; text-transform: uppercase;
   padding: 10px 16px; border-radius: 8px; white-space: nowrap;
   opacity: 0; transition: opacity 0.25s, translate 0.3s; pointer-events: none;
 }
-.acc-p:not(.open):hover .acc-pill { opacity: 1; translate: -50% -62%; }
+@media (hover: hover) and (min-width: 981px) { .acc-p:not(.open):hover .acc-pill { opacity: 1; translate: -50% -62%; } }
 /* En modo detalle: cover oculto en el abierto y en las franjas */
 .acc-p.open .acc-cover,
 .acc.has-open .acc-p:not(.open) .acc-cover { opacity: 0; pointer-events: none; }
@@ -632,13 +662,13 @@ section { padding: 96px 0; }
 /* Mini botón reset (vuelve a la grilla) */
 .acc-reset {
   margin-top: 14px;
-  font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase;
+  font-family: var(--font-mono); font-size: var(--t-min); letter-spacing: 0.08em; text-transform: uppercase;
   color: var(--muted); border: 1px solid var(--line); border-radius: 999px; padding: 8px 16px;
 }
-.acc-reset:hover { color: var(--text); border-color: var(--accent); }
+@media (hover: hover) { .acc-reset:hover { color: var(--text); border-color: var(--accent); } }
 .acc-body {
-  display: grid; grid-template-columns: 1.05fr 1fr; gap: 32px; align-items: center;
-  width: 100%; min-width: 640px; padding: 40px;
+  display: grid; grid-template-columns: minmax(0, 1.05fr) minmax(0, 1fr); gap: 32px; align-items: center;
+  width: 100%; min-width: min(640px, calc(100vw - 366px)); padding: 40px;
   opacity: 0; pointer-events: none; transition: opacity 0.3s;
 }
 .acc-p.open .acc-body { opacity: 1; pointer-events: auto; transition-delay: 0.22s; }
@@ -652,8 +682,8 @@ section { padding: 96px 0; }
 .acc-p.open .acc-txt > *:nth-child(4) { transition-delay: 0.40s; }
 .acc-p.open .acc-txt > *:nth-child(5) { transition-delay: 0.46s; }
 .acc-p.open .acc-txt > *:nth-child(6) { transition-delay: 0.52s; }
-.acc-txt h3 { font-size: 26px; font-weight: 500; }
-.acc-list { list-style: none; display: flex; flex-direction: column; gap: 10px; font-size: 13px; margin: 8px 0 4px; }
+.acc-txt h3 { font-size: 1.625rem; font-weight: 500; }
+.acc-list { list-style: none; display: flex; flex-direction: column; gap: 10px; font-size: 0.8125rem; margin: 8px 0 4px; }
 .acc-list li { display: flex; gap: 10px; align-items: baseline; }
 .acc-list li::before { content: "\2192"; color: var(--accent); }
 .acc-img { position: relative; border-radius: 12px; overflow: hidden; opacity: 0; scale: 1.06; transition: opacity 0.5s, scale 0.8s cubic-bezier(0.4, 0, 0.2, 1); }
@@ -670,13 +700,16 @@ section { padding: 96px 0; }
   .acc { flex-direction: column; height: auto; margin-inline: 0; }
   .acc-p { flex: none !important; min-width: 0; }
   .acc-vert { display: none; }
-  .acc-cover { position: relative; inset: auto; flex-direction: row; align-items: center; gap: 18px; padding: 18px 20px; }
+  /* Objeto a la izquierda; título y pill apilados a la derecha, así el
+     título tiene todo el renglón y no se parte a mitad de palabra. Las filas
+     1fr de los bordes centran el bloque aunque la pill no esté (cursor custom) */
+  .acc-cover { position: relative; inset: auto; flex: 1; min-width: 0; display: grid; grid-template-columns: auto minmax(0, 1fr); grid-template-rows: 1fr auto auto 1fr; align-items: center; gap: 0 18px; padding: 18px 20px; }
   .acc-cover :is(img, video) { width: 86px; margin: 0; }
-  .acc-cover h3 { font-size: 17px; }
-  .acc-pill { position: static; inset: auto; translate: none; opacity: 1; pointer-events: none; order: 1; margin-left: auto; padding: 8px 12px; font-size: 10px; }
+  .acc-cover h3 { grid-column: 2; grid-row: 2; font-size: clamp(1.0625rem, 0.75rem + 1.2vw, 1.3125rem); hyphens: auto; }
+  .acc-pill { position: static; inset: auto; translate: none; opacity: 1; pointer-events: none; grid-column: 2; grid-row: 3; justify-self: start; align-self: start; margin-top: 10px; padding: 8px 12px; font-size: var(--t-min); white-space: normal; text-wrap: balance; }
   .acc.has-open .acc-p:not(.open) .acc-cover { opacity: 1; pointer-events: auto; }
   .acc-p.open .acc-cover { display: none; }
-  .acc-body { min-width: 0; grid-template-columns: 1fr; padding: 22px; }
+  .acc-body { min-width: 0; grid-template-columns: minmax(0, 1fr); padding: 22px; }
   .acc-p:not(.open) .acc-body { display: none; }
 }
 
@@ -711,7 +744,7 @@ html.cursor-on [contenteditable] { cursor: auto !important; }
   background: #FFFFFF; color: #000000;
 }
 .cursor.label span {
-  display: block; font-family: var(--font-mono); font-size: 10px; font-weight: 700;
+  display: block; font-family: var(--font-mono); font-size: var(--t-min); font-weight: 700;
   letter-spacing: 0.09em; text-transform: uppercase; white-space: nowrap;
 }
 /* Con cursor custom activo, las pills estáticas sobran (el cursor las reemplaza) */
@@ -726,7 +759,7 @@ html.cursor-on .demo-ov { display: none; }
     opacity: 1; background: transparent; backdrop-filter: none;
     align-items: end; justify-items: start; padding: 14px;
   }
-  .demo-ov span { font-size: 11px; padding: 8px 14px; }
+  .demo-ov span { font-size: var(--t-min); padding: 8px 14px; }
 }
 
 /* Cambio de idioma: cada texto traducido entra con blur+fade */
@@ -796,7 +829,7 @@ html.lang-swap [data-i18n] { animation: langswap 0.5s cubic-bezier(0.4, 0, 0.2, 
   filter: blur(16px); opacity: 0.65;
   animation: ai-pan 5s ease-in-out infinite;   /* mismo timing → halo sincronizado */
 }
-.btn-ai:hover { transform: scale(1.03); }
+@media (hover: hover) { .btn-ai:hover { transform: scale(1.03); } }
 @keyframes ai-pan { 0%, 100% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } }
 /* En el hero, botones rectangulares redondeados como Clean Slate */
 .hero-ctas .btn { border-radius: 16px; }
@@ -852,7 +885,7 @@ html.lang-swap [data-i18n] { animation: langswap 0.5s cubic-bezier(0.4, 0, 0.2, 
   --ibrd1: #C4C4C4; --ibrd2: #E9E9E9;
 }
 .bento-sec .eyebrow, .bento-sec .sub { color: var(--imut); }
-.bento { display: grid; grid-template-columns: repeat(6, 1fr); gap: 14px; margin-top: 44px; max-width: 100%; }
+.bento { display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 14px; margin-top: 44px; max-width: 100%; }
 /* min-width:0 — sin esto, el min-content de los hijos (marquee de chips,
    canvas del globo, foto 800px) explota el ancho de la grilla en mobile */
 .bento > *, .bcard, .bcard-in, .b-stats, .founder, .founder > *, .founder-fig, .founder-txt { min-width: 0; }
@@ -867,40 +900,40 @@ html.lang-swap [data-i18n] { animation: langswap 0.5s cubic-bezier(0.4, 0, 0.2, 
   background: linear-gradient(126deg, var(--ibrd1) 0%, var(--ibrd2) 100%);
   transition: background 0.35s;
 }
-.bcard:hover { background: linear-gradient(126deg, color-mix(in srgb, var(--ibrd1) 55%, var(--accent)) 0%, var(--ibrd2) 100%); }
+@media (hover: hover) { .bcard:hover { background: linear-gradient(126deg, color-mix(in srgb, var(--ibrd1) 55%, var(--accent)) 0%, var(--ibrd2) 100%); } }
 .bcard-in { border-radius: 9px; background: var(--ib); padding: 24px; height: 100%; }
 
 .b-stats { grid-column: span 2; display: grid; grid-template-rows: repeat(3, 1fr); gap: 14px; }
 .b-stat .bcard-in { display: flex; flex-direction: column; gap: 5px; justify-content: center; }
-.b-stat b { font-family: var(--font-head); font-weight: 500; font-size: 40px; letter-spacing: -0.02em; line-height: 1; }
-.b-stat span { font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--imut); }
+.b-stat b { font-family: var(--font-head); font-weight: 500; font-size: 2.5rem; letter-spacing: -0.02em; line-height: 1; }
+.b-stat span { font-size: var(--t-min); letter-spacing: 0.1em; text-transform: uppercase; color: var(--imut); }
 
 .b-founder { grid-column: span 6; }
 /* Founder grande estilo Stökt: foto alta a la izquierda con nombre
    superpuesto abajo (gradiente para legibilidad) + bio amplia a la derecha */
-.founder { display: grid; grid-template-columns: minmax(260px, 400px) 1fr; gap: 42px; }
+.founder { display: grid; grid-template-columns: minmax(260px, 400px) minmax(0, 1fr); gap: 42px; }
 .founder-fig { position: relative; border-radius: 10px; overflow: hidden; margin: 0; }
 .founder-fig img { width: 100%; height: 100%; min-height: 460px; object-fit: cover; display: block; }
 .founder-fig::after { content: ""; position: absolute; inset: 45% 0 0 0; background: linear-gradient(180deg, transparent, rgba(0, 0, 0, 0.6)); }
-.founder-id { position: absolute; left: 22px; bottom: 18px; right: 22px; z-index: 1; color: #F2F2F2; }
-.founder-id h3 { font-size: 25px; font-weight: 500; }
-.founder-id .role { font-size: 10px; letter-spacing: 0.14em; color: rgba(242, 242, 242, 0.75); }
+.founder-id { position: absolute; left: 22px; bottom: 18px; right: 22px; z-index: 1; color: #F2F2F2; overflow-wrap: anywhere; }
+.founder-id h3 { font-size: 1.5625rem; font-weight: 500; }
+.founder-id .role { font-size: var(--t-min); letter-spacing: 0.14em; color: rgba(242, 242, 242, 0.75); }
 .founder-txt { display: flex; flex-direction: column; gap: 16px; padding: 8px 0; }
-.founder-txt h4 { font-size: 22px; font-weight: 500; margin-bottom: 8px; }
-.founder-txt p { font-family: var(--font-head); font-size: 15px; line-height: 1.75; color: var(--imut); max-width: 62ch; }
+.founder-txt h4 { font-size: 1.375rem; font-weight: 500; margin-bottom: 8px; }
+.founder-txt p { font-family: var(--font-head); font-size: 0.9375rem; line-height: 1.75; color: var(--imut); max-width: 62ch; }
 .founder-cta {
   margin-top: auto; align-self: flex-end;
   display: inline-flex; align-items: center; gap: 7px;
-  font-size: 13px; color: var(--it); text-decoration: none;
+  font-size: 0.8125rem; color: var(--it); text-decoration: none;
 }
-.founder-cta:hover { color: var(--accent); }
+@media (hover: hover) { .founder-cta:hover { color: var(--accent); } }
 
 /* Card del globo (Stökt): título + disponibilidad arriba, globo punteado
    en canvas abajo, recortado por overflow para que "asome" del card. */
 .b-globe { grid-column: span 4; }
 .b-globe .bcard-in { display: flex; flex-direction: column; align-items: center; gap: 12px; padding-bottom: 0; overflow: hidden; }
-.b-globe h3 { font-size: clamp(20px, 2vw, 26px); margin-top: 10px; }
-.avail { display: inline-flex; align-items: center; gap: 10px; font-size: 11px; letter-spacing: 0.1em; color: var(--imut); }
+.b-globe h3 { font-size: clamp(1.25rem, 2vw, 1.625rem); margin-top: 10px; }
+.avail { display: inline-flex; align-items: center; gap: 10px; font-size: var(--t-min); letter-spacing: 0.1em; color: var(--imut); }
 .globe-wrap { width: min(720px, 100%); height: 400px; overflow: hidden; margin-top: 10px; }
 .globe-wrap canvas { width: 100%; aspect-ratio: 1; display: block; }
 /* Punto verde: dot sólido + halo (anillo) que escala y se desvanece */
@@ -917,17 +950,17 @@ html.lang-swap [data-i18n] { animation: langswap 0.5s cubic-bezier(0.4, 0, 0.2, 
 @keyframes halo { 0% { transform: scale(0.4); opacity: 0.9; } 70%, 100% { transform: scale(1.5); opacity: 0; } }
 
 .b-tools { grid-column: span 6; }
-.b-tools h3 { font-size: 15px; margin-bottom: 18px; }
+.b-tools h3 { font-size: 0.9375rem; margin-bottom: 18px; }
 .chips-mq { --speed: 22s; }
 .chips-mq .mtrack { gap: 12px; padding-right: 12px; }
 .chip {
   min-width: 64px; height: 64px; padding: 0 14px; flex-shrink: 0;
   display: grid; place-items: center;
   border: 1px solid var(--ibrd1); border-radius: 10px; background: var(--ib);
-  font-size: 11px; color: var(--imut); white-space: nowrap;
+  font-size: var(--t-min); color: var(--imut); white-space: nowrap;
 }
 .chip svg { display: block; }
-.chip-word { font-family: var(--font-mono); font-size: 13px; color: var(--it); letter-spacing: 0.01em; }
+.chip-word { font-family: var(--font-mono); font-size: 0.8125rem; color: var(--it); letter-spacing: 0.01em; }
 
 /* ---------- Formulario IA (CTA final) ----------
    Card de vidrio con border-beam vivo, labels mono numerados, inputs
@@ -944,7 +977,7 @@ html.lang-swap [data-i18n] { animation: langswap 0.5s cubic-bezier(0.4, 0, 0.2, 
 }
 .af-head {
   display: flex; align-items: center; gap: 10px;
-  font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.12em;
+  font-family: var(--font-mono); font-size: var(--t-min); letter-spacing: 0.12em;
   text-transform: uppercase; color: var(--muted);
   padding-bottom: 14px; border-bottom: 1px dashed var(--line);
 }
@@ -953,18 +986,18 @@ html.lang-swap [data-i18n] { animation: langswap 0.5s cubic-bezier(0.4, 0, 0.2, 
   background-size: 300% 100%; animation: ai-pan 5s ease-in-out infinite; }
 .af-badge {
   margin-left: auto; padding: 3px 10px; border-radius: 999px;
-  font-size: 10px; letter-spacing: 0.08em; white-space: nowrap;
+  font-size: var(--t-min); letter-spacing: 0.08em; white-space: nowrap;
   color: var(--accent); border: 1px solid color-mix(in srgb, var(--accent) 40%, transparent);
   background: color-mix(in srgb, var(--accent) 8%, transparent);
 }
-.af-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+.af-grid { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 20px; }
 .af-field { display: flex; flex-direction: column; gap: 8px; }
-.af-label { font-family: var(--font-mono); font-size: 10px; letter-spacing: 0.12em; text-transform: uppercase; }
+.af-label { font-family: var(--font-mono); font-size: var(--t-min); letter-spacing: 0.12em; text-transform: uppercase; }
 .af-label i { font-style: normal; color: var(--accent); }
 .af-label b { font-weight: 400; color: var(--muted); }
-.af-label em { font-style: normal; font-size: 9px; color: color-mix(in srgb, var(--muted) 60%, transparent); }
+.af-label em { font-style: normal; font-size: var(--t-min); color: color-mix(in srgb, var(--muted) 60%, transparent); }
 .ai-form input, .ai-form textarea {
-  font-family: var(--font-mono); font-size: 14px; color: var(--text);
+  font-family: var(--font-mono); font-size: 0.875rem; color: var(--text);
   background: transparent; border: 0; border-bottom: 1px solid var(--line);
   padding: 8px 2px; border-radius: 0; resize: none; min-height: 0;
   transition: border-color 0.25s;
@@ -982,12 +1015,12 @@ html.lang-swap [data-i18n] { animation: langswap 0.5s cubic-bezier(0.4, 0, 0.2, 
 .ai-form.tried input:invalid, .ai-form.tried textarea:invalid { border-bottom-color: var(--pink); }
 .af-chips { display: flex; flex-wrap: wrap; gap: 8px; }
 .af-chip {
-  font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.05em;
+  font-family: var(--font-mono); font-size: var(--t-min); letter-spacing: 0.05em;
   padding: 8px 14px; border-radius: 999px;
   border: 1px solid var(--line); color: var(--muted);
   transition: all 0.2s;
 }
-.af-chip:hover { border-color: var(--accent); color: var(--text); }
+@media (hover: hover) { .af-chip:hover { border-color: var(--accent); color: var(--text); } }
 .af-chip.on {
   color: var(--accent); border-color: var(--accent);
   background: color-mix(in srgb, var(--accent) 10%, transparent);
@@ -996,11 +1029,11 @@ html.lang-swap [data-i18n] { animation: langswap 0.5s cubic-bezier(0.4, 0, 0.2, 
 .af-foot { display: flex; align-items: center; gap: 16px; flex-wrap: wrap; padding-top: 4px; }
 .af-via { display: flex; align-items: center; gap: 8px; }
 .af-via .af-label { margin-right: 2px; }
-.af-hint { font-family: var(--font-mono); font-size: 10.5px; color: var(--muted); max-width: 300px; text-align: left; line-height: 1.5; }
+.af-hint { font-family: var(--font-mono); font-size: var(--t-min); color: var(--muted); max-width: 300px; text-align: left; line-height: 1.5; }
 .af-send { margin-left: auto; }
 @media (max-width: 720px) {
   .ai-form { padding: 20px 18px; }
-  .af-grid { grid-template-columns: 1fr; }
+  .af-grid { grid-template-columns: minmax(0, 1fr); }
   .af-badge { display: none; }
   .af-foot { flex-direction: column; align-items: stretch; }
   .af-hint { max-width: none; text-align: center; }
@@ -1018,23 +1051,26 @@ html.lang-swap [data-i18n] { animation: langswap 0.5s cubic-bezier(0.4, 0, 0.2, 
   backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
   padding: 22px 26px; margin-bottom: 56px;
 }
-.nl-txt h4 { font-size: 17px; font-weight: 500; margin-bottom: 4px; }
-.nl-txt p { font-family: var(--font-mono); font-size: 11.5px; color: var(--muted); max-width: 380px; }
-.nl-form { display: flex; align-items: flex-end; gap: 14px; flex: 1; max-width: 420px; min-width: 260px; }
+.nl-txt h4 { font-size: 1.0625rem; font-weight: 500; margin-bottom: 4px; }
+.nl-txt p { font-family: var(--font-mono); font-size: var(--t-min); color: var(--muted); max-width: 380px; }
+.nl-form { display: flex; flex-wrap: wrap; align-items: flex-end; gap: 0 14px; flex: 1; max-width: 420px; min-width: 260px; }
 .nl-form input {
-  flex: 1; font-family: var(--font-mono); font-size: 13px; color: var(--text);
+  flex: 1; min-width: 0; font-family: var(--font-mono); font-size: 0.8125rem; color: var(--text);
   background: transparent; border: 0; border-bottom: 1px solid var(--line);
   padding: 9px 2px; border-radius: 0; transition: border-color 0.25s;
 }
 .nl-form input::placeholder { color: color-mix(in srgb, var(--muted) 55%, transparent); }
 .nl-form input:focus-visible { outline: none; border-radius: 0; border-bottom-color: var(--accent); box-shadow: 0 1px 0 var(--accent); }
 .nl-form.tried input:invalid { border-bottom-color: var(--pink); }
-.nl-btn { padding: 11px 20px; font-size: 11px; white-space: nowrap; }
-.nl-ok { font-family: var(--font-mono); font-size: 11px; color: #22C55E; }
+.nl-btn { padding: 11px 20px; font-size: var(--t-min); white-space: nowrap; }
+.nl-ok { font-family: var(--font-mono); font-size: var(--t-min); color: #22C55E; }
+/* Aviso de Novedades: vacío no ocupa lugar; el role=status ya está en el árbol */
+.nl-estado { flex-basis: 100%; font-family: var(--font-mono); font-size: var(--t-min); color: var(--text); }
+.nl-estado:not(:empty) { margin-top: 10px; }
 @media (max-width: 720px) {
-  .nl-bar { flex-direction: column; align-items: stretch; text-align: center; }
+  .nl-bar { flex-direction: column; flex-wrap: nowrap; align-items: stretch; text-align: center; padding: 22px 18px; }
   .nl-txt p { max-width: none; }
-  .nl-form { max-width: none; }
+  .nl-form { max-width: none; min-width: 0; }
 }
 
 /* ---------- CTA final gigante (estilo Stökt) ---------- */
@@ -1043,14 +1079,24 @@ html.lang-swap [data-i18n] { animation: langswap 0.5s cubic-bezier(0.4, 0, 0.2, 
 /* ---------- Bento responsive ---------- */
 @media (max-width: 980px) {
   .b-founder, .b-globe, .b-tools, .b-stats { grid-column: span 6; }
-  .b-stats { grid-template-columns: repeat(3, 1fr); }
+  .b-stats { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  /* founder.jpg mide 800 px: en la tableta va cuadrada y arriba, no estirada
+     al alto del texto (400x610 la agrandaba x1,5 en pantallas de densidad 2) */
+  .founder { grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); gap: 32px; }
+  .founder-fig { align-self: start; }
+  .founder-fig img { min-height: 0; height: auto; aspect-ratio: 1; }
 }
 @media (max-width: 720px) {
-  .bento { grid-template-columns: 1fr; }
+  .bento { grid-template-columns: minmax(0, 1fr); }
   .b-stats, .b-founder, .b-globe, .b-tools { grid-column: auto; }
-  .b-stats { grid-template-columns: 1fr; }
-  .founder { grid-template-columns: 1fr; gap: 22px; }
-  .founder-fig img { min-height: 0; aspect-ratio: 1; }
+  .b-stats { grid-template-columns: minmax(0, 1fr); }
+  .founder { grid-template-columns: minmax(0, 1fr); gap: 22px; }
+  .founder-fig img { min-height: 0; height: 100%; aspect-ratio: 1; }
+  /* Foto y nombre comparten la celda: si el nombre crece, crece la foto
+     en vez de recortarlo (absolute + overflow lo cortaba arriba) */
+  .founder-fig { display: grid; grid-template-columns: minmax(0, 1fr); }
+  .founder-fig > img, .founder-id { grid-area: 1 / 1; }
+  .founder-id { position: relative; inset: auto; align-self: end; margin: 0 22px 18px; }
   .founder-cta { align-self: flex-start; margin-top: 6px; }
 }
 
@@ -1126,9 +1172,10 @@ html.fx-on .cs-grid .demo.fx-visto { opacity: 1; transform: none; }
    lo pone currentColor a traves de mask-image. Por eso no hacen falta
    variantes para claro y oscuro, y el hover es solo un cambio de opacidad. */
 .marcas-sec { padding: 62px 0 !important; }
+/* Rótulo de la sección, en minúscula como los .eyebrow */
 .marcas-h {
-  text-align: center; font-size: 11px; letter-spacing: 0.14em;
-  text-transform: uppercase; color: var(--muted); margin-bottom: 30px;
+  text-align: center; font-size: var(--t-min); letter-spacing: 0.02em;
+  color: var(--muted); margin-bottom: 30px;
 }
 /* Carrusel de dos pistas en direcciones opuestas, como el de Cañada Húmeda.
    Reusa .marquee/.mtrack (loop infinito + mask lateral + pausa fuera de
@@ -1141,11 +1188,12 @@ html.fx-on .cs-grid .demo.fx-visto { opacity: 1; transform: none; }
   align-items: center; gap: 0 58px; padding-right: 58px;
 }
 .marca-txt {
-  font-family: var(--font-mono); font-size: 13px; letter-spacing: 0.10em;
+  font-family: var(--font-mono); font-size: 0.8125rem; letter-spacing: 0.10em;
   text-transform: uppercase; color: var(--text); white-space: nowrap;
 }
 .marcas a, .marcas .marca-txt { display: block; opacity: 0.55; transition: opacity var(--fx-rapido) var(--fx-ease); }
-.marcas a:hover, .marcas a:focus-visible, .marcas li:hover .marca-txt { opacity: 1; }
+.marcas a:focus-visible { opacity: 1; }
+@media (hover: hover) { .marcas a:hover, .marcas li:hover .marca-txt { opacity: 1; } }
 .marca {
   display: block; background-color: currentColor;
   -webkit-mask-position: center; mask-position: center;
@@ -1187,8 +1235,24 @@ html.fx-on .cs-grid .demo.fx-visto { opacity: 1; transform: none; }
      tenga align-self:center. El margen negativo simetrico si lo centra. */
   margin-inline: calc((100% - var(--obj-w)) / 2);
 }
-@media (max-width: 720px) {
-  .acc-cover canvas.srv-obj { width: 120px; max-width: 120px; height: auto; margin: 0 -17px; align-self: auto; }
+/* Con las tarjetas apiladas (≤980) el objeto va chico a la izquierda y sigue
+   desbordando un 14 % por lado, 17 px como máximo para no pasar el gap ni el
+   padding. El margen en % de arriba se calcula contra el
+   ancho de la tarjeta: en una fila empujaba título y pill fuera de la tarjeta. */
+@media (max-width: 980px) {
+  .acc-cover canvas.srv-obj {
+    --obj-w: clamp(120px, 20vw, 180px);
+    grid-row: 1 / -1; width: var(--obj-w); max-width: none; height: auto;
+    margin: 0 max(-17px, calc(var(--obj-w) * -0.14)); align-self: center;
+  }
+}
+/* Celular angosto (plegable cerrado, 280 a 340): objeto, título y pill más
+   chicos, así "Automatización" y "Ver detalle →" entran en un renglón */
+@media (max-width: 340px) {
+  .acc-cover { column-gap: 14px; padding: 16px; }
+  .acc-cover canvas.srv-obj { --obj-w: 96px; }
+  .acc-cover h3 { font-size: 1rem; }
+  .acc-pill { padding: 8px; letter-spacing: 0; }
 }
 @media (prefers-reduced-motion: reduce) {
   .srv-obj { pointer-events: none; }   /* el JS ya no lo reproduce */
@@ -1264,7 +1328,7 @@ html.fx-on .cs-grid .demo.fx-visto { opacity: 1; transform: none; }
    productos propios sin necesitar una leyenda aparte. */
 .origen {
   margin-left: auto; flex-shrink: 0;
-  font-family: var(--font-mono); font-size: 9px; letter-spacing: 0.08em;
+  font-family: var(--font-mono); font-size: var(--t-min); letter-spacing: 0.08em;
   text-transform: uppercase; color: var(--muted);
   border: 1px solid var(--line); padding: 3px 8px; border-radius: 999px;
   white-space: nowrap;
@@ -1274,7 +1338,7 @@ html.fx-on .cs-grid .demo.fx-visto { opacity: 1; transform: none; }
 @media (max-width: 720px) {
   .marcas { gap: 0 34px; padding-right: 34px; }
   .m-saurium { width: 106px; height: 35px; }
-  .marca-txt { font-size: 11px; }
+  .marca-txt { font-size: var(--t-min); }
 }
 .m-molins { width: 44px; height: 45px; -webkit-mask-image: url(assets/marcas/marca-molins.png); mask-image: url(assets/marcas/marca-molins.png); }
 @media (max-width: 720px) { .m-molins { width: 36px; height: 37px; } }
@@ -1345,4 +1409,56 @@ html.nav-lejos .hdr-pill {
   html.fx-on .acc:not(.fx-visto) .acc-p, html.fx-on .ai-form:not(.fx-visto) .af-field { opacity: 1; }
   .acc.fx-visto .acc-p, .ai-form.fx-visto .af-field { animation: none; }
   .lap-screen .lap-px { translate: 0 0 !important; height: 100%; }
+}
+
+/* ============================================================
+   23. TODAS LAS PANTALLAS — dedo, letra, horizonte corto,
+       colores forzados (matriz del 07/10)
+   ============================================================ */
+/* Letra: en el celular el cuerpo sigue a la letra del navegador (16 px
+   por defecto) en vez de quedar en 15 */
+@media (max-width: 720px), (pointer: coarse) {
+  body { font-size: 1rem; }
+  .founder-txt p { font-size: 1rem; }
+}
+/* Con mouse, 24 px: los enlaces del pie ganan alto sin separarse más */
+.f-col ul { gap: 2px; }
+.f-col li a { display: inline-block; padding-block: 4px; }
+/* Con dedo: 44 px de objetivo. Donde agrandar la caja movería el diseño,
+   el área crece con un ::after transparente. */
+@media (pointer: coarse) {
+  .ai-form input, .ai-form textarea, .nl-form input { font-size: max(1rem, 16px); min-height: 44px; }
+  .af-chip, .nl-btn, .skip, .acc-reset { min-height: 44px; }
+  .srv-cta { display: inline-flex; align-items: center; min-height: 44px; }
+  .menu-pop a { padding-block: 13px; }
+  .f-col ul { gap: 0; }
+  .f-col li a { display: block; padding-block: 13px; }
+  .nav a, .hdr-cta { position: relative; }
+  .nav a::after, .hdr-cta::after { content: ""; position: absolute; inset: -4px 0; }
+}
+/* .bar-x ya es absolute: no se toca su position */
+.bar a, .logo, .tgl, .menu summary, .founder-cta, .marcas a { position: relative; }
+.bar a::after, .bar-x::after, .logo::after, .tgl::after, .menu summary::after,
+.founder-cta::after, .marcas a::after { content: ""; position: absolute; }
+.bar a::after { inset: -14px -4px; }
+.bar-x::after { inset: -8px; }
+.logo::after { inset: -14px -4px; }
+.tgl::after { inset: -5px; }
+.menu summary::after { inset: -3px; }
+.founder-cta::after { inset: -12px -4px; }
+.marcas a::after { inset: -12px -6px; }
+.cta-links a { position: relative; }
+.cta-links a::after { content: ""; position: absolute; inset: -4px 0; }
+/* Horizonte corto (celular acostado, zoom de 400%): sin barra de anuncio
+   (su enlace repite el del header) y el header más bajo */
+@media (max-height: 500px) {
+  .bar { display: none; }
+  .hdr { padding-block: 4px; }
+  .hdr-pill { padding-block: 3px; }
+  html { scroll-padding-top: 64px; }
+}
+/* Colores forzados: el fondo de los botones desaparece; el borde los
+   sigue marcando como botones */
+@media (forced-colors: active) {
+  button, summary, .btn, .hdr-cta, .af-chip, .founder-cta, .srv-cta, [role="button"] { border: 1px solid ButtonText; }
 }
