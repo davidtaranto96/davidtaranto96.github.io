@@ -777,12 +777,15 @@ html.cursor-on .acc-pill { display: none; }
 html.cursor-on .demo-ov { display: none; }
 
 /* En pantallas táctiles (sin hover ni cursor custom) las acciones deben
-   verse SIEMPRE: pill fija en covers y botón "Visitar" fijo en demos */
+   verse SIEMPRE: pill fija en covers y botón "Visitar" fijo en demos.
+   El botón va arriba a la derecha de la captura: abajo pisaba el título de
+   la tarjeta y el titular del sitio; arriba solo tapa su menú, que a ese
+   tamaño no se lee. */
 @media (hover: none) {
   .acc-pill { opacity: 1; }
   .demo-ov {
     opacity: 1; background: transparent; backdrop-filter: none;
-    align-items: end; justify-items: start; padding: 14px;
+    align-items: start; justify-items: end; padding: 14px;
   }
   .demo-ov span { font-size: var(--t-min); padding: 8px 14px; }
 }
