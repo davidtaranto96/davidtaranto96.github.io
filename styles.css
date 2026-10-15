@@ -505,6 +505,7 @@ section { padding: 96px 0; }
    !important porque .demo trae display:block. Las capturas son todas
    640x400, y el aspect-ratio evita saltos de layout mientras cargan. */
 .cs-filter { justify-content: center; margin: 40px 0 6px; }
+.cs-filter[hidden] { display: none; }
 .cs-grid { margin-top: 26px; }
 .cs-grid .demo[hidden] { display: none !important; }
 .cs-grid .demo img { aspect-ratio: 16 / 10; object-fit: cover; }

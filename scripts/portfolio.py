@@ -117,6 +117,10 @@ def tarjeta(c):
            f'alt="{c["alt"]}" loading="lazy">')
     if c["estado"] == "live":
         badge = '<span class="live"><i aria-hidden="true"></i> Live</span>'
+    elif c["estado"] == "en-trabajo":
+        # sin link y con su foto: la vista previa de lo que todavia no se publico
+        badge = ('<span class="live off"><i aria-hidden="true"></i> '
+                 '<span data-i18n="st_wip">En trabajo</span></span>')
     else:
         badge = f'<span class="live off"><i aria-hidden="true"></i> {c["estado"].capitalize()}</span>'
     # la grilla es de clientes: el chip solo aparece si alguna vez entra algo propio
@@ -173,7 +177,7 @@ def build(doc):
 
     js = JS.read_text(encoding="utf-8")
     i18n = "\n".join(f'    {c["i18n"]}: "{c["sub"]["en"]}",' for c in casos)
-    i18n += '\n    or_c: "Client", or_p: "Own",'
+    i18n += '\n    or_c: "Client", or_p: "Own", st_wip: "In progress",'
     js = entre_marcadores(js, "// CASOS:INICIO", "// CASOS:FIN", i18n, "el i18n en main.js")
     JS.write_text(js, encoding="utf-8")
 

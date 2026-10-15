@@ -526,10 +526,10 @@
     s4_l2: "M365/Azure flows and Graph API",
     s4_l3: "Integrations across your tools",
     lap_eb: "See it working", lap_h: "One of my CRMs at work.",
-    lap_sub: "This is Brújula, the CRM I built for Berni Studio — shown with demo data.",
+    lap_sub: "A walkthrough of one of the CRMs I have in production, with demo data.",
     about_eb: "About me", about_h: "The person behind the system.",
     f_p1: "SysAdmin at JBKnowledge (a global company) based in Salta, Argentina. Computer Engineering student, 5+ years managing M365, Azure and automation.",
-    f_p2: "Today I have two custom CRMs in production: Francisco Molins's, which feeds his real-estate portal, and the one that runs Berni Studio's work. I designed and built both, and I maintain them myself.",
+    f_p2: "Today I have two custom CRMs in production: one feeds a real-estate portal and the other runs a studio's day-to-day work. I designed and built both, and I maintain them myself.",
     f_p3: "I work from idea to deploy: solo when that's enough, building a team when the project calls for it.",
     f_cta: "Work with me",
     f_h: "The Founder",
@@ -541,7 +541,7 @@
     test_note: "*Straight from clients",
     cta_note: "*No fluff",
     mk_h: "Brands that already trusted me",
-    mk_note: "*Delivered work, not filler logos",
+    mk_note: "*Real clients, not filler logos",
     cs_eb: "Cases", cs_h: "Work delivered.",
     cs_sub: "Real clients, in production. Anything with a link, you can open right now.",
     cs_s1: "client projects", cs_s2: "online right now", cs_s3: "on their own domain",
@@ -549,14 +549,16 @@
     cs_f3: "Mobile apps", cs_f4: "AI automation",
     // CASOS:INICIO
     c13s: "Real-estate development · Salta",
-    c14s: "Custom CRM + portal · Salta",
+    c14s: "Real-estate portal · Salta",
     c1s: "Site + bookings · Salta retreats",
     c2s: "Custom store · leather atelier",
     c16s: "Yucatán chukum · bilingual",
     c4s: "Trilingual corporate site · agri",
     c5s: "Gated community · real estate",
     c12s: "Real-estate brokerage · Salta",
-    or_c: "Client", or_p: "Own",
+    c17s: "Original artwork shop · Barcelona",
+    c18s: "Bags made from textile waste · Salta",
+    or_c: "Client", or_p: "Own", st_wip: "In progress",
     // CASOS:FIN
     cta_eb: "Seriously", cta_h: "LET'S TALK.",
     cta_sub: "Got an idea? Tell me about it. Fill in the briefing and WhatsApp or your email opens with the message ready \u2014 I read it myself and get back to you.",
@@ -792,6 +794,8 @@
       const f = chip.dataset.f;
       if (f !== "all" && !cards.some((c) => c.dataset.cat === f)) chip.hidden = true;
     });
+    // con una sola categoria el filtro no filtra nada: se esconde hasta que haya dos
+    if (chips.filter((c) => !c.hidden).length <= 2) csFilter.hidden = true;
     chips.forEach((chip) => {
       chip.addEventListener("click", () => {
         chips.forEach((c) => c.classList.toggle("on", c === chip));

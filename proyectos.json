@@ -23,16 +23,16 @@
     {
       "id": "fmolins",
       "nombre": "Francisco Molins",
-      "cat": "sys",
+      "cat": "web",
       "url": "https://franciscomolins.com",
       "estado": "live",
       "i18n": "c14s",
       "origen": "cliente",
       "sub": {
-        "es": "CRM a medida + portal · Salta",
-        "en": "Custom CRM + portal · Salta"
+        "es": "Portal inmobiliario · Salta",
+        "en": "Real-estate portal · Salta"
       },
-      "alt": "Portal inmobiliario de Francisco Molins, alimentado por su CRM",
+      "alt": "Portal inmobiliario de Francisco Molins, en Salta",
       "cursor": {
         "es": "Visitar ↗",
         "en": "Visit ↗"
@@ -132,20 +132,58 @@
       "id": "mavenz",
       "nombre": "MAVENZ",
       "cat": "web",
-      "url": "https://davidtaranto96.github.io/mavenz-web/demo/",
-      "estado": "demo",
+      "url": "",
+      "estado": "en-trabajo",
       "i18n": "c12s",
       "origen": "cliente",
       "sub": {
         "es": "Comercializadora inmobiliaria · Salta",
         "en": "Real-estate brokerage · Salta"
       },
-      "alt": "Demo del sitio de MAVENZ, comercializadora inmobiliaria de Salta",
+      "alt": "Vista previa del sitio de MAVENZ, comercializadora inmobiliaria de Salta",
       "cursor": {
         "es": "Ver demo ↗",
         "en": "View demo ↗"
       },
-      "nota": "Propuesta en curso: va como Demo hasta que cierre."
+      "nota": "En trabajo: va sin link hasta que se publique."
+    },
+    {
+      "id": "josi",
+      "nombre": "Josi Compagnucci",
+      "cat": "web",
+      "url": "",
+      "estado": "en-trabajo",
+      "i18n": "c17s",
+      "origen": "cliente",
+      "sub": {
+        "es": "Tienda de obra original · Barcelona",
+        "en": "Original artwork shop · Barcelona"
+      },
+      "alt": "Vista previa de la tienda de Josi Compagnucci, artista radicada en Barcelona",
+      "cursor": {
+        "es": "Visitar ↗",
+        "en": "Visit ↗"
+      },
+      "nota": "En trabajo: va sin link hasta que se publique."
+    },
+    {
+      "id": "retazos",
+      "nombre": "RETAZOS",
+      "cat": "web",
+      "url": "",
+      "estado": "en-trabajo",
+      "i18n": "c18s",
+      "origen": "cliente",
+      "sub": {
+        "es": "Bolsos con residuo textil · Salta",
+        "en": "Bags made from textile waste · Salta"
+      },
+      "alt": "Vista previa de la tienda de RETAZOS, bolsos hechos con residuo textil en Salta",
+      "cursor": {
+        "es": "Visitar ↗",
+        "en": "Visit ↗"
+      },
+      "nota": "En trabajo: va sin link hasta que se publique."
     }
   ]
 }
