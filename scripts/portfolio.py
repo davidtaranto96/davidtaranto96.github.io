@@ -164,11 +164,8 @@ def build(doc):
     html = HTML.read_text(encoding="utf-8")
     html = entre_marcadores(html, "<!-- CASOS:INICIO -->", "<!-- CASOS:FIN -->",
                             "\n\n".join(tarjeta(c) for c in casos), "la grilla en index.html")
-    # los stats se derivan de los datos: nunca afirman algo que el JSON no sostenga
+    # la meta description cuenta los casos: nunca afirma algo que el JSON no sostenga
     _, vivos, propios = numeros(casos)
-    for clave, valor in (("cs_s1", len(casos)), ("cs_s2", vivos), ("cs_s3", propios)):
-        html = re.sub(r'(<b data-count=")\d+(">)\d+(</b><span data-i18n="%s")' % clave,
-                      rf'\g<1>{valor}\g<2>{valor}\g<3>', html)
     html, n = re.subn(r"\d+ proyectos de clientes, \d+ en línea",
                       f"{len(casos)} proyectos de clientes, {vivos} en línea", html)
     if not n:

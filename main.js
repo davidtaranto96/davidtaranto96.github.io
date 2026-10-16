@@ -543,8 +543,7 @@
     mk_h: "Brands that already trusted me",
     mk_note: "*Real clients, not filler logos",
     cs_eb: "Cases", cs_h: "Work delivered.",
-    cs_sub: "Real clients, in production. Anything with a link, you can open right now.",
-    cs_s1: "client projects", cs_s2: "online right now", cs_s3: "on their own domain",
+    cs_sub: "Websites, stores and systems that real businesses use every day.",
     cs_f0: "All", cs_f1: "Sites & stores", cs_f2: "Systems & CRM",
     cs_f3: "Mobile apps", cs_f4: "AI automation",
     // CASOS:INICIO
@@ -578,8 +577,8 @@
     nl_p: "Launches, deals and lessons from building with AI. Zero spam.",
     nl_btn: "Count me in \u2192",
     nl_ok: "Your mail app opened: send it and I'll add you.",
-    f_proj: "Projects", f_rec: "Resources", f_cont: "Contact",
-    f_wa: "WhatsApp", f_status: "Available for projects", f_crm: "Custom CRM",
+    f_cont: "Contact",
+    f_wa: "WhatsApp", f_status: "Available for projects",
     made: "Made in Salta, Argentina"
   };
   const langLbl = $("#langLabel");
@@ -595,7 +594,7 @@
       if (v !== undefined) el.innerHTML = v;
     });
     // Placeholders de inputs/textarea (data-ph = clave i18n)
-    const PH_EN = { af_name_ph: "Jane Doe", af_from_ph: "Store, studio, startup\u2026", af_idea_ph: "I want a system that\u2026", af_mail_ph: "you@email.com", af_tel_ph: "+1 555 000 0000", nl_ph: "you@email.com" };
+    const PH_EN = { nl_ph: "you@email.com" };
     $$("[data-ph]").forEach((el) => {
       if (el.dataset.esPh === undefined) el.dataset.esPh = el.placeholder;
       el.placeholder = l === "en" ? (PH_EN[el.dataset.ph] ?? el.placeholder) : el.dataset.esPh;
@@ -920,6 +919,26 @@
         });
       }, { rootMargin: "120px 0px" }).observe(panel);
     }
+  });
+
+  /* ---------- 22b. Filas de celulares sin huecos ----------
+     Cada track tiene que medir más que la pantalla más ancha: si no, al final
+     del loop asoma el vacío y parece que la fila se frenó. Se repite el
+     contenido hasta cubrirla y se estira la duración para no acelerar. */
+  $$(".mobile-sec .marquee").forEach((mq) => {
+    const tracks = $$(".mtrack", mq);
+    const base = [...tracks[0].children];
+    const ancho = Math.max(innerWidth, screen.width) + 200;
+    let vueltas = 1;
+    while (tracks[0].scrollWidth < ancho && vueltas < 6) {
+      tracks.forEach((tr, i) => base.forEach((n) => {
+        const copia = n.cloneNode(true);
+        if (i === 0) copia.setAttribute("aria-hidden", "true");
+        tr.append(copia);
+      }));
+      vueltas++;
+    }
+    if (vueltas > 1) mq.style.setProperty("--speed", parseFloat(mq.style.getPropertyValue("--speed")) * vueltas + "s");
   });
 
   /* ---------- 23. Pausar animaciones fuera del viewport ----------

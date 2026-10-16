@@ -33,7 +33,7 @@
   <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;700&family=Geist+Mono:wght@400;700&display=swap">
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;700&family=Geist+Mono:wght@400;700&display=swap">
 
-  <link rel="stylesheet" href="styles.css?v=20261015a">
+  <link rel="stylesheet" href="styles.css?v=20261016c">
 
   <!-- Tema inicial ANTES del primer paint (evita flash):
        localStorage manda; si no hay, respeta prefers-color-scheme. -->
@@ -63,7 +63,8 @@
     "url": "https://davidtaranto96.github.io/",
     "sameAs": [
       "https://github.com/davidtaranto96",
-      "https://linkedin.com/in/davidtaranto"
+      "https://linkedin.com/in/davidtaranto",
+      "https://www.instagram.com/david.taranto/"
     ],
     "knowsAbout": ["Microsoft 365", "Azure", "Automatización", "IA", "Claude", "Next.js", "WhatsApp bots"]
   }
@@ -136,30 +137,6 @@
   <main id="main">
     <!-- ============ 3. HERO ============ -->
     <section class="hero" id="top">
-      <!-- 4 screenshots flotantes: --x/--r distancia al borde izquierdo/derecho,
-           --y alto, --w ancho de diseño, --rot rotación, --dur/--delay del bob,
-           data-depth (2..4) para el parallax. -->
-      <div class="float" style="--x: 2vw; --y: 6%; --w: 340px;" data-depth="3">
-        <div class="float-card" style="--rot: -8deg; --dur: 5.5s;">
-          <img src="assets/hero-1.jpg?v=2" width="680" height="440" alt="Pantalla de un CRM a medida de DT System, con datos de demo" loading="lazy">
-        </div>
-      </div>
-      <div class="float der" style="--r: 26vw; --y: 2%; --w: 280px;" data-depth="4">
-        <div class="float-card" style="--rot: 6deg; --dur: 6.5s; --delay: -2s;">
-          <img src="assets/hero-2.jpg" width="560" height="400" alt="Sitio del Edificio La Torre, emprendimiento inmobiliario en Salta" loading="lazy">
-        </div>
-      </div>
-      <div class="float" style="--x: 1vw; --y: 62%; --w: 310px;" data-depth="2">
-        <div class="float-card" style="--rot: 4deg; --dur: 7s; --delay: -1s;">
-          <img src="assets/hero-3.jpg" width="620" height="420" alt="Landing de Aires de San Lorenzo, barrio privado en Salta" loading="lazy">
-        </div>
-      </div>
-      <div class="float der" style="--r: 24vw; --y: 58%; --w: 270px;" data-depth="3">
-        <div class="float-card" style="--rot: -10deg; --dur: 6s; --delay: -3s;">
-          <img src="assets/hero-4.jpg" width="540" height="380" alt="Sitio institucional de Cañada Húmeda, grupo agroindustrial" loading="lazy">
-        </div>
-      </div>
-
       <div class="hero-inner">
         <h1><span data-i18n="hero_t">Haciendo realidad tu</span> <span class="tw-linea"><span class="tw" id="tw" data-words="idea|web|tienda&nbsp;online|CRM|app" data-words-en="idea|website|online&nbsp;store|CRM|app"></span><span class="caret" aria-hidden="true"></span></span></h1>
         <p class="sub" data-i18n="hero_sub">Webs, tiendas online y CRM a medida — con automatización e IA cuando suma. Construido en Salta, usado en producción.</p>
@@ -174,7 +151,7 @@
     <!-- ============ 4. MOBILE SHOWCASE ============ -->
     <section class="mobile-sec">
       <div class="mobile-head wrap">
-        <span class="eyebrow" data-i18n="mob_eb">Mobile-first de verdad</span>
+        <span class="eyebrow rebota" data-i18n="mob_eb">Mobile-first de verdad</span>
         <h2 class="h2" data-rv="up" data-i18n="mob_h">Hecho para cómo se usa en serio: desde el celular.</h2>
       </div>
 
@@ -186,35 +163,31 @@
           <div class="phone"><img src="assets/mobile-5.jpg" width="360" height="780" alt="Edificio La Torre en el celular" loading="lazy"></div>
           <div class="phone"><img src="assets/mobile-2.jpg" width="360" height="780" alt="Tienda BAZA en el celular" loading="lazy"></div>
           <div class="phone"><img src="assets/mobile-9.jpg" width="360" height="780" alt="Cañada Húmeda en el celular" loading="lazy"></div>
-          <div class="phone"><img src="assets/mobile-4.jpg" width="360" height="780" alt="Aires de San Lorenzo en el celular" loading="lazy"></div>
-          <div class="phone"><img src="assets/mobile-7.jpg" width="360" height="780" alt="Saurium en el celular" loading="lazy"></div>
+          <div class="phone"><img src="assets/mobile-10.jpg" width="360" height="780" alt="MAVENZ en el celular" loading="lazy"></div>
         </div>
         <div class="mtrack" aria-hidden="true">
           <div class="phone"><img src="assets/mobile-1.jpg" width="360" height="780" alt="melou en el celular" loading="lazy"></div>
           <div class="phone"><img src="assets/mobile-5.jpg" width="360" height="780" alt="Edificio La Torre en el celular" loading="lazy"></div>
           <div class="phone"><img src="assets/mobile-2.jpg" width="360" height="780" alt="Tienda BAZA en el celular" loading="lazy"></div>
           <div class="phone"><img src="assets/mobile-9.jpg" width="360" height="780" alt="Cañada Húmeda en el celular" loading="lazy"></div>
-          <div class="phone"><img src="assets/mobile-4.jpg" width="360" height="780" alt="Aires de San Lorenzo en el celular" loading="lazy"></div>
-          <div class="phone"><img src="assets/mobile-7.jpg" width="360" height="780" alt="Saurium en el celular" loading="lazy"></div>
+          <div class="phone"><img src="assets/mobile-10.jpg" width="360" height="780" alt="MAVENZ en el celular" loading="lazy"></div>
         </div>
       </div>
-      <!-- Segunda fila: dirección opuesta y velocidad distinta -->
+      <!-- Segunda fila: otros sitios, dirección opuesta y velocidad distinta -->
       <div class="marquee rev" style="--speed: 13s;">
         <div class="mtrack">
-          <div class="phone"><img src="assets/mobile-5.jpg" width="360" height="780" alt="Edificio La Torre en el celular" loading="lazy"></div>
+          <div class="phone"><img src="assets/mobile-7.jpg?v=2" width="360" height="780" alt="Saurium en el celular" loading="lazy"></div>
           <div class="phone"><img src="assets/mobile-8.jpg" width="360" height="780" alt="Portal de Francisco Molins en el celular" loading="lazy"></div>
-          <div class="phone"><img src="assets/mobile-7.jpg" width="360" height="780" alt="Saurium en el celular" loading="lazy"></div>
-          <div class="phone"><img src="assets/mobile-1.jpg" width="360" height="780" alt="melou en el celular" loading="lazy"></div>
           <div class="phone"><img src="assets/mobile-4.jpg" width="360" height="780" alt="Aires de San Lorenzo en el celular" loading="lazy"></div>
-          <div class="phone"><img src="assets/mobile-2.jpg" width="360" height="780" alt="Tienda BAZA en el celular" loading="lazy"></div>
+          <div class="phone"><img src="assets/mobile-11.jpg" width="360" height="780" alt="Josi Compagnucci en el celular" loading="lazy"></div>
+          <div class="phone"><img src="assets/mobile-12.jpg" width="360" height="780" alt="RETAZOS en el celular" loading="lazy"></div>
         </div>
         <div class="mtrack" aria-hidden="true">
-          <div class="phone"><img src="assets/mobile-5.jpg" width="360" height="780" alt="Edificio La Torre en el celular" loading="lazy"></div>
+          <div class="phone"><img src="assets/mobile-7.jpg?v=2" width="360" height="780" alt="Saurium en el celular" loading="lazy"></div>
           <div class="phone"><img src="assets/mobile-8.jpg" width="360" height="780" alt="Portal de Francisco Molins en el celular" loading="lazy"></div>
-          <div class="phone"><img src="assets/mobile-7.jpg" width="360" height="780" alt="Saurium en el celular" loading="lazy"></div>
-          <div class="phone"><img src="assets/mobile-1.jpg" width="360" height="780" alt="melou en el celular" loading="lazy"></div>
           <div class="phone"><img src="assets/mobile-4.jpg" width="360" height="780" alt="Aires de San Lorenzo en el celular" loading="lazy"></div>
-          <div class="phone"><img src="assets/mobile-2.jpg" width="360" height="780" alt="Tienda BAZA en el celular" loading="lazy"></div>
+          <div class="phone"><img src="assets/mobile-11.jpg" width="360" height="780" alt="Josi Compagnucci en el celular" loading="lazy"></div>
+          <div class="phone"><img src="assets/mobile-12.jpg" width="360" height="780" alt="RETAZOS en el celular" loading="lazy"></div>
         </div>
       </div>
     </section>
@@ -517,10 +490,10 @@
               <li><a href="https://sauriumchukum.com" target="_blank" rel="noopener" aria-label="Saurium"><span class="marca m-saurium"></span></a></li>
               <li><a href="https://edificiolatorre.com" target="_blank" rel="noopener" aria-label="Edificio La Torre"><span class="marca m-latorre"></span></a></li>
               <li><a href="https://franciscomolins.com" target="_blank" rel="noopener" aria-label="Francisco Molins Real Estate"><span class="marca m-molins"></span></a></li>
-              <li><span class="marca-txt">Berni Studio</span></li>
-              <li><span class="marca-txt">MAVENZ</span></li>
-              <li><span class="marca-txt">Josi Compagnucci</span></li>
-              <li><span class="marca-txt">RETAZOS</span></li>
+              <li><span class="marca-txt marca-par"><span class="marca m-bf"></span>BF Studio</span></li>
+              <li><span class="marca m-mavenz" role="img" aria-label="MAVENZ"></span></li>
+              <li><span class="marca m-josi" role="img" aria-label="Josi Compagnucci"></span></li>
+              <li><span class="marca m-retazos" role="img" aria-label="RETAZOS"></span></li>
           </ul>
           <ul class="marcas mtrack" aria-hidden="true">
               <li><a href="https://melou.com.ar" target="_blank" rel="noopener" aria-label="melou"><span class="marca m-melou"></span></a></li>
@@ -530,10 +503,10 @@
               <li><a href="https://sauriumchukum.com" target="_blank" rel="noopener" aria-label="Saurium"><span class="marca m-saurium"></span></a></li>
               <li><a href="https://edificiolatorre.com" target="_blank" rel="noopener" aria-label="Edificio La Torre"><span class="marca m-latorre"></span></a></li>
               <li><a href="https://franciscomolins.com" target="_blank" rel="noopener" aria-label="Francisco Molins Real Estate"><span class="marca m-molins"></span></a></li>
-              <li><span class="marca-txt">Berni Studio</span></li>
-              <li><span class="marca-txt">MAVENZ</span></li>
-              <li><span class="marca-txt">Josi Compagnucci</span></li>
-              <li><span class="marca-txt">RETAZOS</span></li>
+              <li><span class="marca-txt marca-par"><span class="marca m-bf"></span>BF Studio</span></li>
+              <li><span class="marca m-mavenz" role="img" aria-label="MAVENZ"></span></li>
+              <li><span class="marca m-josi" role="img" aria-label="Josi Compagnucci"></span></li>
+              <li><span class="marca m-retazos" role="img" aria-label="RETAZOS"></span></li>
           </ul>
         </div>        <span class="astnote" data-i18n="mk_note">*Clientes reales, no logos de relleno</span>
       </div>
@@ -548,13 +521,7 @@
         <div class="sec-head" data-rv="fade">
           <span class="eyebrow" data-i18n="cs_eb">Casos</span>
           <h2 class="h2" data-i18n="cs_h">Trabajo entregado.</h2>
-          <p class="sub" data-i18n="cs_sub">Clientes reales, en producción. Lo que tiene link, lo podés abrir ahora mismo.</p>
-        </div>
-
-        <div class="stats">
-          <div class="stat"><b data-count="10">10</b><span data-i18n="cs_s1">proyectos de clientes</span></div>
-          <div class="stat"><b data-count="7">7</b><span data-i18n="cs_s2">en línea ahora mismo</span></div>
-          <div class="stat"><b data-count="7">7</b><span data-i18n="cs_s3">con dominio propio</span></div>
+          <p class="sub" data-i18n="cs_sub">Webs, tiendas y sistemas que hoy usan negocios de verdad.</p>
         </div>
 
         <div class="af-chips cs-filter" id="csFilter" role="group" aria-label="Filtrar proyectos por tipo" data-i18n-aria="cs_filtro">
@@ -681,25 +648,25 @@
 
           <div class="af-grid">
             <label class="af-field">
-              <span class="af-label"><i>( 01 )</i> <b data-i18n="af_name">Tu nombre</b></span>
-              <input type="text" name="nombre" autocomplete="name" enterkeyhint="next" required data-ph="af_name_ph" placeholder="Juan Pérez">
+              <span class="af-label"><b data-i18n="af_name">Tu nombre</b></span>
+              <input type="text" name="nombre" autocomplete="name" enterkeyhint="next" required>
             </label>
             <label class="af-field">
-              <span class="af-label"><i>( 02 )</i> <b data-i18n="af_from">Tu negocio / proyecto</b></span>
-              <input type="text" name="negocio" enterkeyhint="next" data-ph="af_from_ph" placeholder="Tienda, estudio, emprendimiento…">
+              <span class="af-label"><b data-i18n="af_from">Tu negocio / proyecto</b></span>
+              <input type="text" name="negocio" enterkeyhint="next">
             </label>
             <label class="af-field">
-              <span class="af-label"><i>( 03 )</i> <b data-i18n="af_mail">Tu correo</b> <em data-i18n="af_opt">· opcional</em></span>
-              <input type="email" name="correo" autocomplete="email" enterkeyhint="next" data-ph="af_mail_ph" placeholder="vos@correo.com">
+              <span class="af-label"><b data-i18n="af_mail">Tu correo</b> <em data-i18n="af_opt">· opcional</em></span>
+              <input type="email" name="correo" autocomplete="email" enterkeyhint="next">
             </label>
             <label class="af-field">
-              <span class="af-label"><i>( 04 )</i> <b data-i18n="af_tel">Tu teléfono</b> <em data-i18n="af_opt">· opcional</em></span>
-              <input type="tel" name="telefono" autocomplete="tel" enterkeyhint="next" data-ph="af_tel_ph" placeholder="+54 387 000 0000">
+              <span class="af-label"><b data-i18n="af_tel">Tu teléfono</b> <em data-i18n="af_opt">· opcional</em></span>
+              <input type="tel" name="telefono" autocomplete="tel" enterkeyhint="next">
             </label>
           </div>
 
           <div class="af-field">
-            <span class="af-label"><i>( 05 )</i> <b data-i18n="af_type">¿Qué necesitás?</b></span>
+            <span class="af-label"><b data-i18n="af_type">¿Qué necesitás?</b></span>
             <div class="af-chips" role="group" aria-label="Tipo de proyecto" data-i18n-aria="af_tipo">
               <button type="button" class="af-chip on" data-val="Web / Tienda" data-i18n="af_t1">Web / Tienda</button>
               <button type="button" class="af-chip" data-val="Sistema / CRM" data-i18n="af_t2">Sistema / CRM</button>
@@ -710,8 +677,8 @@
           </div>
 
           <label class="af-field">
-            <span class="af-label"><i>( 06 )</i> <b data-i18n="af_idea">Contame la idea</b></span>
-            <textarea name="idea" rows="1" required data-ph="af_idea_ph" placeholder="Quiero un sistema que…"></textarea>
+            <span class="af-label"><b data-i18n="af_idea">Contame la idea</b></span>
+            <textarea name="idea" rows="1" required></textarea>
           </label>
 
           <div class="af-foot">
@@ -763,26 +730,13 @@
           <a class="logo" href="#top">dt<b>/</b>system</a>
           <p>Automate the boring stuff, focus on what matters.</p>
         </div>
-        <div class="f-col">
-          <h4><span data-i18n="f_proj">Proyectos</span> <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg></h4>
+        <div class="f-contacto">
+          <h4 data-i18n="f_cont">Contacto</h4>
           <ul>
-            <li><a href="https://edificiolatorre.com" target="_blank" rel="noopener">Edificio La Torre</a></li>
-            <li><a href="https://franciscomolins.com" target="_blank" rel="noopener">Francisco Molins</a></li>
-            <li><a href="#dt-system" data-i18n="f_crm">CRM a medida</a></li>
-          </ul>
-        </div>
-        <div class="f-col">
-          <h4><span data-i18n="f_rec">Recursos</span> <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg></h4>
-          <ul>
-            <li><a href="https://github.com/davidtaranto96" target="_blank" rel="noopener">GitHub</a></li>
-                        <li><a href="https://linkedin.com/in/davidtaranto" target="_blank" rel="noopener">LinkedIn</a></li>
-          </ul>
-        </div>
-        <div class="f-col">
-          <h4><span data-i18n="f_cont">Contacto</span> <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg></h4>
-          <ul>
-            <li><a href="https://wa.me/5493875454070" target="_blank" rel="noopener" data-i18n="f_wa">WhatsApp</a></li>
-            <li><a href="mailto:david_taranto@outlook.es">Email</a></li>
+            <li><a href="https://wa.me/5493875454070" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true" focusable="false" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3.5a8.4 8.4 0 0 0-7.3 12.6L3.6 20.4l4.4-1.1A8.4 8.4 0 1 0 12 3.5z"/><path fill="currentColor" stroke="none" transform="translate(8.05 7.95) scale(.33)" d="M20 15.4c-1.2 0-2.4-.2-3.5-.6a1 1 0 0 0-1 .3l-1.6 2c-2.8-1.4-5.5-3.9-6.9-6.9l2-1.7c.3-.3.3-.7.2-1-.4-1.1-.6-2.3-.6-3.5 0-.5-.4-1-1-1H4.2C3.6 3 3 3.2 3 4c0 9.3 7.7 17 17 17 .7 0 1-.6 1-1.2v-3.4c0-.6-.5-1-1-1z"/></svg><span data-i18n="f_wa">WhatsApp</span></a></li>
+            <li><a href="mailto:david_taranto@outlook.es"><svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true" focusable="false" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3.5" y="5.5" width="17" height="13" rx="2.5"/><path d="M4.6 7.6 12 13l7.4-5.4"/></svg><span>david_taranto@outlook.es</span></a></li>
+            <li><a href="https://www.instagram.com/david.taranto/" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true" focusable="false" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3.5" y="3.5" width="17" height="17" rx="5"/><circle cx="12" cy="12" r="3.9"/><circle cx="17.1" cy="6.9" r=".95" fill="currentColor" stroke="none"/></svg><span>Instagram</span></a></li>
+            <li><a href="https://linkedin.com/in/davidtaranto" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true" focusable="false" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3.5" y="3.5" width="17" height="17" rx="5"/><path d="M8.4 10.6v5.9M11.9 16.5v-5.9M11.9 13.3c0-1.6 1.1-2.7 2.45-2.7s2.2 1 2.2 2.55v3.35"/><circle cx="8.4" cy="7.75" r=".95" fill="currentColor" stroke="none"/></svg><span>LinkedIn</span></a></li>
           </ul>
         </div>
       </div>
@@ -796,6 +750,6 @@
 
   <script src="assets/land-data.js" defer></script>
   <script src="objetos.js" defer></script>
-  <script src="main.js?v=20261015a" defer></script>
+  <script src="main.js?v=20261015b" defer></script>
 </body>
 </html>

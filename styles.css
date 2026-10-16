@@ -6,10 +6,13 @@
 
 /* ---------- 1. Tokens de tema ---------- */
 :root {
-  --bg: #FFFFFF;
+  --bg: oklch(0.968 0.005 240); /* blanco apagado, apenas hacia el celeste de la marca: el blanco puro cansaba */
   --text: #333333;
-  --muted: rgba(51, 51, 51, 0.62);
-  --accent: #52BFFE;          /* celeste primario */
+  --muted: rgba(51, 51, 51, 0.76);   /* 4,5:1 sobre el fondo y las tarjetas */
+  --accent: #52BFFE;          /* celeste primario: fondos, bordes, puntos */
+  --accent-ink: #0B6A9E;      /* el celeste cuando es texto: 5:1 sobre el fondo claro */
+  --ok: #22C55E;
+  --ok-ink: #15803D;
   --amber: #F59E0B;           /* usar con muchísima moderación */
   --pink: #EC4899;            /* usar con muchísima moderación */
   --line: rgba(51, 51, 51, 0.12);
@@ -31,7 +34,9 @@
 [data-theme="dark"] {
   --bg: #0E0F12;
   --text: #F2F2F2;
-  --muted: rgba(242, 242, 242, 0.60);
+  --muted: rgba(242, 242, 242, 0.66);
+  --accent-ink: #52BFFE;
+  --ok-ink: #22C55E;
   --line: rgba(242, 242, 242, 0.14);
   --card: #15171C;
   --card-border: rgba(242, 242, 242, 0.10);
@@ -67,6 +72,8 @@ body {
 /* Palabras largas: en títulos 'anywhere', porque las palabras del h2 van en
    inline-block y 'break-word' no achica su ancho mínimo */
 body { overflow-wrap: break-word; }
+/* Los párrafos se leen en la sans: el mono queda para rótulos, precios y detalles (revisión 2026-10-16) */
+p { font-family: var(--font-head); font-size: 1rem; line-height: 1.6; text-wrap: pretty; }
 h1, h2, h3, h4, .h2 .w { overflow-wrap: anywhere; }
 h1, h2, h3, h4 { font-family: var(--font-head); font-weight: 700; line-height: 1.1; letter-spacing: -0.02em; text-wrap: balance; }
 img, video { max-width: 100%; display: block; }
@@ -140,7 +147,7 @@ html.theme-fade *, html.theme-fade *::before, html.theme-fade *::after {
   /* Solo "Disponible para proyectos": el WhatsApp ya está en el hero */
   .bar .bar-largo, .bar a { display: none; }
 }
-.bar a { color: var(--accent); text-decoration: none; }
+.bar a { color: var(--accent-ink); text-decoration: none; }
 @media (hover: hover) { .bar a:hover { text-decoration: underline; } }
 /* Beam de luz que recorre el borde inferior en loop de 4s.
    El animation-delay negativo lo pone JS: -(Date.now()%4000)/1000 s,
@@ -183,12 +190,12 @@ html.theme-fade *, html.theme-fade *::before, html.theme-fade *::after {
   text-decoration: none; color: var(--text); letter-spacing: 0.09em;
   padding: 9px 14px; border-radius: 999px; display: block;
 }
-@media (hover: hover) { .nav a:hover { color: var(--accent); } }
+@media (hover: hover) { .nav a:hover { color: var(--accent-ink); } }
 /* Hover "rotación vertical" (Stökt): el clip vive en .nl y la palabra que
    ENTRA lo hace en color acento — igual que en wearestokt.com. */
 .nl { display: inline-block; position: relative; overflow: hidden; vertical-align: top; }
 .nl > span { display: block; transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
-.nl > span + span { position: absolute; top: 100%; left: 0; color: var(--accent); }
+.nl > span + span { position: absolute; top: 100%; left: 0; color: var(--accent-ink); }
 @media (hover: hover) { .nav a:hover .nl > span { transform: translateY(-100%); } }
 .hdr-right { justify-self: end; display: flex; align-items: center; gap: 8px; }
 /* Botón de idioma (ES/EN) — .tgl.lang para ganarle a la regla base de .tgl */
@@ -248,7 +255,7 @@ section { padding: 96px 0; }
 .astnote {
   display: block; margin: 2px 0 10px;
   font-family: var(--font-mono); font-size: var(--t-min); letter-spacing: 0.14em;
-  text-transform: uppercase; color: var(--accent);
+  text-transform: uppercase; color: var(--accent-ink);
 }
 /* Cabeceras de sección centradas (como Clean Slate) */
 .sec-head { text-align: center; }
@@ -349,6 +356,11 @@ section { padding: 96px 0; }
 .marquee + .marquee { margin-top: 34px; }
 .mtrack { display: flex; gap: 28px; flex-shrink: 0; animation: mscroll var(--speed, 10s) linear infinite; padding-right: 28px; }
 .marquee.rev .mtrack { animation-direction: reverse; }
+.eyebrow.rebota { display: inline-block; }
+@media (prefers-reduced-motion: no-preference) {
+  .eyebrow.rebota { animation: rebota 1.8s ease-in-out infinite; }
+}
+@keyframes rebota { 0%, 100% { translate: 0 0; } 50% { translate: 0 7px; } }
 @keyframes mscroll { to { transform: translateX(-100%); } }
 
 /* Teléfono dibujado en CSS: frame con notch + reflejo diagonal */
@@ -387,10 +399,10 @@ section { padding: 96px 0; }
 .srv-tag { font-size: 0.8125rem; color: var(--muted); margin-bottom: 16px; }
 .srv ul { list-style: none; display: flex; flex-direction: column; gap: 9px; margin-bottom: 20px; font-size: 0.8125rem; }
 .srv li { display: flex; gap: 9px; align-items: baseline; }
-.srv li::before { content: "✓"; color: var(--accent); font-weight: 700; }
+.srv li::before { content: "✓"; color: var(--accent-ink); font-weight: 700; }
 .srv-price { font-size: 0.75rem; color: var(--muted); margin-bottom: 14px; }
 .srv-price b { color: var(--text); font-weight: 400; }  /* slot listo para precio */
-.srv-cta { margin-top: auto; font-size: 0.8125rem; text-decoration: none; color: var(--accent); }
+.srv-cta { margin-top: auto; font-size: 0.8125rem; text-decoration: none; color: var(--accent-ink); }
 @media (hover: hover) { .srv-cta:hover { text-decoration: underline; } }
 .ribbon {
   position: absolute; top: 14px; right: 14px; z-index: 2;
@@ -450,7 +462,7 @@ section { padding: 96px 0; }
   border: 1px solid var(--card-border); border-radius: 20px;
   background: var(--card); padding: 40px 36px; position: relative;
 }
-.review-q { color: var(--accent); margin-bottom: 12px; }
+.review-q { color: var(--accent-ink); margin-bottom: 12px; }
 .review p { font-size: 1.0625rem; line-height: 1.7; margin-bottom: 22px; }
 .review-who { display: flex; align-items: center; justify-content: center; gap: 12px; font-size: 0.8125rem; }
 .avatar {
@@ -458,7 +470,7 @@ section { padding: 96px 0; }
   background: var(--accent); color: #0E0F12; font-family: var(--font-head); font-weight: 700;
 }
 .verified { display: inline-flex; align-items: center; gap: 5px; font-size: var(--t-min); color: var(--muted); border: 1px solid var(--line); padding: 3px 9px; border-radius: 999px; }
-.verified svg { color: var(--accent); }
+.verified svg { color: var(--accent-ink); }
 /* Marquee de testimonios (lento, ~55s) */
 .t-marquee { --speed: 55s; }
 .t-card {
@@ -484,10 +496,10 @@ section { padding: 96px 0; }
 .live {
   margin-left: auto; display: inline-flex; align-items: center; gap: 6px;
   font-size: var(--t-min); letter-spacing: 0.08em; text-transform: uppercase;
-  color: #22C55E; border: 1px solid color-mix(in srgb, #22C55E 40%, transparent);
+  color: var(--ok-ink); border: 1px solid color-mix(in srgb, var(--ok) 40%, transparent);
   padding: 3px 9px; border-radius: 999px; white-space: nowrap;
 }
-.live i { width: 6px; height: 6px; border-radius: 50%; background: #22C55E; animation: pulse 1.6s ease-in-out infinite; }
+.live i { width: 6px; height: 6px; border-radius: 50%; background: var(--ok); animation: pulse 1.6s ease-in-out infinite; }
 @keyframes pulse { 50% { opacity: 0.25; } }
 /* Overlay hover con pill "Visitar ↗" */
 .demo-ov {
@@ -511,9 +523,15 @@ section { padding: 96px 0; }
 .cs-grid .demo img { aspect-ratio: 16 / 10; object-fit: cover; }
 /* Sin huecos: la grilla va en medias columnas y cada caso ocupa dos. main.js le pone --ini
    al primero de la última fila incompleta para centrarla, también con un filtro activo. */
-.demo-grid.cs-grid { grid-template-columns: repeat(6, minmax(0, 1fr)); }
 .cs-grid .demo { grid-column: var(--ini, auto) / span 2; }
-@media (max-width: 980px) { .demo-grid.cs-grid { grid-template-columns: repeat(4, minmax(0, 1fr)); } }
+/* Tarjetas grandes (corrección 2026-10-15, variante A): dos por fila desde la tableta */
+.demo-grid.cs-grid { grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 28px; }
+.cs-grid .demo { border-radius: 22px; box-shadow: var(--shadow); }
+.cs-grid .demo img { transition: transform 0.6s var(--fx-ease); }
+@media (hover: hover) { .cs-grid .demo:hover img { transform: scale(1.04); } }
+.cs-grid .demo-info { padding: 20px 24px 22px; }
+.cs-grid .demo-info h3 { font-size: clamp(1.125rem, 1rem + 0.5vw, 1.375rem); }
+.cs-grid .demo-info small { font-size: 0.875rem; }
 @media (max-width: 720px) {
   .demo-grid.cs-grid { grid-template-columns: minmax(0, 1fr); }
   .cs-grid .demo { grid-column: auto; }
@@ -535,7 +553,7 @@ section { padding: 96px 0; }
   border: 1px dashed var(--line); border-radius: 999px; padding: 3px 10px;
 }
 @media (hover: hover) { .pw:hover { border-color: var(--accent); color: var(--text); } }
-.pw.copied { color: #22C55E; border-color: #22C55E; }
+.pw.copied { color: var(--ok-ink); border-color: var(--ok); }
 
 /* ---------- 12. CTA final ---------- */
 .cta-card {
@@ -545,9 +563,9 @@ section { padding: 96px 0; }
   box-shadow: var(--shadow);
 }
 .cta-card .h2 { font-size: clamp(1.625rem, 3.6vw, 2.375rem); }
-.cta-links { display: flex; gap: 20px; justify-content: center; margin-top: 22px; font-size: 0.8125rem; }
-.cta-links a { color: var(--muted); text-decoration: none; }
-@media (hover: hover) { .cta-links a:hover { color: var(--accent); } }
+.cta-links { display: flex; flex-wrap: wrap; gap: 0 20px; justify-content: center; margin-top: 22px; font-size: 0.8125rem; }
+.cta-links a { display: inline-flex; align-items: center; min-height: 44px; color: var(--muted); text-decoration: none; white-space: nowrap; }
+@media (hover: hover) { .cta-links a:hover { color: var(--accent-ink); } }
 
 /* ---------- 13. Footer ---------- */
 .footer { position: relative; overflow: hidden; border-top: 1px solid var(--line); padding: 80px 0 env(safe-area-inset-bottom); margin-top: 40px; }
@@ -559,13 +577,18 @@ section { padding: 96px 0; }
   color: var(--text); opacity: 0.04; pointer-events: none; user-select: none;
   z-index: 0; line-height: 1;
 }
-.footer-cols { position: relative; z-index: 1; display: grid; grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr) minmax(0, 1fr) minmax(0, 1fr); gap: 36px; padding-bottom: 70px; }
+.footer-cols { position: relative; z-index: 1; display: flex; flex-wrap: wrap; justify-content: space-between; align-items: flex-start; gap: 36px; padding-bottom: 70px; }
+.f-contacto h4 { font-size: 0.75rem; letter-spacing: 0.1em; text-transform: uppercase; }
+.f-contacto ul { list-style: none; margin-top: 10px; display: flex; flex-wrap: wrap; gap: 4px 22px; font-size: 0.8125rem; }
+.f-contacto a { display: inline-flex; align-items: center; gap: 9px; min-height: 44px; color: var(--muted); text-decoration: none; overflow-wrap: anywhere; }
+.f-contacto svg { flex-shrink: 0; }
+@media (hover: hover) { .f-contacto a:hover { color: var(--accent-ink); } }
 .f-brand p { color: var(--muted); font-size: 0.8125rem; margin-top: 10px; max-width: 260px; }
 .f-col h4 { font-size: 0.75rem; letter-spacing: 0.1em; text-transform: uppercase; display: flex; align-items: center; justify-content: space-between; }
 .f-col h4 svg { display: none; transition: transform 0.3s; }
 .f-col ul { list-style: none; margin-top: 14px; display: flex; flex-direction: column; gap: 10px; font-size: 0.8125rem; }
 .f-col a { color: var(--muted); text-decoration: none; }
-@media (hover: hover) { .f-col a:hover { color: var(--accent); } }
+@media (hover: hover) { .f-col a:hover { color: var(--accent-ink); } }
 .footer-bottom {
   position: relative; z-index: 1;
   display: flex; align-items: center; gap: 16px; flex-wrap: wrap;
@@ -575,7 +598,7 @@ section { padding: 96px 0; }
   display: inline-flex; align-items: center; gap: 7px;
   border: 1px solid var(--line); border-radius: 999px; padding: 4px 12px;
 }
-.status i { width: 7px; height: 7px; border-radius: 50%; background: #22C55E; animation: pulse 1.6s ease-in-out infinite; }
+.status i { width: 7px; height: 7px; border-radius: 50%; background: var(--ok); animation: pulse 1.6s ease-in-out infinite; }
 .made { margin-left: auto; }
 
 /* ---------- 14. Responsive ---------- */
@@ -618,6 +641,7 @@ section { padding: 96px 0; }
   .stats { gap: 34px; }
   .footer-cols { grid-template-columns: minmax(0, 1fr); gap: 0; }
   .f-brand { margin-bottom: 26px; }
+  .f-contacto ul { flex-direction: column; gap: 0; }
   /* Acordeón mobile: h4 clickeable, listas colapsadas con max-height animado */
   .f-col { border-top: 1px solid var(--line); }
   .f-col h4 { padding: 16px 0; cursor: pointer; }
@@ -711,7 +735,7 @@ section { padding: 96px 0; }
 .acc-txt h3 { font-size: 1.625rem; font-weight: 500; }
 .acc-list { list-style: none; display: flex; flex-direction: column; gap: 10px; font-size: 0.8125rem; margin: 8px 0 4px; }
 .acc-list li { display: flex; gap: 10px; align-items: baseline; }
-.acc-list li::before { content: "\2192"; color: var(--accent); }
+.acc-list li::before { content: "\2192"; color: var(--accent-ink); }
 .acc-img { position: relative; border-radius: 12px; overflow: hidden; opacity: 0; scale: 1.06; transition: opacity 0.5s, scale 0.8s cubic-bezier(0.4, 0, 0.2, 1); }
 .acc-p.open .acc-img { opacity: 1; scale: 1; transition-delay: 0.25s; }
 .acc-img::after {
@@ -966,7 +990,7 @@ html.lang-swap [data-i18n] { animation: langswap 0.5s cubic-bezier(0.4, 0, 0.2, 
   display: inline-flex; align-items: center; gap: 7px;
   font-size: 0.8125rem; color: var(--it); text-decoration: none;
 }
-@media (hover: hover) { .founder-cta:hover { color: var(--accent); } }
+@media (hover: hover) { .founder-cta:hover { color: var(--accent-ink); } }
 
 /* Card del globo (Stökt): título + disponibilidad arriba, globo punteado
    en canvas abajo, recortado por overflow para que "asome" del card. */
@@ -979,19 +1003,19 @@ html.lang-swap [data-i18n] { animation: langswap 0.5s cubic-bezier(0.4, 0, 0.2, 
 /* Punto verde: dot sólido + halo (anillo) que escala y se desvanece */
 .dotlive {
   position: relative; width: 9px; height: 9px; border-radius: 50%;
-  background: #22C55E; box-shadow: 0 0 10px rgba(34, 197, 94, 0.7);
+  background: var(--ok); box-shadow: 0 0 10px rgba(34, 197, 94, 0.7);
   flex-shrink: 0; display: inline-block;
 }
 .dotlive::after {
   content: ""; position: absolute; inset: -5px; border-radius: 50%;
-  border: 2px solid #22C55E; opacity: 0;
+  border: 2px solid var(--ok); opacity: 0;
   animation: halo 1.9s cubic-bezier(0.4, 0, 0.2, 1) infinite;
 }
 @keyframes halo { 0% { transform: scale(0.4); opacity: 0.9; } 70%, 100% { transform: scale(1.5); opacity: 0; } }
 
 .b-tools { grid-column: span 6; }
 .b-tools h3 { font-size: 0.9375rem; margin-bottom: 18px; }
-.chips-mq { --speed: 22s; }
+.chips-mq { --speed: 60s; }
 .chips-mq .mtrack { gap: 12px; padding-right: 12px; }
 .chip {
   min-width: 64px; height: 64px; padding: 0 14px; flex-shrink: 0;
@@ -1027,15 +1051,14 @@ html.lang-swap [data-i18n] { animation: langswap 0.5s cubic-bezier(0.4, 0, 0.2, 
 .af-badge {
   margin-left: auto; padding: 3px 10px; border-radius: 999px;
   font-size: var(--t-min); letter-spacing: 0.08em; white-space: nowrap;
-  color: var(--accent); border: 1px solid color-mix(in srgb, var(--accent) 40%, transparent);
+  color: var(--accent-ink); border: 1px solid color-mix(in srgb, var(--accent) 40%, transparent);
   background: color-mix(in srgb, var(--accent) 8%, transparent);
 }
 .af-grid { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 20px; }
 .af-field { display: flex; flex-direction: column; gap: 8px; }
 .af-label { font-family: var(--font-mono); font-size: var(--t-min); letter-spacing: 0.12em; text-transform: uppercase; }
-.af-label i { font-style: normal; color: var(--accent); }
 .af-label b { font-weight: 400; color: var(--muted); }
-.af-label em { font-style: normal; font-size: var(--t-min); color: color-mix(in srgb, var(--muted) 60%, transparent); }
+.af-label em { font-style: normal; font-size: var(--t-min); color: var(--muted); }
 .ai-form input, .ai-form textarea {
   font-family: var(--font-mono); font-size: 0.875rem; color: var(--text);
   background: transparent; border: 0; border-bottom: 1px solid var(--line);
@@ -1045,7 +1068,7 @@ html.lang-swap [data-i18n] { animation: langswap 0.5s cubic-bezier(0.4, 0, 0.2, 
 /* El textarea arranca de UNA línea (como los inputs) y crece con el
    contenido: field-sizing donde exista + auto-grow por JS de fallback */
 .ai-form textarea { field-sizing: content; max-height: 180px; overflow: hidden; }
-.ai-form input::placeholder, .ai-form textarea::placeholder { color: color-mix(in srgb, var(--muted) 55%, transparent); }
+.ai-form input::placeholder, .ai-form textarea::placeholder { color: var(--muted); }
 .ai-form input:focus-visible, .ai-form textarea:focus-visible {
   outline: none; border-radius: 0;
   border-bottom-color: var(--accent);
@@ -1062,7 +1085,7 @@ html.lang-swap [data-i18n] { animation: langswap 0.5s cubic-bezier(0.4, 0, 0.2, 
 }
 @media (hover: hover) { .af-chip:hover { border-color: var(--accent); color: var(--text); } }
 .af-chip.on {
-  color: var(--accent); border-color: var(--accent);
+  color: var(--accent-ink); border-color: var(--accent);
   background: color-mix(in srgb, var(--accent) 10%, transparent);
   box-shadow: 0 0 14px -4px color-mix(in srgb, var(--accent) 60%, transparent);
 }
@@ -1099,11 +1122,11 @@ html.lang-swap [data-i18n] { animation: langswap 0.5s cubic-bezier(0.4, 0, 0.2, 
   background: transparent; border: 0; border-bottom: 1px solid var(--line);
   padding: 9px 2px; border-radius: 0; transition: border-color 0.25s;
 }
-.nl-form input::placeholder { color: color-mix(in srgb, var(--muted) 55%, transparent); }
+.nl-form input::placeholder { color: var(--muted); }
 .nl-form input:focus-visible { outline: none; border-radius: 0; border-bottom-color: var(--accent); box-shadow: 0 1px 0 var(--accent); }
 .nl-form.tried input:invalid { border-bottom-color: var(--pink); }
 .nl-btn { padding: 11px 20px; font-size: var(--t-min); white-space: nowrap; }
-.nl-ok { font-family: var(--font-mono); font-size: var(--t-min); color: #22C55E; }
+.nl-ok { font-family: var(--font-mono); font-size: var(--t-min); color: var(--ok-ink); }
 /* Aviso de Novedades: vacío no ocupa lugar; el role=status ya está en el árbol */
 .nl-estado { flex-basis: 100%; font-family: var(--font-mono); font-size: var(--t-min); color: var(--text); }
 .nl-estado:not(:empty) { margin-top: 10px; }
@@ -1212,6 +1235,7 @@ html.fx-on .cs-grid .demo.fx-visto { opacity: 1; transform: none; }
    lo pone currentColor a traves de mask-image. Por eso no hacen falta
    variantes para claro y oscuro, y el hover es solo un cambio de opacidad. */
 .marcas-sec { padding: 62px 0 !important; }
+.marcas-sec + #proyectos { padding-top: 0; }
 /* Rótulo de la sección, en minúscula como los .eyebrow */
 .marcas-h {
   text-align: center; font-size: var(--t-min); letter-spacing: 0.02em;
@@ -1231,7 +1255,7 @@ html.fx-on .cs-grid .demo.fx-visto { opacity: 1; transform: none; }
   font-family: var(--font-mono); font-size: 0.8125rem; letter-spacing: 0.10em;
   text-transform: uppercase; color: var(--text); white-space: nowrap;
 }
-.marcas a, .marcas .marca-txt { display: block; opacity: 0.55; transition: opacity var(--fx-rapido) var(--fx-ease); }
+.marcas a, .marcas .marca-txt { display: block; opacity: 0.72; transition: opacity var(--fx-rapido) var(--fx-ease); }
 .marcas a:focus-visible { opacity: 1; }
 @media (hover: hover) { .marcas a:hover, .marcas li:hover .marca-txt { opacity: 1; } }
 .marca {
@@ -1386,6 +1410,19 @@ html.fx-on .cs-grid .demo.fx-visto { opacity: 1; transform: none; }
 .m-latorre { width: 40px;  height: 45px; -webkit-mask-image: url(assets/marcas/marca-latorre.png); mask-image: url(assets/marcas/marca-latorre.png); }
 @media (max-width: 720px) {
   .m-latorre { width: 33px;  height: 37px; }
+}
+.m-josi    { width: 186px; height: 18px; -webkit-mask-image: url(assets/marcas/marca-josi.png);    mask-image: url(assets/marcas/marca-josi.png); }
+.m-mavenz  { width: 142px; height: 21px; -webkit-mask-image: url(assets/marcas/marca-mavenz.svg);  mask-image: url(assets/marcas/marca-mavenz.svg); }
+.m-retazos { width: 164px; height: 18px; -webkit-mask-image: url(assets/marcas/marca-retazos.png); mask-image: url(assets/marcas/marca-retazos.png); }
+.m-bf      { width: 32px;  height: 32px; -webkit-mask-image: url(assets/marcas/marca-bf.png);      mask-image: url(assets/marcas/marca-bf.png); }
+.marcas .marca-par { display: flex; align-items: center; gap: 10px; }
+.marcas li > .marca { opacity: 0.72; transition: opacity var(--fx-rapido) var(--fx-ease); }
+@media (hover: hover) { .marcas li:hover > .marca { opacity: 1; } }
+@media (max-width: 720px) {
+  .m-josi    { width: 150px; height: 15px; }
+  .m-mavenz  { width: 115px; height: 17px; }
+  .m-retazos { width: 133px; height: 15px; }
+  .m-bf      { width: 27px;  height: 27px; }
 }
 
 /* ============================================================
