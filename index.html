@@ -33,7 +33,7 @@
   <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;700&family=Geist+Mono:wght@400;700&display=swap">
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;700&family=Geist+Mono:wght@400;700&display=swap">
 
-  <link rel="stylesheet" href="styles.css?v=20261016c">
+  <link rel="stylesheet" href="styles.css?v=20261016d">
 
   <!-- Tema inicial ANTES del primer paint (evita flash):
        localStorage manda; si no hay, respeta prefers-color-scheme. -->
@@ -697,11 +697,6 @@
           </div>
         </form>
 
-        <div class="cta-links">
-          <a href="mailto:david_taranto@outlook.es">david_taranto@outlook.es</a>
-          <a href="https://linkedin.com/in/davidtaranto" target="_blank" rel="noopener">LinkedIn ↗</a>
-          <a href="https://wa.me/5493875454070" target="_blank" rel="noopener" data-i18n="af_direct">WhatsApp directo ↗</a>
-        </div>
       </div>
     </section>
   </main>
@@ -711,24 +706,18 @@
     <!-- Wordmark gigante detrás del contenido -->
     <span class="footer-giant" aria-hidden="true">DT SYSTEM</span>
     <div class="wrap">
-      <!-- Newsletter: novedades y promos. Sin backend: abre un mail de
-           suscripción prellenado. Para hacerlo automático: reemplazar el
-           handler por el endpoint de tu proveedor (Formspree/Buttondown). -->
+      <!-- Novedades por Instagram: sin lista de correo que mantener -->
       <div class="nl-bar">
         <div class="nl-txt">
-          <h4 data-i18n="nl_h">Novedades y promos</h4>
-          <p data-i18n="nl_p">Lanzamientos, promos y aprendizajes de construir con IA. Cero spam.</p>
+          <h4 data-i18n="nl_h">Novedades y trabajos nuevos</h4>
+          <p data-i18n="nl_p">Lo que voy lanzando, primero en Instagram.</p>
         </div>
-        <form class="nl-form" id="nlForm" novalidate>
-          <input type="email" name="email" required autocomplete="email" enterkeyhint="send" aria-label="Tu correo" data-i18n-aria="nl_mail" data-ph="nl_ph" placeholder="vos@correo.com">
-          <button type="submit" class="btn btn-pri nl-btn" data-i18n="nl_btn">Sumarme →</button>
-          <p class="nl-estado" id="nlEstado" role="status"></p>
-        </form>
+        <a class="btn btn-pri nl-btn" href="https://www.instagram.com/david.taranto/" target="_blank" rel="noopener" data-i18n="nl_btn">Seguir en Instagram ↗</a>
       </div>
       <div class="footer-cols">
         <div class="f-brand">
           <a class="logo" href="#top">dt<b>/</b>system</a>
-          <p>Automate the boring stuff, focus on what matters.</p>
+          <p data-i18n="f_tag">Automatizá lo repetitivo y enfocate en lo que importa.</p>
         </div>
         <div class="f-contacto">
           <h4 data-i18n="f_cont">Contacto</h4>
@@ -750,6 +739,6 @@
 
   <script src="assets/land-data.js" defer></script>
   <script src="objetos.js" defer></script>
-  <script src="main.js?v=20261015b" defer></script>
+  <script src="main.js?v=20261016a" defer></script>
 </body>
 </html>

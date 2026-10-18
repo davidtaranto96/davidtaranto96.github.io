@@ -563,9 +563,6 @@ section { padding: 96px 0; }
   box-shadow: var(--shadow);
 }
 .cta-card .h2 { font-size: clamp(1.625rem, 3.6vw, 2.375rem); }
-.cta-links { display: flex; flex-wrap: wrap; gap: 0 20px; justify-content: center; margin-top: 22px; font-size: 0.8125rem; }
-.cta-links a { display: inline-flex; align-items: center; min-height: 44px; color: var(--muted); text-decoration: none; white-space: nowrap; }
-@media (hover: hover) { .cta-links a:hover { color: var(--accent-ink); } }
 
 /* ---------- 13. Footer ---------- */
 .footer { position: relative; overflow: hidden; border-top: 1px solid var(--line); padding: 80px 0 env(safe-area-inset-bottom); margin-top: 40px; }
@@ -1116,24 +1113,11 @@ html.lang-swap [data-i18n] { animation: langswap 0.5s cubic-bezier(0.4, 0, 0.2, 
 }
 .nl-txt h4 { font-size: 1.0625rem; font-weight: 500; margin-bottom: 4px; }
 .nl-txt p { font-family: var(--font-mono); font-size: var(--t-min); color: var(--muted); max-width: 380px; }
-.nl-form { display: flex; flex-wrap: wrap; align-items: flex-end; gap: 0 14px; flex: 1; max-width: 420px; min-width: 260px; }
-.nl-form input {
-  flex: 1; min-width: 0; font-family: var(--font-mono); font-size: 0.8125rem; color: var(--text);
-  background: transparent; border: 0; border-bottom: 1px solid var(--line);
-  padding: 9px 2px; border-radius: 0; transition: border-color 0.25s;
 }
-.nl-form input::placeholder { color: var(--muted); }
-.nl-form input:focus-visible { outline: none; border-radius: 0; border-bottom-color: var(--accent); box-shadow: 0 1px 0 var(--accent); }
-.nl-form.tried input:invalid { border-bottom-color: var(--pink); }
-.nl-btn { padding: 11px 20px; font-size: var(--t-min); white-space: nowrap; }
-.nl-ok { font-family: var(--font-mono); font-size: var(--t-min); color: var(--ok-ink); }
-/* Aviso de Novedades: vacío no ocupa lugar; el role=status ya está en el árbol */
-.nl-estado { flex-basis: 100%; font-family: var(--font-mono); font-size: var(--t-min); color: var(--text); }
-.nl-estado:not(:empty) { margin-top: 10px; }
+.nl-btn { padding: 11px 20px; font-size: var(--t-min); white-space: nowrap; flex-shrink: 0; }
 @media (max-width: 720px) {
   .nl-bar { flex-direction: column; flex-wrap: nowrap; align-items: stretch; text-align: center; padding: 22px 18px; }
   .nl-txt p { max-width: none; }
-  .nl-form { max-width: none; min-width: 0; }
 }
 
 /* ---------- CTA final gigante (estilo Stökt) ---------- */
@@ -1504,7 +1488,7 @@ html.nav-lejos .hdr-pill {
 /* Con dedo: 44 px de objetivo. Donde agrandar la caja movería el diseño,
    el área crece con un ::after transparente. */
 @media (pointer: coarse) {
-  .ai-form input, .ai-form textarea, .nl-form input { font-size: max(1rem, 16px); min-height: 44px; }
+  .ai-form input, .ai-form textarea { font-size: max(1rem, 16px); min-height: 46px; }
   .af-chip, .nl-btn, .skip, .acc-reset { min-height: 44px; }
   .srv-cta { display: inline-flex; align-items: center; min-height: 44px; }
   .menu-pop a { padding-block: 13px; }
@@ -1524,8 +1508,6 @@ html.nav-lejos .hdr-pill {
 .menu summary::after { inset: -3px; }
 .founder-cta::after { inset: -12px -4px; }
 .marcas a::after { inset: -12px -6px; }
-.cta-links a { position: relative; }
-.cta-links a::after { content: ""; position: absolute; inset: -4px 0; }
 /* Horizonte corto (celular acostado, zoom de 400%): sin barra de anuncio
    (su enlace repite el del header) y el header más bajo */
 @media (max-height: 500px) {

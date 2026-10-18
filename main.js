@@ -573,10 +573,10 @@
     af_hint: "Opens WhatsApp with your briefing ready to send.",
     af_send: "Send briefing",
     af_direct: "Direct WhatsApp \u2197",
-    nl_h: "News & deals",
-    nl_p: "Launches, deals and lessons from building with AI. Zero spam.",
-    nl_btn: "Count me in \u2192",
-    nl_ok: "Your mail app opened: send it and I'll add you.",
+    f_tag: "Automate the boring stuff, focus on what matters.",
+    nl_h: "News & new work",
+    nl_p: "What I'm launching, first on Instagram.",
+    nl_btn: "Follow on Instagram \u2197",
     f_cont: "Contact",
     f_wa: "WhatsApp", f_status: "Available for projects",
     made: "Made in Salta, Argentina"
@@ -593,14 +593,8 @@
       const v = l === "en" ? EN[k] : el.dataset.es;
       if (v !== undefined) el.innerHTML = v;
     });
-    // Placeholders de inputs/textarea (data-ph = clave i18n)
-    const PH_EN = { nl_ph: "you@email.com" };
-    $$("[data-ph]").forEach((el) => {
-      if (el.dataset.esPh === undefined) el.dataset.esPh = el.placeholder;
-      el.placeholder = l === "en" ? (PH_EN[el.dataset.ph] ?? el.placeholder) : el.dataset.esPh;
-    });
     // Etiquetas para lectores de pantalla (data-i18n-aria = clave)
-    const ARIA_EN = { nav: "Main", bar_x: "Close announcement", theme: "Toggle light/dark theme", menu: "Open menu", nl_mail: "Your email", af_via: "Send via", af_tipo: "Project type", cs_filtro: "Filter projects by type" };
+    const ARIA_EN = { nav: "Main", bar_x: "Close announcement", theme: "Toggle light/dark theme", menu: "Open menu", af_via: "Send via", af_tipo: "Project type", cs_filtro: "Filter projects by type" };
     $$("[data-i18n-aria]").forEach((el) => {
       if (el.dataset.esAria === undefined) el.dataset.esAria = el.getAttribute("aria-label") || "";
       el.setAttribute("aria-label", l === "en" ? (ARIA_EN[el.dataset.i18nAria] ?? el.dataset.esAria) : el.dataset.esAria);
@@ -649,35 +643,6 @@
     tmq.addEventListener("pointercancel", endDrag);
   }
   if (lang === "en") setLang("en");   // aplicar idioma guardado al cargar
-
-  /* ---------- 19. Newsletter (footer) ----------
-     Sin backend: abre un mail de suscripción prellenado y avisa que hay
-     que mandarlo (nada queda anotado hasta que llega).
-     Para automatizarlo: reemplazar por fetch al endpoint de Formspree/
-     Buttondown/Mailchimp con el mismo input. */
-  const nlForm = $("#nlForm");
-  const nlEstado = $("#nlEstado");
-  // El aviso lleva data-i18n y su castellano en data-es: setLang lo traduce
-  // como a cualquier texto si se cambia de idioma con el aviso a la vista
-  function avisoNl(ver) {
-    if (!nlEstado) return;
-    if (!ver) { delete nlEstado.dataset.i18n; delete nlEstado.dataset.es; nlEstado.textContent = ""; return; }
-    nlEstado.dataset.i18n = "nl_ok";
-    nlEstado.dataset.es = "Se abri\u00f3 tu correo: mandalo y te sumo.";
-    nlEstado.textContent = lang === "en" ? EN.nl_ok : nlEstado.dataset.es;
-  }
-  nlForm?.addEventListener("submit", (e) => {
-    e.preventDefault();
-    avisoNl(false);
-    nlForm.classList.add("tried");
-    if (!nlForm.checkValidity()) { nlForm.reportValidity(); return; }
-    const em = nlForm.email.value.trim();
-    const subj = lang === "en" ? "Newsletter signup" : "Suscripci\u00f3n a novedades";
-    const body = lang === "en" ? `Please add me to the list: ${em}` : `Sumame a la lista: ${em}`;
-    location.href = `mailto:${MAIL}?subject=${encodeURIComponent(subj)}&body=${encodeURIComponent(body)}`;
-    nlForm.classList.remove("tried");
-    avisoNl(true);
-  });
 
   /* ---------- 17. Acordeón de servicios (Stökt) ----------
      Un panel abierto a la vez; los cerrados quedan como franjas con el
